@@ -1,0 +1,7 @@
+DEPENDENCIES
+  seconion
+    path: .
+    metadata: true
+
+GRAPH
+  seconion (0.1.22)

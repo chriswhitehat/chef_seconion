@@ -1,0 +1,5 @@
+To Do:
+
+SSH Key exchange
+Create Environment Scheme (kp_washington_prod)
+Account for servername localhost on sguil server.
