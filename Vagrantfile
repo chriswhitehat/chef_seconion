@@ -24,13 +24,13 @@ Vagrant.configure("2") do |config|
     soserver.vm.hostname = "soserver"
     soserver.vm.network "private_network", ip: "192.168.50.21", virtualbox__intnet: true
     config.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "2028"]
+      vb.customize ["modifyvm", :id, "--memory", "1024"]
     end
 
     soserver.vm.provision "chef_client" do |client|
       client.chef_server_url = "https://esa-ir-dca.ghc.org/organizations/ghc"
       client.validation_client_name = "ghc-validator"
-      client.validation_key_path = "../.chef/ghc-validator.pem"
+      client.validation_key_path = "../../.chef/ghc-validator.pem"
       client.add_recipe "seconion::server"
     end
   end
@@ -40,13 +40,13 @@ Vagrant.configure("2") do |config|
     sosensor.vm.hostname = "sosensor"
     sosensor.vm.network "private_network", ip: "192.168.50.31", virtualbox__intnet: true
     config.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "2028"]
+      vb.customize ["modifyvm", :id, "--memory", "1024"]
     end
 
     sosensor.vm.provision "chef_client" do |client|
       client.chef_server_url = "https://esa-ir-dca.ghc.org/organizations/ghc"
       client.validation_client_name = "ghc-validator"
-      client.validation_key_path = "../.chef/ghc-validator.pem"
+      client.validation_key_path = "../../.chef/ghc-validator.pem"
       client.add_recipe "seconion::sensor"
     end
   end
