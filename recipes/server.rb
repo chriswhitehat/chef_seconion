@@ -13,7 +13,7 @@ end
 package ['securityonion-server', 'syslog-ng-core']
 
 template '/etc/nsm/securityonion.conf' do
-  source 'server/securityonion.conf.erb'
+  source 'default/securityonion.conf.erb'
   mode '0644'
   owner 'root'
   group 'root'
