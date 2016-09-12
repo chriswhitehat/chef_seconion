@@ -6,7 +6,7 @@
 
 require 'spec_helper'
 
-describe 'seconion::./sensor_keys' do
+describe 'seconion::sensor_keys' do
   context 'When all attributes are default, on an unspecified platform' do
     let(:chef_run) do
       runner = ChefSpec::ServerRunner.new
