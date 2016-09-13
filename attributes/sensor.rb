@@ -57,6 +57,26 @@ default[:seconion][:sensor][:bro_enabled] = 'yes'
 default[:seconion][:sensor][:bro_user] = 'sguil'
 default[:seconion][:sensor][:bro_group] = 'sguil'
 
+# Bro Network Configuration File
+default['seconion']['sensor']["bro_network"] = [
+  {
+    'type' => 'standalone',
+    'host' => 'localhost',
+    'interface' => 'etho0'
+  }   
+]
+
+# Bro Node Configuration File
+default['seconion']['sensor']['bro_broccoli'] = [
+  {
+    'debug_messages' => 'yes',
+    'debug_calltrace' => 'yes',
+    'use_ssl' => 'yes',
+    'ca_cert' => '<path>/ca_cert.pem'
+    'host_cert' => '<path>/bro_cert.pem'
+    'host_pass' =>
+  }
+]
 # The default is 4096.
 # High traffic networks may need to increase this.
 default[:seconion][:sensor][:pf_ring_slots] = 4096
