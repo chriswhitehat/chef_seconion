@@ -58,11 +58,6 @@ default['seconion']['server']['local_nids_rule_tuning'] = 'no'
 # VRTET
 default['seconion']['server']['ids_rules'] = 'ETVRT'
 
-# OINKCODE
-# If you're running VRT or ETPRO rulesets, you'll need to supply your
-# oinkcode here.
-default['seconion']['server']['oinkcode'] = '2cfd7a06675a81d35b29c0332a81b164066aa81d'
-
 
 #########################
 # Maintenance

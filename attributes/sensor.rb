@@ -24,10 +24,10 @@
 #########################
 
 # At what percentage of disk usage should the NSM scripts warn you?
-default['seconion']['sensor']['warn_disk_usage'] = 80
+default[:seconion][:sensor][:warn_disk_usage] = 80
 
 # At what percentage of disk usage should the NSM scripts begin purging old data?
-default['seconion']['sensor']['crit_disk_usage'] = 95
+default[:seconion][:sensor][:crit_disk_usage] = 95
 
 
 ################################
@@ -37,25 +37,25 @@ default['seconion']['sensor']['crit_disk_usage'] = 95
 # Which network interface should be the management interface?
 # The management interface has an IP address and is NOT used for sniffing.
 # We recommend that you always make this eth0 if possible for consistency.
-default['seconion']['sensor']['mgmt']['interface'] = 'eth0'
-default['seconion']['sensor']['mgmt']['ipv4'] = '127.0.0.1'
-default['seconion']['sensor']['mgmt']['netmask'] = '255.255.255.0'
-default['seconion']['sensor']['mgmt']['gateway'] = '127.0.0.1'
-default['seconion']['sensor']['mgmt']['nameserver'] = '127.0.0.1'
-default['seconion']['sensor']['mgmt']['domain'] = 'example.com'
+default[:seconion][:sensor][:mgmt][:interface] = 'eth0'
+default[:seconion][:sensor][:mgmt][:ipv4] = '127.0.0.1'
+default[:seconion][:sensor][:mgmt][:netmask] = '255.255.255.0'
+default[:seconion][:sensor][:mgmt][:gateway] = '127.0.0.1'
+default[:seconion][:sensor][:mgmt][:nameserver] = '127.0.0.1'
+default[:seconion][:sensor][:mgmt][:domain] = 'example.com'
 
 
 #########################
 # Network IDS
 #########################
 
-default['seconion']['sensor']['ids_engine'] = 'snort'
+default[:seconion][:sensor][:ids_engine] = 'snort'
 
 
 # BRO_USER specifies the user account used to start Bro.
-default['seconion']['sensor']['bro_enabled'] = 'yes'
-default['seconion']['sensor']['bro_user'] = 'sguil'
-default['seconion']['sensor']['bro_group'] = 'sguil'
+default[:seconion][:sensor][:bro_enabled] = 'yes'
+default[:seconion][:sensor][:bro_user] = 'sguil'
+default[:seconion][:sensor][:bro_group] = 'sguil'
 
 # Bro Network Configuration File
 default['seconion']['sensor']["bro_network"] = [
@@ -79,44 +79,48 @@ default['seconion']['sensor']['bro_broccoli'] = [
 ]
 # The default is 4096.
 # High traffic networks may need to increase this.
-default['seconion']['sensor']['pf_ring_slots'] = 4096
+default[:seconion][:sensor][:pf_ring_slots] = 4096
 
-# The list of sensor definitions to apply to the hosts interfaces
-default['seconion']['sensor']['sniffing_interfaces'] = [
-  {
-    # interface to drop into promiscuious mode
-    'interface' => 'eth1',
-    # mtu for promiscuious nic
-    'mtu' => '1530',
-    # name of sensor in sguil and directory structure
-    'sensorname' => 'sowan',
-    # enable the ids engine 
-    'ids_engine_enabled' => true,
-    # type of ids engine (snort/suriciata)
-    'ids_engine' => 'snort',
-    # load balance instances for ids engine
-    'ids_lb_procs' => 1,
-    # enable squil agent to send ids alerts to server (applies to snort and suricata)
-    'snort_agent_enabled' => true,
-    # barnyard2 sends snort/suricata alerts to the snort agent and other destinations
-    'barnyard2_enabled' => true,
-    # enable the Bro IDS
-    'bro_enabled' => true,
-    # load balance instances for Bro IDS
-    'bro_lb_procs' => 1,
-    # extract files using bro based on mimetypes
-    'bro_extract_files' => false,
-    # enable netsniff-ng full packet capture
-    'pcap_enabled' => true,
-    # enable sguil agent to pull pcaps from the sguil client
-    'pcap_agent_enabled' => true,
-    # how large to make the pcap files in MB
-    'pcap_size' => 150,
-    # how big of a ring buffer for netsniff-ng
-    'pcap_ring_size' => 128,
-    # additional pcap options to be sent to the netsniff-ng command
-    'pcap_options' => '--mmap'
-  }]
+# List of sniffing interfaces
+default[:seconion][:sensor][:sniffing_interfaces] = []
+
+
+#####################
+# Sniffing Defaults
+#####################
+# interface to drop into promiscuious mode
+default[:seconion][:sensor][:sniff][:interface] = 'eth1',
+# mtu for promiscuious nic
+default[:seconion][:sensor][:sniff][:mtu] = '1530',
+# name of sensor in sguil and directory structure
+default[:seconion][:sensor][:sniff][:sensorname] = 'sensorname',
+# enable the ids engine 
+default[:seconion][:sensor][:sniff][:ids_engine_enabled] = true,
+# type of ids engine (snort/suriciata)
+default[:seconion][:sensor][:sniff][:ids_engine] = 'snort',
+# load balance instances for ids engine
+default[:seconion][:sensor][:sniff][:ids_lb_procs] = 1,
+# enable squil agent to send ids alerts to server (applies to snort and suricata)
+default[:seconion][:sensor][:sniff][:snort_agent_enabled] = true,
+# barnyard2 sends snort/suricata alerts to the snort agent and other destinations
+default[:seconion][:sensor][:sniff][:barnyard2_enabled] = true,
+# enable the Bro IDS
+default[:seconion][:sensor][:sniff][:bro_enabled] = true,
+# load balance instances for Bro IDS
+default[:seconion][:sensor][:sniff][:bro_lb_procs] = 1,
+# extract files using bro based on mimetypes
+default[:seconion][:sensor][:sniff][:bro_extract_files] = false,
+# enable netsniff-ng full packet capture
+default[:seconion][:sensor][:sniff][:pcap_enabled] = true,
+# enable sguil agent to pull pcaps from the sguil client
+default[:seconion][:sensor][:sniff][:pcap_agent_enabled] = true,
+# how large to make the pcap files in MB
+default[:seconion][:sensor][:sniff][:pcap_size] = 150,
+# how big of a ring buffer for netsniff-ng
+default[:seconion][:sensor][:sniff][:pcap_ring_size] = 128,
+# additional pcap options to be sent to the netsniff-ng command
+default[:seconion][:sensor][:sniff][:pcap_options] = '--mmap'
+
 
 #########################
 # Network IDS Rules
@@ -126,5 +130,11 @@ default['seconion']['sensor']['sniffing_interfaces'] = [
 # rule-update will copy rules from master server and then try to run PulledPork locally for tuning
 # LOCAL_NIDS_RULE_TUNING=no
 # rule-update will copy rules from master server as-is (no changes)
-default['seconion']['sensor']['local_nids_rule_tuning'] = 'yes'
+
+default[:seconion][:sensor][:vrt_rules_enabled] = true
+default[:seconion][:sensor][:vrtopen_rules_enabled] = false
+default[:seconion][:sensor][:etpro_rules_enabled] = true
+default[:seconion][:sensor][:etgpl_rules_enabled] = false
+
+default[:seconion][:sensor][:local_nids_rule_tuning] = 'yes'
 
