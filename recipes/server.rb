@@ -18,7 +18,7 @@ directories.each do |path|
   directory path do
     owner 'root'
     group 'root'
-    mode '0700'
+    mode '0755'
     action :create
   end
 end
