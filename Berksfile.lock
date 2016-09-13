@@ -4,4 +4,4 @@ DEPENDENCIES
     metadata: true
 
 GRAPH
-  seconion (0.2.1)
+  seconion (0.2.2)

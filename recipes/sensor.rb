@@ -23,16 +23,6 @@ directories.each do |path|
 	end
 end
 
-############
-# SSH Keys
-############
-directory  do
-  owner 'root'
-  group 'root'
-  mode '0700'
-  action :create
-end
-
 execute 'ssh-keygen -f "/root/.ssh/securityonion" -N \'\'' do
   not_if do ::File.exists?('/root/.ssh/securityonion') end
 end
