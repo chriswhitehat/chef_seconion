@@ -23,6 +23,11 @@ directories.each do |path|
 	end
 end
 
+
+###########
+# SSH Sensor Config
+###########
+
 execute 'ssh-keygen -f "/root/.ssh/securityonion" -N \'\'' do
   not_if do ::File.exists?('/root/.ssh/securityonion') end
 end
@@ -32,6 +37,14 @@ if File.exists?('/root/.ssh/securityonion.pub')
 else
   node.default[:seconion][:so_ssh_pub] = '' 
 end
+
+template '/root/.ssh/securityonion_ssh.conf' do
+  source 'sensor/securityonion_ssh.conf.erb'
+  mode '0600'
+  owner 'root'
+  group 'root'
+end
+
 
 
 ###########
