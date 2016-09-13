@@ -15,7 +15,7 @@ directories = [ '/nsm/server_data/',
                 '/nsm/server_data/securityonion/rules/']
 
 directories.each do |path|
-  directory dir do
+  directory path do
     owner 'root'
     group 'root'
     mode '0700'

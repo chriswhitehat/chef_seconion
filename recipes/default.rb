@@ -25,7 +25,7 @@ directories = ['/nsm',
 
 
 directories.each do |path|
-  directory dir do
+  directory path do
 	  owner 'root'
 	  group 'root'
 	  mode '0700'

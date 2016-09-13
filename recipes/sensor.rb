@@ -15,7 +15,7 @@ package ['securityonion-sensor', 'syslog-ng-core']
 directories = ['/nsm/sensor_data']
 
 directories.each do |path|
-  directory dir do
+  directory path do
 	  owner 'root'
 	  group 'root'
 	  mode '0700'
