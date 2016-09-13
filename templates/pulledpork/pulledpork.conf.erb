@@ -27,6 +27,7 @@
 rule_url=https://www.snort.org/reg-rules/|snortrules-snapshot.tar.gz|<%= node[:seconion][:server][:vrt_oinkcode] %>
 <% else %>
 #rule_url=https://www.snort.org/reg-rules/|snortrules-snapshot.tar.gz|<oinkcode>
+<% end %>
 
 # NEW Community ruleset:
 # NEW For IP Blacklisting! Note the format is urltofile|IPBLACKLIST|<oinkcode>
@@ -37,11 +38,13 @@ rule_url=https://www.snort.org/reg-rules/|snortrules-snapshot.tar.gz|<%= node[:s
 rule_url=https://www.snort.org/reg-rules/|opensource.gz|<%= node[:seconion][:server][:vrt_oinkcode] %> 
 <% else %>
 #rule_url=https://www.snort.org/reg-rules/|opensource.gz|<oinkcode>
+<% end %>
 
 <% if node[:seconion][:sensor][:etgpl_rules_enabled] %>
 rule_url=https://rules.emergingthreatspro.com/|emerging.rules.tar.gz|open
 <% else %>
 #rule_url=https://rules.emergingthreatspro.com/|emerging.rules.tar.gz|open
+<% end %>
 
 # THE FOLLOWING URL is for etpro downloads, note the tarball name change!
 # and the et oinkcode requirement!
@@ -50,6 +53,7 @@ rule_url=https://rules.emergingthreatspro.com/|emerging.rules.tar.gz|open
 rule_url=https://rules.emergingthreatspro.com/|etpro.rules.tar.gz|<%= node[:seconion][:server][:etpro_oinkcode] %> 
 <% else %>
 #rule_url=https://rules.emergingthreatspro.com/|etpro.rules.tar.gz|<et oinkcode>
+<% end %>
 
 # NOTE above that the VRT snortrules-snapshot does not contain the version
 # portion of the tarball name, this is because PP now automatically populates
