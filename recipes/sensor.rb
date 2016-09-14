@@ -5,7 +5,7 @@
 # Copyright (c) 2016 The Authors, All Rights Reserved.
 
 
-def sniffing_interface do
+def sniffing_interface
   sniff = {
     # interface to drop into promiscuious mode
     'interface' => default[:seconion][:sensor][:sniff][:interface],
@@ -117,4 +117,5 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sensor|
       mode '0644'
     end
   end  
+
 end
