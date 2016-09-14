@@ -74,7 +74,7 @@ default['seconion']['sensor']['bro_broccoli'] = [
     'use_ssl' => 'yes',
     'ca_cert' => '<path>/ca_cert.pem',
     'host_cert' => '<path>/bro_cert.pem',
-    'host_pass' =>
+    'host_pass' => ''
   }
 ]
 # The default is 4096.
