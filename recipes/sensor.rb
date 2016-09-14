@@ -137,4 +137,12 @@ end
 ############
 # Configure Bro 
 ############
-template ''
+template '/opt/bro/etc/node.cfg' do
+  source 'bro/node.cfg.erb'
+  mode '0644'
+  owner 'root'
+  group 'root'
+  variables (
+    :sniffing_interfaces => node[:seconion][:sensor][:sniffing_interfaces]
+  )
+end
