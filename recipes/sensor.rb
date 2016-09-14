@@ -114,8 +114,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sensor|
   
   pulledpork_confs = ['disablesid', 'dropsid', 'enablesid', 'modifysid', 'pulledpork']
   pulledpork_confs.each do |conf|
-    template "/etc/nsm/pulledpork/#{sensor[:sensorname]}/#{conf}" do
-      source "#{conf}.conf.erb"
+    template "/etc/nsm/pulledpork/#{sensor[:sensorname]}/#{conf}.conf" do
+      source "pulledpork/#{conf}.conf.erb"
       owner 'root'
       group 'root'
       mode '0644'
