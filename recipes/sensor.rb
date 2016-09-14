@@ -108,3 +108,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sensor|
     action :create
   end
 end
+
+
+############
+# Configure Bro 
+############
+template ''
