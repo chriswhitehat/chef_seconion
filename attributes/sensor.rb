@@ -67,18 +67,6 @@ default[:seconion][:sensor][:bro_network] = [
   }   
 ]
 
-# Bro Node Configuration File
-default[:seconion][:sensor][:bro_broccoli] = [
-    #VERIFY THIS IS WHAT YOU WANT IN DMZ
-  {
-    'debug_messages' => 'yes',
-    'debug_calltrace' => 'yes',
-    'use_ssl' => 'yes',
-    'ca_cert' => '<path>/ca_cert.pem',
-    'host_cert' => '<path>/bro_cert.pem',
-    'host_pass' => ''
-  }
-]
 # The default is 4096.
 # High traffic networks may need to increase this.
 default[:seconion][:sensor][:pf_ring_slots] = 4096
@@ -125,7 +113,7 @@ default[:seconion][:sensor][:sniff][:pcap_options] = '--mmap'
 
 
 #########################
-# Network IDS Rules
+# Netwogit stark IDS Rules
 #########################
 
 # LOCAL_NIDS_RULE_TUNING=yes
