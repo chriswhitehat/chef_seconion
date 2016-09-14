@@ -95,6 +95,7 @@ template '/etc/nsm/securityonion.conf' do
   group 'root'
 end
 
+node[:seconion][:sensor][:sniffing_interfaces] << sniffing_interface()
 
 ############
 # Configure Sensors
