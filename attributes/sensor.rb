@@ -72,8 +72,8 @@ default['seconion']['sensor']['bro_broccoli'] = [
     'debug_messages' => 'yes',
     'debug_calltrace' => 'yes',
     'use_ssl' => 'yes',
-    'ca_cert' => '<path>/ca_cert.pem'
-    'host_cert' => '<path>/bro_cert.pem'
+    'ca_cert' => '<path>/ca_cert.pem',
+    'host_cert' => '<path>/bro_cert.pem',
     'host_pass' =>
   }
 ]
