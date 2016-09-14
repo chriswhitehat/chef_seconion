@@ -95,8 +95,8 @@ template '/etc/nsm/securityonion.conf' do
   group 'root'
 end
 
-testnode1 = sniffing_interface()
-testnode2 = sniffing_interface()
+testsensor1 = sniffing_interface()
+testsensor2 = sniffing_interface()
 testsensor1[:sensorname] = 'testsensor1'
 testsensor1[:interface] = 'eth0'
 
