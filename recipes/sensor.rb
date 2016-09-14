@@ -143,6 +143,6 @@ template '/opt/bro/etc/node.cfg' do
   owner 'root'
   group 'root'
   variables (
-    :sniffing_interfaces => node[:seconion][:sensor][:sniffing_interfaces]
+    :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
 end
