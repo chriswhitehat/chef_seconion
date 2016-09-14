@@ -95,7 +95,16 @@ template '/etc/nsm/securityonion.conf' do
   group 'root'
 end
 
-node.default[:seconion][:sensor][:sniffing_interfaces] << sniffing_interface()
+testnode1 = sniffing_interface()
+testnode2 = sniffing_interface()
+testsensor1[:sensorname] = 'testsensor1'
+testsensor1[:interface] = 'eth0'
+
+testsensor2[:sensorname] = 'testsensor2'
+testsensor2[:interface] = 'eth1'
+
+node.default[:seconion][:sensor][:sniffing_interfaces] << testsensor1
+node.default[:seconion][:sensor][:sniffing_interfaces] << testsensor2
 
 ############
 # Configure Sensors
