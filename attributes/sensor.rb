@@ -57,15 +57,6 @@ default[:seconion][:sensor][:bro_enabled] = 'yes'
 default[:seconion][:sensor][:bro_user] = 'sguil'
 default[:seconion][:sensor][:bro_group] = 'sguil'
 
-# Bro Network Configuration File
-default[:seconion][:sensor][:bro_network] = [
-    #FIX This will pull config from the sniffing interfaces
-  {
-    'type' => 'standalone',
-    'host' => 'localhost',
-    'interface' => 'eth0'
-  }   
-]
 
 # The default is 4096.
 # High traffic networks may need to increase this.
