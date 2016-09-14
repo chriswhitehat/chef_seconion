@@ -35,7 +35,7 @@ rule_url=https://www.snort.org/reg-rules/|snortrules-snapshot.tar.gz|<%= node[:s
 #rule_url=http://labs.snort.org/feeds/ip-filter.blf|IPBLACKLIST|open
 # URL for rule documentation! (slow to process)
 <% if node[:seconion][:sensor][:vrtopen_rules_enabled] %>
-rule_url=https://www.snort.org/reg-rules/|opensource.gz|<%= node[:seconion][:server][:vrt_oinkcode] %> 
+rule_url=https://www.snort.org/reg-rules/|opensource.gz|<%= node[:seconion][:server][:vrt_oinkcode] %>
 <% else %>
 #rule_url=https://www.snort.org/reg-rules/|opensource.gz|<oinkcode>
 <% end %>

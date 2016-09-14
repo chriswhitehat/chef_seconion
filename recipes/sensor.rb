@@ -132,3 +132,17 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sensor|
   end  
 
 end
+
+
+############
+# Configure Bro 
+############
+template '/opt/bro/etc/node.cfg' do
+  source 'bro/node.cfg.erb'
+  mode '0644'
+  owner 'root'
+  group 'root'
+  variables (
+    :sniffing_interfaces => node[:seconion][:sensor][:sniffing_interfaces]
+  )
+end
