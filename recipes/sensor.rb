@@ -8,37 +8,37 @@
 def sniffing_interface
   sniff = {
     # interface to drop into promiscuious mode
-    'interface' => default[:seconion][:sensor][:sniff][:interface],
+    'interface' => node[:seconion][:sensor][:sniff][:interface],
     # mtu for promiscuious nic
-    'mtu' => default[:seconion][:sensor][:sniff][:mtu],
+    'mtu' => node[:seconion][:sensor][:sniff][:mtu],
     # name of sensor in sguil and directory structure
-    'sensorname' => default[:seconion][:sensor][:sniff][:sensorname],
+    'sensorname' => node[:seconion][:sensor][:sniff][:sensorname],
     # enable the ids engine 
-    'ids_engine_enabled' => default[:seconion][:sensor][:sniff][:ids_engine_enabled],
+    'ids_engine_enabled' => node[:seconion][:sensor][:sniff][:ids_engine_enabled],
     # type of ids engine (snort/suriciata)
-    'ids_engine' => default[:seconion][:sensor][:sniff][:ids_engine],
+    'ids_engine' => node[:seconion][:sensor][:sniff][:ids_engine],
     # load balance instances for ids engine
-    'ids_lb_procs' => default[:seconion][:sensor][:sniff][:ids_lb_procs],
+    'ids_lb_procs' => node[:seconion][:sensor][:sniff][:ids_lb_procs],
     # enable squil agent to send ids alerts to server (applies to snort and suricata)
-    'snort_agent_enabled' => default[:seconion][:sensor][:sniff][:snort_agent_enabled],
+    'snort_agent_enabled' => node[:seconion][:sensor][:sniff][:snort_agent_enabled],
     # barnyard2 sends snort/suricata alerts to the snort agent and other destinations
-    'barnyard2_enabled' => default[:seconion][:sensor][:sniff][:barnyard2_enabled],
+    'barnyard2_enabled' => node[:seconion][:sensor][:sniff][:barnyard2_enabled],
     # enable the Bro IDS
-    'bro_enabled' => default[:seconion][:sensor][:sniff][:bro_enabled],
+    'bro_enabled' => node[:seconion][:sensor][:sniff][:bro_enabled],
     # load balance instances for Bro IDS
-    'bro_lb_procs' => default[:seconion][:sensor][:sniff][:bro_lb_procs],
+    'bro_lb_procs' => node[:seconion][:sensor][:sniff][:bro_lb_procs],
     # extract files using bro based on mimetypes
-    'bro_extract_files' => default[:seconion][:sensor][:sniff][:bro_extract_files],
+    'bro_extract_files' => node[:seconion][:sensor][:sniff][:bro_extract_files],
     # enable netsniff-ng full packet capture
-    'pcap_enabled' => default[:seconion][:sensor][:sniff][:pcap_enabled],
+    'pcap_enabled' => node[:seconion][:sensor][:sniff][:pcap_enabled],
     # enable sguil agent to pull pcaps from the sguil client
-    'pcap_agent_enabled' => default[:seconion][:sensor][:sniff][:pcap_agent_enabled],
+    'pcap_agent_enabled' => node[:seconion][:sensor][:sniff][:pcap_agent_enabled],
     # how large to make the pcap files in MB
-    'pcap_size' => default[:seconion][:sensor][:sniff][:pcap_size],
+    'pcap_size' => node[:seconion][:sensor][:sniff][:pcap_size],
     # how big of a ring buffer for netsniff-ng
-    'pcap_ring_size' => default[:seconion][:sensor][:sniff][:pcap_ring_size],
+    'pcap_ring_size' => node[:seconion][:sensor][:sniff][:pcap_ring_size],
     # additional pcap options to be sent to the netsniff-ng command
-    'pcap_options' => default[:seconion][:sensor][:sniff][:pcap_options]}
+    'pcap_options' => node[:seconion][:sensor][:sniff][:pcap_options]}
   return sniff
 end
 
