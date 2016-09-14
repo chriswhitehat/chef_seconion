@@ -58,16 +58,18 @@ default[:seconion][:sensor][:bro_user] = 'sguil'
 default[:seconion][:sensor][:bro_group] = 'sguil'
 
 # Bro Network Configuration File
-default['seconion']['sensor']["bro_network"] = [
+default[:seconion][:sensor][:bro_network] = [
+    #FIX This will pull config from the sniffing interfaces
   {
     'type' => 'standalone',
     'host' => 'localhost',
-    'interface' => 'etho0'
+    'interface' => 'eth0'
   }   
 ]
 
 # Bro Node Configuration File
-default['seconion']['sensor']['bro_broccoli'] = [
+default[:seconion][:sensor][:bro_broccoli] = [
+    #VERIFY THIS IS WHAT YOU WANT IN DMZ
   {
     'debug_messages' => 'yes',
     'debug_calltrace' => 'yes',
