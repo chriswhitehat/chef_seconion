@@ -49,7 +49,10 @@ end
 package ['securityonion-sensor', 'syslog-ng-core']
 
 
-directories = ['/nsm/sensor_data']
+directories = ['/nsm/sensor_data',
+               '/opt/bro/share/bro/ghc_extraction',
+               '/opt/bro/share/bro/etpro',
+               '/opt/bro/share/bro/smtp-embedded-url-bloom']
 
 directories.each do |path|
   directory path do
@@ -130,7 +133,6 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sensor|
       mode '0644'
     end
   end  
-
 end
 
 
@@ -151,18 +153,6 @@ end
 ############
 # Create GHC Specific rule files for File Extraction
 ############
-folders = ['/opt/bro/share/bro/ghc_extraction',
-           '/opt/bro/share/bro/etpro',
-           '/opt/bro/share/bro/smtp-embedded-url-bloom']
-
-folders.each do |path|
-  directory path do
-    owner 'root'
-    group 'root'
-    mode '0755'
-    action :create
-  end
-end
 
 # Create files for ET Intelligence in Bro
 template '/opt/bro/share/bro/etpro/__load__.bro' do
@@ -179,10 +169,10 @@ template '/opt/bro/share/bro/etpro/etpro_intel.bro' do
    mode '0644'
 end
 
-# Gets dependency files for ET Pro
-cron 'test' do
+# Installing ET intelligence in Bro
+cron 'etpro_intel' do
   hour '1'
-  command 'wget -q https://rules.emergingthreats.net/#####<authorization code>#####/reputation/brorepdata.tar.gz && tar -xzf bro-repdata.tar.gz -C /opt/bro/share/bro/etpro && rm -rf bro-repdata.tar.gz > /dev/null 2>&1'
+  command 'wget -q https://rules.emergingthreats.net/#{oinkcode}/reputation/brorepdata.tar.gz && tar -xzf bro-repdata.tar.gz -C /opt/bro/share/bro/etpro && rm -rf bro-repdata.tar.gz > /dev/null 2>&1'
 end
 
 # Create files for SMTP embedded Url Bloom
@@ -234,8 +224,4 @@ ruby_block 'insert_line' do
 end
 
 
-# Installing ET intelligence in Bro
-cron 'test' do
-  hour '1'
-  command 'wget -q https://rules.emergingthreats.net/<oinkcode>/reputation/brorepdata.tar.gz && tar -xzf bro-repdata.tar.gz -C /opt/bro/share/bro/etpro && rm -rf bro-repdata.tar.gz > /dev/null 2>&1'
-end
+
