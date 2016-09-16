@@ -135,7 +135,17 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sensor|
   end  
 end
 
+############
+# Add options to sensor.conf 
+############
+# template templates/sensor/sensor.conf
 
+template '/etc/nsm/sensortab' do
+  source 'source.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
 
 
 
@@ -216,7 +226,7 @@ template '/opt/bro/share/bro/ghc_extraction/extract.bro' do
    mode '0644'
 end
 
-# Insert lines to load GHC, SMTP, and ETPRO file extraction 
+# Insert Command in File to load GHC, SMTP, and ETPRO file extraction specific to GHC
 ruby_block 'insert_line' do
   block do
     file = Chef::Util::FileEdit.new("/opt/bro/share/bro/site/local.bro")
@@ -227,5 +237,16 @@ ruby_block 'insert_line' do
   end
 end
 
+#########################################
+# Download rules using Pulledpork
+#########################################
 
+
+
+
+
+#########################################
+# Apache configuration
+#########################################
+#disable apache? Sensors don't use it. 
 
