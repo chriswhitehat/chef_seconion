@@ -136,6 +136,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sensor|
 end
 
 
+
+
+
 ############
 # Configure Bro 
 ############
@@ -151,6 +154,7 @@ end
 
 
 ############
+# Configure Bro Continued
 # Create GHC Specific rule files for File Extraction
 ############
 

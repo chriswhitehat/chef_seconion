@@ -6,4 +6,4 @@ Account for servername localhost on sguil server.
 
 
 Bro: 
-Determine Home_Net logic and configuration for sensors - network.cfg.erb
+Determine Home_Net configuration for sensors - network.cfg.erb
