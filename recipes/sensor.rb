@@ -157,7 +157,7 @@ template '/opt/bro/etc/node.cfg' do
   mode '0644'
   owner 'root'
   group 'root'
-  variables (
+  variables ( 
     :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
 end
@@ -169,25 +169,25 @@ end
 ############
 
 # Create files for ET Intelligence in Bro
-template '/opt/bro/share/bro/etpro/__load__.bro' do
-   source 'bro/extraction/etpro/__load__.bro.erb'
-   owner 'root'
-   group 'root'
-   mode '0644'
-end
+# template '/opt/bro/share/bro/etpro/__load__.bro' do
+#    source 'bro/extraction/etpro/__load__.bro.erb'
+#    owner 'root'
+#    group 'root'
+#    mode '0644'
+# end
 
-template '/opt/bro/share/bro/etpro/etpro_intel.bro' do
-   source 'bro/extraction/etpro/etpro_intel.bro.erb'
-   owner 'root'
-   group 'root'
-   mode '0644'
-end
+# template '/opt/bro/share/bro/etpro/etpro_intel.bro' do
+#    source 'bro/extraction/etpro/etpro_intel.bro.erb'
+#    owner 'root'
+#    group 'root'
+#    mode '0644'
+# end
 
 # Installing ET intelligence in Bro
-cron 'etpro_intel' do
-  hour '1'
-  command 'wget -q https://rules.emergingthreats.net/#{oinkcode}/reputation/brorepdata.tar.gz && tar -xzf bro-repdata.tar.gz -C /opt/bro/share/bro/etpro && rm -rf bro-repdata.tar.gz > /dev/null 2>&1'
-end
+# cron 'etpro_intel' do
+#   hour '1'
+#   command 'wget -q https://rules.emergingthreats.net/#{oinkcode}/reputation/brorepdata.tar.gz && tar -xzf bro-repdata.tar.gz -C /opt/bro/share/bro/etpro && rm -rf bro-repdata.tar.gz > /dev/null 2>&1'
+# end
 
 # Create files for SMTP embedded Url Bloom
 template '/opt/bro/share/bro/smtp-embedded-url-bloom/__load__.bro' do
