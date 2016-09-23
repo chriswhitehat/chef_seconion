@@ -48,7 +48,6 @@ default[:seconion][:sensor][:mgmt][:domain] = 'example.com'
 #########################
 # Network IDS
 #########################
-
 default[:seconion][:sensor][:ids_engine] = 'snort'
 
 
