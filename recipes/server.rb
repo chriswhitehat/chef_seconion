@@ -8,7 +8,8 @@ apt_repository 'SecurityOnion' do
   uri 'ppa:securityonion/stable'
 end
 
-directories = [ '/nsm/server_data/',
+directories = [ '/nsm',
+                '/nsm/server_data/',
                 '/nsm/server_data/securityonion/',
                 '/nsm/server_data/securityonion/archive/',
                 '/nsm/server_data/securityonion/load/',
