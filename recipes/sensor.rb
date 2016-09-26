@@ -219,7 +219,7 @@ template '/opt/bro/share/bro/ghc_extraction/__load__.bro' do
 end
 
 template '/opt/bro/share/bro/ghc_extraction/extract.bro' do
-   source 'bro/extraction/extract.bro.erb'
+   source 'bro/extraction/ghc/extract.bro.erb'
    owner 'root'
    group 'root'
    mode '0644'
