@@ -140,12 +140,12 @@ end
 ############
 # template templates/sensor/sensor.conf
 
-template '/etc/nsm/sensortab' do
-  source 'source.erb'
-  owner 'root'
-  group 'root'
-  mode '0644'
-end
+# template '/etc/nsm/sensortab' do
+#   source 'source.erb'
+#   owner 'root'
+#   group 'root'
+#   mode '0644'
+# end
 
 
 ############
