@@ -197,14 +197,14 @@ template '/opt/bro/share/bro/smtp-embedded-url-bloom/__load__.bro' do
 end
 
 template '/opt/bro/share/bro/smtp-embedded-url-bloom/smtp-embedded-url-bloom-ghc.bro' do
-   source 'bro/extraction/etpro/smtp-embedded-url-bloom-ghc.bro.erb'
+   source 'bro/extraction/smtp-embedded-url-bloom-ghc.bro.erb'
    owner 'root'
    group 'root'
    mode '0644'
 end
 
 template '/opt/bro/share/bro/smtp-embedded-url-bloom/smtp-embedded-url-cluster.bro' do
-   source 'bro/extraction/etpro/smtp-embedded-url-cluster.bro.erb'
+   source 'bro/extraction/smtp-embedded-url-cluster.bro.erb'
    owner 'root'
    group 'root'
    mode '0644'
@@ -212,14 +212,14 @@ end
 
 # Create files for GHC File Extraction
 template '/opt/bro/share/bro/ghc_extraction/__load__.bro' do
-   source 'bro/extraction/etpro/ghc_extraction/__load__.bro.erb'
+   source 'bro/extraction/ghc/__load__.bro.erb'
    owner 'root'
    group 'root'
    mode '0644'
 end
 
 template '/opt/bro/share/bro/ghc_extraction/extract.bro' do
-   source 'bro/extraction/etpro/ghc_extraction/extract.bro.erb'
+   source 'bro/extraction/extract.bro.erb'
    owner 'root'
    group 'root'
    mode '0644'
