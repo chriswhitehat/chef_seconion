@@ -190,7 +190,7 @@ end
 
 # Create files for SMTP embedded Url Bloom
 template '/opt/bro/share/bro/smtp-embedded-url-bloom/__load__.bro' do
-   source 'bro/extraction/smtp-embedded-url-bloom/smtp-embedded-url-bloom/__load__.bro.erb'
+   source 'bro/extraction/smtp-embedded-url-bloom/__load__.bro.erb'
    owner 'root'
    group 'root'
    mode '0644'
