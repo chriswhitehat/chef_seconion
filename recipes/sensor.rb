@@ -147,7 +147,7 @@ template '/etc/nsm/sensortab' do
   mode '0644'
 end
 
-
+sniffing_interfaces = node['seconion']['sensor']['sniffing_interfaces']
 
 ############
 # Configure Bro 
@@ -158,7 +158,7 @@ template '/opt/bro/etc/node.cfg' do
   owner 'root'
   group 'root'
   variables ( 
-    :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
+    :sniffing_interfaces => sniffing_interfaces
   )
 end
 
