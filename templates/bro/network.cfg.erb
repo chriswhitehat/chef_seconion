@@ -11,6 +11,6 @@
 
 
 ##NEED TO REPLACE WITH LOGIC TO DETERMINE FULL HOME_NET##
-<% node[:seconion][:sensor][:sniff][:homenet].each do |net, desc| %>
+<% for @net, @desc in node[:seconion][:sensor][:sniff][:homenet] %>
 <%= @net %>		<%= @desc %>
 <% end %>
