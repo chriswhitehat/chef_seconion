@@ -82,7 +82,8 @@ end
 # Configure Sensors
 ############
 node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
-  directories = ["/etc/nsm/pulledpork/#{sniff[:sensorname]}"]
+  directories = ["/etc/nsm/#{sniff[:sensorname]}",
+                  "/etc/nsm/pulledpork/#{sniff[:sensorname]}"]
 
   directories.each do |path|
     directory path do
@@ -105,6 +106,16 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       )
     end
   end  
+
+  template "/etc/nsm/#{sniff[:sensorname]}/snort.conf" do
+    source 'snort/snort.conf.erb'
+    mode '0644'
+    owner 'root'
+    group 'root'
+    variables( 
+      :sniff => sniff
+    )
+  end
 end
 
 ############
@@ -118,7 +129,6 @@ end
 #   group 'root'
 #   mode '0644'
 # end
-
 
 ############
 # Configure Bro 
