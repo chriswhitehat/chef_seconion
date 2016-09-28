@@ -133,6 +133,12 @@ template '/opt/bro/etc/node.cfg' do
   )
 end
 
+template '/opt/bro/etc/network.cfg' do
+  source 'bro/network.cfg.erb'
+  mode '0644'
+  owner 'root'
+  group 'root'
+end
 
 ############
 # Configure Bro Continued
