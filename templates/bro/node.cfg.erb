@@ -25,10 +25,10 @@ type=proxy
 host=localhost
 
 <% for @sniff in @sniffing_interfaces %>
-	[<%= node[:seconion][:sensor][:sniff][:sensorname] %>]
-	type=worker
-	host=<%= node[:seconion][:sensor][:sniff][:host] %>
-	interface= <%= node[:seconion][:sensor][:sniff][:interface] %>
-	lb_method=pf_ring
-	lb_procs=<%= node[:seconion][:sensor][:sniff][:bro_lb_procs] %>
+[<%@sniff[:sensorname]%>]
+type=worker
+host=localhost
+interface= <%=@sniff[:interface] %>
+lb_method=pf_ring
+lb_procs=<%= @sniff[:bro_lb_procs] %>
 <%end %>
