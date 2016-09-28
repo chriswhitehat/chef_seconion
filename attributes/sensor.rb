@@ -74,9 +74,9 @@ default[:seconion][:sensor][:sniff][:mtu] = '1530',
 # name of sensor in sguil and directory structure
 default[:seconion][:sensor][:sniff][:sensorname] = 'sensorname',
 # homenet definition
-default[:seconion][:sensor][:sniff][:homenet] = [('192.168.0.0/16', 'rfc1918 IP Space'),
-																									('10.0.0.0/8', 'rfc1918 IP Space'),
-																									('172.16.0.0/12', 'rfc1918 IP Space')],
+default[:seconion][:sensor][:sniff][:homenet] = [['192.168.0.0/16', 'rfc1918 IP Space'],
+																									['10.0.0.0/8', 'rfc1918 IP Space'],
+																									['172.16.0.0/12', 'rfc1918 IP Space']],
 # enable the ids engine 
 default[:seconion][:sensor][:sniff][:ids_engine_enabled] = true,
 # type of ids engine (snort/suriciata)
