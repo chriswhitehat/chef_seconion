@@ -4,7 +4,7 @@ maintainer_email 'chris.white.hat@gmail.com'
 license          'All rights reserved'
 description      'Installs/Configures Security Onion'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.2.45'
+version          '0.2.46'
 
 provides         'seconion::server'
 provides         'seconion::sensor'
