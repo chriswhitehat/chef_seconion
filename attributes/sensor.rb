@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+# List of sniffing interfaces
+default[:seconion][:sensor][:sniffing_interfaces] = []
 
 
 #########################
@@ -61,9 +63,6 @@ default[:seconion][:sensor][:bro_group] = 'sguil'
 # High traffic networks may need to increase this.
 default[:seconion][:sensor][:pf_ring_slots] = 4096
 
-# List of sniffing interfaces
-default[:seconion][:sensor][:sniffing_interfaces] = []
-
 
 #####################
 # Sniffing Defaults
@@ -102,8 +101,27 @@ default[:seconion][:sensor][:sniff][:pcap_ring_size] = 128,
 default[:seconion][:sensor][:sniff][:pcap_options] = '--mmap'
 
 
+sniff = {
+  'interface' => default[:seconion][:sensor][:sniff][:interface],
+  'mtu' => default[:seconion][:sensor][:sniff][:mtu],
+  'sensorname' => default[:seconion][:sensor][:sniff][:sensorname],
+  'ids_engine_enabled' => default[:seconion][:sensor][:sniff][:ids_engine_enabled],
+  'ids_engine' => default[:seconion][:sensor][:sniff][:ids_engine],
+  'ids_lb_procs' => default[:seconion][:sensor][:sniff][:ids_lb_procs],
+  'snort_agent_enabled' => default[:seconion][:sensor][:sniff][:snort_agent_enabled],
+  'barnyard2_enabled' => default[:seconion][:sensor][:sniff][:barnyard2_enabled],
+  'bro_enabled' => default[:seconion][:sensor][:sniff][:bro_enabled],
+  'bro_lb_procs' => default[:seconion][:sensor][:sniff][:bro_lb_procs],
+  'bro_extract_files' => default[:seconion][:sensor][:sniff][:bro_extract_files],
+  'pcap_enabled' => default[:seconion][:sensor][:sniff][:pcap_enabled],
+  'pcap_agent_enabled' => default[:seconion][:sensor][:sniff][:pcap_agent_enabled],
+  'pcap_size' => default[:seconion][:sensor][:sniff][:pcap_size],
+  'pcap_ring_size' => default[:seconion][:sensor][:sniff][:pcap_ring_size],
+  'pcap_options' => default[:seconion][:sensor][:sniff][:pcap_options]
+}
+
 #########################
-# Netwogit stark IDS Rules
+# Network IDS Rules
 #########################
 
 # LOCAL_NIDS_RULE_TUNING=yes
