@@ -108,7 +108,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end  
 
   homenet = []
-  sniff[:homenet].each do |net|
+  sniff[:homenet].each_pair do |net, desc|
     homenet << net
   end
   homenet = homenet.join(",")
