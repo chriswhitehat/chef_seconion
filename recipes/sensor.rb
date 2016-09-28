@@ -81,8 +81,8 @@ end
 ############
 # Configure Sensors
 ############
-node[:seconion][:sensor][:sniffing_interfaces].each do |sensor|
-  directories = ["/etc/nsm/pulledpork/#{sensor[:sensorname]}"]
+node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
+  directories = ["/etc/nsm/pulledpork/#{sniff[:sensorname]}"]
 
   directories.each do |path|
     directory path do
@@ -95,11 +95,14 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sensor|
   
   pulledpork_confs = ['disablesid', 'dropsid', 'enablesid', 'modifysid', 'pulledpork']
   pulledpork_confs.each do |conf|
-    template "/etc/nsm/pulledpork/#{sensor[:sensorname]}/#{conf}.conf" do
+    template "/etc/nsm/pulledpork/#{sniff[:sensorname]}/#{conf}.conf" do
       source "pulledpork/#{conf}.conf.erb"
       owner 'root'
       group 'root'
       mode '0644'
+      variables( 
+        :sniff => sniff
+      )
     end
   end  
 end

@@ -96,7 +96,7 @@ temp_path=/tmp
 # rules? (this value has changed as of 0.4.0, previously we copied 
 # all of the rules, now we are creating a single large rules file
 # but still keeping a separate file for your so_rules!
-rule_path=/etc/nsm/rules/<%= node[:seconion][:sensor][:sniff][:sensorname] %>/downloaded.rules
+rule_path=/etc/nsm/rules/<%= @sniff[:sensorname] %>/downloaded.rules
 
 # What path you want the .rules files to be written to, this is UNIQUE
 # from the rule_path and cannot be used in conjunction, this is to be used with the
@@ -111,10 +111,10 @@ rule_path=/etc/nsm/rules/<%= node[:seconion][:sensor][:sniff][:sensorname] %>/do
 # files that are local to your system here by adding a comma and more paths...
 # remember that the FULL path must be specified for EACH value.
 # local_rules=/path/to/these.rules,/path/to/those.rules
-local_rules=/etc/nsm/rules/<%= node[:seconion][:sensor][:sniff][:sensorname] %>/local.rules
+local_rules=/etc/nsm/rules/<%= @sniff[:sensorname] %>/local.rules
 
 # Where should I put the sid-msg.map file?
-sid_msg=/etc/nsm/rules/<%= node[:seconion][:sensor][:sniff][:sensorname] %>/sid-msg.map
+sid_msg=/etc/nsm/rules/<%= @sniff[:sensorname] %>/sid-msg.map
 
 # New for by2 and more advanced msg mapping.  Valid options are 1 or 2
 # specify version 2 if you are running barnyard2.2+.  Otherwise use 1
@@ -122,7 +122,7 @@ sid_msg_version=1
 
 # Where do you want me to put the sid changelog?  This is a changelog 
 # that pulledpork maintains of all new sids that are imported
-sid_changelog=/var/log/nsm/<%= node[:seconion][:sensor][:sniff][:sensorname] %>/sid_changes.log
+sid_changelog=/var/log/nsm/<%= @sniff[:sensorname] %>/sid_changes.log
 # this value is optional
 
 #######
@@ -134,7 +134,7 @@ sid_changelog=/var/log/nsm/<%= node[:seconion][:sensor][:sniff][:sensorname] %>/
 
 # What path you want the .so files to actually go to *i.e. where is it
 # defined in your snort.conf, needs a trailing slash
-sorule_path=/usr/local/lib/snort_dynamicrules/<%= node[:seconion][:sensor][:sniff][:sensorname] %>/
+sorule_path=/usr/local/lib/snort_dynamicrules/<%= @sniff[:sensorname] %>/
 
 # Path to the snort binary, we need this to generate the stub files
 snort_path=/usr/bin/snort
@@ -218,10 +218,10 @@ snort_control=/usr/local/bin/snort_control
 
 # Here you can specify what rule modification files to run automatically.
 # simply uncomment and specify the apt path.
-enablesid=/etc/nsm/pulledpork/<%= node[:seconion][:sensor][:sniff][:sensorname] %>/enablesid.conf
-dropsid=/etc/nsm/pulledpork/<%= node[:seconion][:sensor][:sniff][:sensorname] %>/dropsid.conf
-disablesid=/etc/nsm/pulledpork/<%= node[:seconion][:sensor][:sniff][:sensorname] %>/disablesid.conf
-modifysid=/etc/nsm/pulledpork/<%= node[:seconion][:sensor][:sniff][:sensorname] %>/modifysid.conf
+enablesid=/etc/nsm/pulledpork/<%= @sniff[:sensorname] %>/enablesid.conf
+dropsid=/etc/nsm/pulledpork/<%= @sniff[:sensorname] %>/dropsid.conf
+disablesid=/etc/nsm/pulledpork/<%= @sniff[:sensorname] %>/disablesid.conf
+modifysid=/etc/nsm/pulledpork/<%= @sniff[:sensorname] %>/modifysid.conf
 
 # What is the base ruleset that you want to use, please uncomment to use
 # and see the README.RULESETS for a description of the options.  
