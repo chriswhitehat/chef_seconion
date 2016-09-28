@@ -101,7 +101,8 @@ default[:seconion][:sensor][:sniff][:pcap_ring_size] = 128,
 default[:seconion][:sensor][:sniff][:pcap_options] = '--mmap'
 
 
-sniff = {
+# This is a convenience variable, copy and paste into sensor recipes.
+template = {
   'interface' => default[:seconion][:sensor][:sniff][:interface],
   'mtu' => default[:seconion][:sensor][:sniff][:mtu],
   'sensorname' => default[:seconion][:sensor][:sniff][:sensorname],
