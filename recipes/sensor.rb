@@ -118,10 +118,10 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'root'
     group 'root'
-    variables( 
-      :sniff => sniff
+    variables({ 
+      :sniff => sniff,
       :homenet => homenet
-    )
+    })
   end
 end
 
