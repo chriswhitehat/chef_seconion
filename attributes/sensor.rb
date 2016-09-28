@@ -111,6 +111,7 @@ template = {
   'interface' => default[:seconion][:sensor][:sniff][:interface],
   'mtu' => default[:seconion][:sensor][:sniff][:mtu],
   'sensorname' => default[:seconion][:sensor][:sniff][:sensorname],
+  'homenet' = default[:seconion][:sensor][:sniff][:homenet],
   'ids_engine_enabled' => default[:seconion][:sensor][:sniff][:ids_engine_enabled],
   'ids_engine' => default[:seconion][:sensor][:sniff][:ids_engine],
   'ids_lb_procs' => default[:seconion][:sensor][:sniff][:ids_lb_procs],
