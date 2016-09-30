@@ -10,6 +10,8 @@
 # For example, "10.0.0.0/8" or "fe80::/64" are valid prefixes.
 
 
-<% for @net, @desc in node[:seconion][:sensor][:sniff][:homenet] %>
+<% for @sniff in @sniffing_interfaces %>
+  <% for @net, @desc in @sniff[:homenet] %>
 <%= @net %>		<%= @desc %>
+  <% end %>
 <% end %>

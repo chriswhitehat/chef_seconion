@@ -106,23 +106,15 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       )
     end
   end  
-  
 
-  homenet = []
-  sniff[:homenet].each_pair do |net, desc|
-    homenet << net
-  end
-  homenet = homenet.join(",")
-                 
   template "/etc/nsm/#{sniff[:sensorname]}/snort.conf" do
     source 'snort/snort.conf.erb'
     mode '0644'
     owner 'root'
     group 'root'
-    variables({ 
-      :sniff => sniff,
-      :homenet => homenet
-    })
+    variables(
+      :sniff => sniff
+    )
   end
 end
 
@@ -156,6 +148,9 @@ template '/opt/bro/etc/network.cfg' do
   mode '0644'
   owner 'root'
   group 'root'
+  variables( 
+    :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
+  )
 end
 
 ############
