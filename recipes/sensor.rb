@@ -83,7 +83,8 @@ end
 ############
 node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   directories = ["/etc/nsm/#{sniff[:sensorname]}",
-                  "/etc/nsm/pulledpork/#{sniff[:sensorname]}"]
+                  "/etc/nsm/pulledpork/#{sniff[:sensorname]}",
+                  "/opt/bro/share/bro/networks"]
 
   directories.each do |path|
     directory path do
@@ -109,6 +110,17 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   template "/etc/nsm/#{sniff[:sensorname]}/snort.conf" do
     source 'snort/snort.conf.erb'
+    mode '0644'
+    owner 'root'
+    group 'root'
+    variables(
+      :sniff => sniff
+    )
+  end
+
+
+  template "/opt/bro/share/bro/networks/#{sniff[:sensorname]}_networks.bro" do
+    source 'bro/networks/sniff_networks.bro.erb'
     mode '0644'
     owner 'root'
     group 'root'
@@ -145,6 +157,16 @@ end
 
 template '/opt/bro/etc/network.cfg' do
   source 'bro/network.cfg.erb'
+  mode '0644'
+  owner 'root'
+  group 'root'
+  variables( 
+    :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
+  )
+end
+
+template '/opt/bro/share/bro/networks/__load__.bro' do
+  source 'bro/networks/__load__.bro'
   mode '0644'
   owner 'root'
   group 'root'

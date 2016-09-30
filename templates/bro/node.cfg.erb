@@ -31,5 +31,6 @@ host=localhost
 interface=<%= @sniff[:interface] %>
 lb_method=pf_ring
 lb_procs=<%= @sniff[:bro_lb_procs] %>
+aux_scripts=<%= @sniff[:sensorname] %>_networks.bro
 
 <%end %>
