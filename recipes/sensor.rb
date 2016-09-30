@@ -166,7 +166,7 @@ template '/opt/bro/etc/network.cfg' do
 end
 
 template '/opt/bro/share/bro/networks/__load__.bro' do
-  source 'bro/networks/__load__.bro'
+  source 'bro/networks/__load__.bro.erb'
   mode '0644'
   owner 'root'
   group 'root'
