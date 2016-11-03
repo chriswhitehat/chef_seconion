@@ -6,3 +6,29 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+
+directories = ['/nsm',
+        			 '/var/log/nsm/',
+               '/var/log/nsm/securityonion/',
+        			 '/root/.ssh/',
+        			 '/etc/nsm/',
+               '/etc/nsm/rules/',
+               '/etc/nsm/rules/backup/',
+               '/etc/nsm/pulledpork',
+        			 '/usr/local/lib/snort_dynamicrules',
+        			 '/etc/mysql/',
+               '/etc/mysql/conf.d/',
+               '/nsm/bro',
+        			 '/nsm/bro/spool',
+        			 '/nsm/bro/logs',
+        			 '/nsm/bro/extracted']
+
+
+directories.each do |path|
+  directory path do
+	  owner 'root'
+	  group 'root'
+	  mode '0755'
+	  action :create
+	end
+end

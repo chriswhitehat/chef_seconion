@@ -8,9 +8,24 @@ apt_repository 'SecurityOnion' do
   uri 'ppa:securityonion/stable'
 end
 
-#directory '/etc/nsm/'
+directories = [ '/nsm',
+                '/nsm/server_data/',
+                '/nsm/server_data/securityonion/',
+                '/nsm/server_data/securityonion/archive/',
+                '/nsm/server_data/securityonion/load/',
+                '/nsm/server_data/securityonion/rules/']
+
+directories.each do |path|
+  directory path do
+    owner 'root'
+    group 'root'
+    mode '0755'
+    action :create
+  end
+end
 
 package ['securityonion-server', 'syslog-ng-core']
+
 
 template '/etc/nsm/securityonion.conf' do
   source 'default/securityonion.conf.erb'
@@ -30,6 +45,12 @@ sensors.each do |sensor|
   end
 end
 
+directory '/root/.ssh' do
+  owner 'root'
+  group 'root'
+  mode '0700'
+  action :create
+end
 
 template '/root/.ssh/authorized_keys' do
   source 'server/authorized_keys.erb'
