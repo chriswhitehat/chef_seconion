@@ -15,7 +15,8 @@ package ['securityonion-sensor', 'syslog-ng-core']
 directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/ghc_extraction',
                '/opt/bro/share/bro/etpro',
-               '/opt/bro/share/bro/smtp-embedded-url-bloom']
+               '/opt/bro/share/bro/smtp-embedded-url-bloom',
+                '/opt/bro/share/bro/networks']
 
 directories.each do |path|
   directory path do
