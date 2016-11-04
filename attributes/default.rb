@@ -9,3 +9,5 @@ default['seconion']['ids_engine'] = 'snort'
 # oinkcode here.
 default['seconion']['vrt_oinkcode'] = ''
 default['seconion']['etpro_oinkcode'] = ''
+
+default['seconion']['timezone'] = 'Etc/UTC'

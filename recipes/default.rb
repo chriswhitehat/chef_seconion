@@ -32,3 +32,20 @@ directories.each do |path|
 	  action :create
 	end
 end
+
+##########################
+# Timezone
+##########################
+
+template '/etc/timezone' do
+  source 'default/timezone.erb'
+  mode '0655'
+  owner 'root'
+  group 'root'
+  notifies :run, execute['set-timezone'], :immediately
+end
+
+execute 'set-timezone' do
+  command 'dpkg-reconfigure --frontend noninteractive tzdata'
+  action :nothing
+end
