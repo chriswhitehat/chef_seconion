@@ -183,14 +183,14 @@ end
 
 # Create files for ET Intelligence in Bro
 # template '/opt/bro/share/bro/etpro/__load__.bro' do
-#    source 'bro/extraction/etpro/__load__.bro.erb'
+#    source 'bro/etpro/__load__.bro.erb'
 #    owner 'root'
 #    group 'root'
 #    mode '0644'
 # end
 
 # template '/opt/bro/share/bro/etpro/etpro_intel.bro' do
-#    source 'bro/extraction/etpro/etpro_intel.bro.erb'
+#    source 'bro/etpro/etpro_intel.bro.erb'
 #    owner 'root'
 #    group 'root'
 #    mode '0644'
@@ -204,21 +204,21 @@ end
 
 # Create files for SMTP embedded Url Bloom
 template '/opt/bro/share/bro/smtp-embedded-url-bloom/__load__.bro' do
-   source 'bro/extraction/smtp-embedded-url-bloom/__load__.bro.erb'
+   source 'bro/smtp-embedded-url-bloom/__load__.bro.erb'
    owner 'root'
    group 'root'
    mode '0644'
 end
 
 template '/opt/bro/share/bro/smtp-embedded-url-bloom/smtp-embedded-url-bloom-ghc.bro' do
-   source 'bro/extraction/smtp-embedded-url-bloom/smtp-embedded-url-bloom-ghc.bro.erb'
+   source 'bro/smtp-embedded-url-bloom/smtp-embedded-url-bloom-ghc.bro.erb'
    owner 'root'
    group 'root'
    mode '0644'
 end
 
 template '/opt/bro/share/bro/smtp-embedded-url-bloom/smtp-embedded-url-cluster.bro' do
-   source 'bro/extraction/smtp-embedded-url-bloom/smtp-embedded-url-cluster.bro.erb'
+   source 'bro/smtp-embedded-url-bloom/smtp-embedded-url-cluster.bro.erb'
    owner 'root'
    group 'root'
    mode '0644'
