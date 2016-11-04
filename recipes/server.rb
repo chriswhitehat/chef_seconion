@@ -39,7 +39,9 @@ end
 sensor_ssh_keys = ''
 sensors = search(:node, 'recipes:seconion\:\:sensor')
 
-sensors.sort_by { |k, v| v[:hostname] }.each do |sensor|
+sorted_sensors = nodes.sort_by!{ |n| n[:fqdn] }
+
+sorted_sensors.each do |sensor|
   if sensor[:seconion][:so_ssh_pub]
     sensor_ssh_keys << sensor[:seconion][:so_ssh_pub]  
   end
