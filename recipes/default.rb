@@ -42,7 +42,7 @@ template '/etc/timezone' do
   mode '0655'
   owner 'root'
   group 'root'
-  notifies :run, execute['set-timezone'], :immediately
+  notifies :run, 'execute[set-timezone]', :immediately
 end
 
 execute 'set-timezone' do
