@@ -244,6 +244,9 @@ template '/opt/bro/share/bro/site/local.bro' do
    owner 'root'
    group 'root'
    mode '0644'
+   variables( 
+    :bro_scripts => node[:seconion][:sensor][:bro_script]
+  )
 end
 
 # Insert Command in File to load GHC, SMTP, and ETPRO file extraction specific to GHC
