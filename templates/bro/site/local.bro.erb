@@ -14,9 +14,9 @@
 
 <%s @bro_scripts.each_pair do |script, enabled| %>
 	<% if @enabled %>
-@load <%= #{script} %>
+<%= "@load #{script}" %>
 	<% else %>
-#@load <%= #{script} %>
+<%= "#@load #{script}" %>
 	<% end %>
 <% end %>
 
