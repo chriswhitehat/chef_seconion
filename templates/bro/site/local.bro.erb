@@ -12,10 +12,10 @@
 
 # Loop through default[:seconion][:sensor][:bro_script] and load up '@load <script>'
 
-<%s for @script, @enabled in @broscripts %>
-<% if @enabled %>
+<%s for @script, @enabled in @bro_scripts %>
+	<% if @enabled %>
 @load <%= @script %>
-<% else %>
+	<% else %>
 #@load <%= @script %>
 	<% end %>
 <% end %>
