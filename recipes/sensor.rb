@@ -239,16 +239,23 @@ template '/opt/bro/share/bro/ghc_extraction/extract.bro' do
    mode '0644'
 end
 
-# Insert Command in File to load GHC, SMTP, and ETPRO file extraction specific to GHC
-ruby_block 'insert_line' do
-  block do
-    file = Chef::Util::FileEdit.new("/opt/bro/share/bro/site/local.bro")
-    file.insert_line_if_no_match(/^@load smtp-embedded-url-bloom$/, "@load smtp-embedded-url-bloom")
-    file.insert_line_if_no_match(/^@load ghc_extraction$/, "@load ghc_extraction")
-    file.insert_line_if_no_match(/^@load etpro$/, "@load etpro")
-    file.write_file
-  end
+template '/opt/bro/share/bro/site/local.bro' do
+   source 'bro/site/local.bro.erb'
+   owner 'root'
+   group 'root'
+   mode '0644'
 end
+
+# Insert Command in File to load GHC, SMTP, and ETPRO file extraction specific to GHC
+# ruby_block 'insert_line' do
+#   block do
+#     file = Chef::Util::FileEdit.new("/opt/bro/share/bro/site/local.bro")
+#     file.insert_line_if_no_match(/^@load smtp-embedded-url-bloom$/, "@load smtp-embedded-url-bloom")
+#     file.insert_line_if_no_match(/^@load ghc_extraction$/, "@load ghc_extraction")
+#     file.insert_line_if_no_match(/^@load etpro$/, "@load etpro")
+#     file.write_file
+#   end
+# end
 
 #########################################
 # Download rules using Pulledpork
