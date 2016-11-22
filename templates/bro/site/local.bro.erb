@@ -8,9 +8,18 @@
 ##!
 ##! This file will not be overwritten when upgrading or reinstalling!
 
+# Load up enabled Bro Sigs (node[:seconion][:sensor][:bro_sig])
+
+<% @bro_sigs.each do |sig, enabled| %>
+	<% if enabled %>
+<%= "\@load #{sig}" %>
+	<% else %>
+<%= "\#\@load #{sig}" %>
+	<% end %>
+<% end %>
 
 
-# Loop through default[:seconion][:sensor][:bro_script] and load up '@load <script>'
+# Load up enabled Bro Scripts (node[:seconion][:sensor][:bro_script])
 
 <% @bro_scripts.each do |script, enabled| %>
 	<% if enabled %>
@@ -20,4 +29,3 @@
 	<% end %>
 <% end %>
 
-# Loop through default[:seconion][:sensor][:bro_sig] and load up '@load-sig <script>'
