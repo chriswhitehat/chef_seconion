@@ -46,7 +46,48 @@
 # 17803 "^\s*alert" "BLOCK";
 
 
-<% @modifysid_sigs.each do |sig, enabled| %>
+##########################
+# Global
+##########################
+
+<% @global_sigs.each do |sig, enabled| %>
+	<% if enabled %>
+<%= "#{sig}" %>
+	<% else %>
+<%= "\##{sig}" %>
+	<% end %>
+<% end %>
+
+##########################
+# Regional
+##########################
+
+<% @regional_sigs.each do |sig, enabled| %>
+	<% if enabled %>
+<%= "#{sig}" %>
+	<% else %>
+<%= "\##{sig}" %>
+	<% end %>
+<% end %>
+
+##########################
+# Host
+##########################
+
+<% @host_sigs.each do |sig, enabled| %>
+	<% if enabled %>
+<%= "#{sig}" %>
+	<% else %>
+<%= "\##{sig}" %>
+	<% end %>
+<% end %>
+
+
+##########################
+# Sensor 
+##########################
+
+<% @sensor_sigs.each do |sig, enabled| %>
 	<% if enabled %>
 <%= "#{sig}" %>
 	<% else %>

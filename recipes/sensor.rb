@@ -98,6 +98,28 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   
   pulledpork_confs = ['disablesid', 'dropsid', 'enablesid', 'modifysid', 'pulledpork']
   pulledpork_confs.each do |conf|
+
+    if node[:seconion][:sensor][:pulledpork][conf] do
+      if node[:seconion][:sensor][:pulledpork][conf][:global] do
+        global = node[:seconion][:sensor][:pulledpork][conf][:global]
+      else
+        global = {}
+
+      if node[:seconion][:sensor][:pulledpork][conf][:regional] do
+        regional = node[:seconion][:sensor][:pulledpork][conf][:regional]
+      else
+        regional = {}
+
+      if node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]] do
+        host = node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]]
+      else
+        host = {}
+
+      if node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]] do
+        sensor = node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]]
+      else
+        sensor = {}
+
     template "/etc/nsm/pulledpork/#{sniff[:sensorname]}/#{conf}.conf" do
       source "pulledpork/#{conf}.conf.erb"
       owner 'root'
@@ -105,10 +127,10 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       mode '0644'
       variables({
         :sniff => sniff,
-        :global_sigs => node[:seconion][:sensor][:pulledpork][conf][:global],
-        :regional_sigs => node[:seconion][:sensor][:pulledpork][conf][:regional], 
-        :host_sigs => node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]],
-        :sensor_sigs => node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]] 
+        :global_sigs => global
+        :regional_sigs => regional
+        :host_sigs => host
+        :sensor_sigs => sensor
       })
     end
   end  
