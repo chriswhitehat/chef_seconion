@@ -41,7 +41,7 @@
 ##########################
 
 # Example
-default[:seconion][:sensor][:pulledpork][:modifysid][:global]['pcre:ET CNC'] = true
+#default[:seconion][:sensor][:pulledpork][:modifysid][:global]['pcre:ET CNC'] = true
 
  
 ##########################
@@ -63,4 +63,4 @@ default[:seconion][:sensor][:pulledpork][:modifysid][:global]['pcre:ET CNC'] = t
 ##########################
 
 # Example
-default[:seconion][:sensor][:pulledpork][:modifysid]['DCA-DMZ-DMZ-ob1']['1:1034,1:9837,1:1270,1:3390,1:710,1:1249,3:13010'] = true
+#default[:seconion][:sensor][:pulledpork][:modifysid]['DCA-DMZ-DMZ-ob1']['1:1034,1:9837,1:1270,1:3390,1:710,1:1249,3:13010'] = true

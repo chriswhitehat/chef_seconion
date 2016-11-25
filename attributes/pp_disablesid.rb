@@ -49,7 +49,7 @@
 ##########################
 
 # Example
-default[:seconion][:sensor][:pulledpork][:disablesid][:regional]['1:220-1:3264'] = true
+#default[:seconion][:sensor][:pulledpork][:disablesid][:regional]['1:220-1:3264'] = true
 
 ##########################
 # Host

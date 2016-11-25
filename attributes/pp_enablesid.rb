@@ -41,7 +41,7 @@
 ##########################
 
 # Example
-default[:seconion][:sensor][:pulledpork][:enablesid][:global]['pcre:ET CNC'] = true
+#default[:seconion][:sensor][:pulledpork][:enablesid][:global]['pcre:ET CNC'] = true
 
  
 ##########################
