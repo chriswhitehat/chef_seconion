@@ -99,29 +99,29 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   pulledpork_confs = ['disablesid', 'dropsid', 'enablesid', 'modifysid', 'pulledpork']
   pulledpork_confs.each do |conf|
 
-    if node[:seconion][:sensor][:pulledpork][conf] do
-      if node[:seconion][:sensor][:pulledpork][conf][:global] do
+    if node[:seconion][:sensor][:pulledpork][conf] 
+      if node[:seconion][:sensor][:pulledpork][conf][:global] 
         global = node[:seconion][:sensor][:pulledpork][conf][:global]
       else
         global = {}
       end
-      if node[:seconion][:sensor][:pulledpork][conf][:regional] do
+      if node[:seconion][:sensor][:pulledpork][conf][:regional] 
         regional = node[:seconion][:sensor][:pulledpork][conf][:regional]
       else
         regional = {}
       end
-      if node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]] do
+      if node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]] 
         host = node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]]
       else
         host = {}
       end
-      if node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]] do
+      if node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]] 
         sensor = node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]]
       else
         sensor = {}
       end
     end
-    
+
     template "/etc/nsm/pulledpork/#{sniff[:sensorname]}/#{conf}.conf" do
       source "pulledpork/#{conf}.conf.erb"
       owner 'root'
