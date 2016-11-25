@@ -129,9 +129,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       mode '0644'
       variables({
         :sniff => sniff,
-        :global_sigs => global
-        :regional_sigs => regional
-        :host_sigs => host
+        :global_sigs => global,
+        :regional_sigs => regional,
+        :host_sigs => host,
         :sensor_sigs => sensor
       })
     end
