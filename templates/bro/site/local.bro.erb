@@ -8,7 +8,7 @@
 ##!
 ##! This file will not be overwritten when upgrading or reinstalling!
 
-# Load up enabled Bro Sigs (node[:seconion][:sensor][:bro_sig])
+# Load up enabled Bro Sigs e.g. node[:seconion][:sensor][:bro_sig]
 
 <% @bro_sigs.each do |sig, enabled| %>
 	<% if enabled %>
@@ -19,7 +19,7 @@
 <% end %>
 
 
-# Load up enabled Bro Scripts (node[:seconion][:sensor][:bro_script])
+# Load up enabled Bro Scripts e.g. node[:seconion][:sensor][:bro_script]
 
 <% @bro_scripts.each do |script, enabled| %>
 	<% if enabled %>

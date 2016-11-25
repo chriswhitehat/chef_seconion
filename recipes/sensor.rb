@@ -103,9 +103,13 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       owner 'root'
       group 'root'
       mode '0644'
-      variables( 
-        :sniff => sniff
-      )
+      variables({
+        :sniff => sniff,
+        :global_sigs => node[:seconion][:sensor][:pulledpork][conf][:global],
+        :regional_sigs => node[:seconion][:sensor][:pulledpork][conf][:regional], 
+        :host_sigs => node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]],
+        :sensor_sigs => node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]] 
+      })
     end
   end  
 

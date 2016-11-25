@@ -43,3 +43,52 @@
 # The modifications in this file are for sample/example purposes only and
 # should not actively be used, you need to modify this file to fit your 
 # environment.
+
+##########################
+# Global
+##########################
+
+<% @global_sigs.each do |sig, enabled| %>
+	<% if enabled %>
+<%= "#{sig}" %>
+	<% else %>
+<%= "\##{sig}" %>
+	<% end %>
+<% end %>
+
+##########################
+# Regional
+##########################
+
+<% @regional_sigs.each do |sig, enabled| %>
+	<% if enabled %>
+<%= "#{sig}" %>
+	<% else %>
+<%= "\##{sig}" %>
+	<% end %>
+<% end %>
+
+##########################
+# Host
+##########################
+
+<% @host_sigs.each do |sig, enabled| %>
+	<% if enabled %>
+<%= "#{sig}" %>
+	<% else %>
+<%= "\##{sig}" %>
+	<% end %>
+<% end %>
+
+
+##########################
+# Sensor 
+##########################
+
+<% @sensor_sigs.each do |sig, enabled| %>
+	<% if enabled %>
+<%= "#{sig}" %>
+	<% else %>
+<%= "\##{sig}" %>
+	<% end %>
+<% end %>

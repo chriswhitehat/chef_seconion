@@ -44,3 +44,12 @@
 # that it is a SNORTSAM block rule!
 # 17803 "\(msg:"" "\(msg:"SNORTSAM ";
 # 17803 "^\s*alert" "BLOCK";
+
+
+<% @modifysid_sigs.each do |sig, enabled| %>
+	<% if enabled %>
+<%= "#{sig}" %>
+	<% else %>
+<%= "\##{sig}" %>
+	<% end %>
+<% end %>
