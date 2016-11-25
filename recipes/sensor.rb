@@ -104,22 +104,24 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
         global = node[:seconion][:sensor][:pulledpork][conf][:global]
       else
         global = {}
-
+      end
       if node[:seconion][:sensor][:pulledpork][conf][:regional] do
         regional = node[:seconion][:sensor][:pulledpork][conf][:regional]
       else
         regional = {}
-
+      end
       if node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]] do
         host = node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]]
       else
         host = {}
-
+      end
       if node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]] do
         sensor = node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]]
       else
         sensor = {}
-
+      end
+    end
+    
     template "/etc/nsm/pulledpork/#{sniff[:sensorname]}/#{conf}.conf" do
       source "pulledpork/#{conf}.conf.erb"
       owner 'root'
