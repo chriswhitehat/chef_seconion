@@ -268,7 +268,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   pulledpork_confs = ['disablesid', 'dropsid', 'enablesid', 'modifysid']
   pulledpork_confs.each do |conf|
 
-    if node[:seconion][:sensor][:pulledpork][conf] 
+    if node[:seconion][:sensor][:pulledpork] && node[:seconion][:sensor][:pulledpork][conf] 
       if node[:seconion][:sensor][:pulledpork][conf][:global] 
         global = node[:seconion][:sensor][:pulledpork][conf][:global]
       else
@@ -289,6 +289,11 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       else
         sensor = {}
       end
+    else
+      global = {}
+      regional = {}
+      host = {}
+      sensor = {}
     end
 
     template "/etc/nsm/pulledpork/#{sniff[:sensorname]}/#{conf}.conf" do
