@@ -79,89 +79,8 @@ template '/etc/nsm/securityonion.conf' do
 end
 
 
-############
-# Configure Sensors
-############
-node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
-  directories = ["/etc/nsm/#{sniff[:sensorname]}",
-                  "/etc/nsm/pulledpork/#{sniff[:sensorname]}",
-                  "/opt/bro/share/bro/networks"]
-
-  directories.each do |path|
-    directory path do
-      owner 'root'
-      group 'root'
-      mode '0755'
-      action :create
-    end
-  end
-  
-  pulledpork_confs = ['disablesid', 'dropsid', 'enablesid', 'modifysid', 'pulledpork']
-  pulledpork_confs.each do |conf|
-
-    if node[:seconion][:sensor][:pulledpork][conf] 
-      if node[:seconion][:sensor][:pulledpork][conf][:global] 
-        global = node[:seconion][:sensor][:pulledpork][conf][:global]
-      else
-        global = {}
-      end
-      if node[:seconion][:sensor][:pulledpork][conf][:regional] 
-        regional = node[:seconion][:sensor][:pulledpork][conf][:regional]
-      else
-        regional = {}
-      end
-      if node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]] 
-        host = node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]]
-      else
-        host = {}
-      end
-      if node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]] 
-        sensor = node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]]
-      else
-        sensor = {}
-      end
-    end
-
-    template "/etc/nsm/pulledpork/#{sniff[:sensorname]}/#{conf}.conf" do
-      source "pulledpork/#{conf}.conf.erb"
-      owner 'root'
-      group 'root'
-      mode '0644'
-      variables({
-        :sniff => sniff,
-        :global_sigs => global,
-        :regional_sigs => regional,
-        :host_sigs => host,
-        :sensor_sigs => sensor
-      })
-    end
-  end  
-
-  template "/etc/nsm/#{sniff[:sensorname]}/snort.conf" do
-    source 'snort/snort.conf.erb'
-    mode '0644'
-    owner 'root'
-    group 'root'
-    variables(
-      :sniff => sniff
-    )
-  end
 
 
-  template "/opt/bro/share/bro/networks/#{sniff[:sensorname]}_networks.bro" do
-    source 'bro/networks/sniff_networks.bro.erb'
-    mode '0644'
-    owner 'root'
-    group 'root'
-    variables(
-      :sniff => sniff
-    )
-  end
-end
-
-############
-# Add options to sensor.conf 
-############
 # template templates/sensor/sensor.conf
 
 # template '/etc/nsm/sensortab' do
@@ -278,16 +197,6 @@ template '/opt/bro/share/bro/site/local.bro' do
   })
 end
 
-# Insert Command in File to load GHC, SMTP, and ETPRO file extraction specific to GHC
-# ruby_block 'insert_line' do
-#   block do
-#     file = Chef::Util::FileEdit.new("/opt/bro/share/bro/site/local.bro")
-#     file.insert_line_if_no_match(/^@load smtp-embedded-url-bloom$/, "@load smtp-embedded-url-bloom")
-#     file.insert_line_if_no_match(/^@load ghc_extraction$/, "@load ghc_extraction")
-#     file.insert_line_if_no_match(/^@load etpro$/, "@load etpro")
-#     file.write_file
-#   end
-# end
 
 #########################################
 # Download rules using Pulledpork
@@ -302,3 +211,122 @@ end
 #########################################
 #disable apache? Sensors don't use it. 
 
+
+template '/etc/modprobe.d/pf_ring.conf' do
+   source 'sensor/pf_ring.conf.erb'
+   owner 'root'
+   group 'root'
+   mode '0644'
+end
+
+
+
+############
+# Configure Sensors
+############
+node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
+
+  barnyard_port = 8000
+
+  directories = ["/etc/nsm/#{sniff[:sensorname]}",
+                  "/etc/nsm/pulledpork/#{sniff[:sensorname]}",
+                  "/opt/bro/share/bro/networks"]
+
+  directories.each do |path|
+    directory path do
+      owner 'root'
+      group 'root'
+      mode '0755'
+      action :create
+    end
+  end
+
+
+  ############
+  # Add options to sensor.conf 
+  ############
+  template "/etc/nsm/#{sniff[:sensorname]}/sensor.conf" do
+    source "sensor/sensor.conf.erb"
+    owner 'root'
+    group 'root'
+    mode '0644'
+    variables({
+      :sniff => sniff,
+    })
+  end
+
+
+  pulledpork_confs = ['disablesid', 'dropsid', 'enablesid', 'modifysid', 'pulledpork']
+  pulledpork_confs.each do |conf|
+
+    if node[:seconion][:sensor][:pulledpork][conf] 
+      if node[:seconion][:sensor][:pulledpork][conf][:global] 
+        global = node[:seconion][:sensor][:pulledpork][conf][:global]
+      else
+        global = {}
+      end
+      if node[:seconion][:sensor][:pulledpork][conf][:regional] 
+        regional = node[:seconion][:sensor][:pulledpork][conf][:regional]
+      else
+        regional = {}
+      end
+      if node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]] 
+        host = node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]]
+      else
+        host = {}
+      end
+      if node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]] 
+        sensor = node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]]
+      else
+        sensor = {}
+      end
+    end
+
+    template "/etc/nsm/pulledpork/#{sniff[:sensorname]}/#{conf}.conf" do
+      source "pulledpork/#{conf}.conf.erb"
+      owner 'root'
+      group 'root'
+      mode '0644'
+      variables({
+        :sniff => sniff,
+        :global_sigs => global,
+        :regional_sigs => regional,
+        :host_sigs => host,
+        :sensor_sigs => sensor
+      })
+    end
+  end  
+
+  template "/etc/nsm/#{sniff[:sensorname]}/snort.conf" do
+    source 'snort/snort.conf.erb'
+    mode '0644'
+    owner 'root'
+    group 'root'
+    variables(
+      :sniff => sniff
+    )
+  end
+
+
+  template "/opt/bro/share/bro/networks/#{sniff[:sensorname]}_networks.bro" do
+    source 'bro/networks/sniff_networks.bro.erb'
+    mode '0644'
+    owner 'root'
+    group 'root'
+    variables(
+      :sniff => sniff
+    )
+  end
+
+
+  execute 'nsm_sensor_add' do
+    command "/usr/sbin/nsm_sensor_add --sensor-name=\"#{sniff[:sensorname]}\" --sensor-interface=\"#{sniff[:interface]}\" --sensor-interface-auto=no \
+                                          --sensor-server-host=\"#{node[:seconion][:server][:servername]}\" --sensor-server-port=7736 \
+                                          --sensor-barnyard2-port=#{barnyard_port} --sensor-auto=yes --sensor-utc=yes \
+                                          --sensor-vlan-tagging=no --sensor-net-group=\"#{sniff[:sensorname]}\" --force-yes"
+    not_if do ::File.exists?("/nsm/sensor_data/#{sniff[:sensorname]}") end
+  end
+  
+  barnyard_port = barnyard_port + 100
+
+end

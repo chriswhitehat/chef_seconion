@@ -143,3 +143,4 @@ default[:seconion][:sensor][:etgpl_rules_enabled] = false
 
 default[:seconion][:sensor][:local_nids_rule_tuning] = 'yes'
 
+

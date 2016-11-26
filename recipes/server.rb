@@ -13,7 +13,7 @@ directories = [ '/nsm',
                 '/nsm/server_data/securityonion/',
                 '/nsm/server_data/securityonion/archive/',
                 '/nsm/server_data/securityonion/load/',
-                '/nsm/server_data/securityonion/rules/']
+                '/nsm/server_data/securityonion/rules/',]
 
 directories.each do |path|
   directory path do
@@ -64,4 +64,12 @@ template '/root/.ssh/authorized_keys' do
     :ssh_pub_keys => sensor_ssh_keys
   )
 end
+
+file '/etc/mysql/conf.d/securityonion-sguild.cnf' do
+  source 'server/mysql/securityonion-sguild.cnf'
+  mode '0640'
+  owner 'root'
+  group 'root'
+end
+
 
