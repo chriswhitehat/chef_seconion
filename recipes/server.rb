@@ -66,10 +66,23 @@ template '/root/.ssh/authorized_keys' do
 end
 
 file '/etc/mysql/conf.d/securityonion-sguild.cnf' do
-  source 'server/mysql/securityonion-sguild.cnf'
+  source 'server/mysql/securityonion-sguild.cnf.erb'
+  mode '0640'
+  owner 'root'
+  group 'root'
+end
+
+file '/etc/mysql/conf.d/securityonion-ibdata1.cnf' do
+  source 'server/mysql/securityonion-ibdata1.cnf.erb'
   mode '0640'
   owner 'root'
   group 'root'
 end
 
 
+# Final action 
+# Needs idempotency
+execute 'nsm_server_add' do
+  command "/usr/sbin/nsm_server_add --server-name=\"#{node[:seconion][:server][:sguil_server_name]}\" --server-sensor-name=NULL --server-sensor-port=7736 --server-client-port=7734 --server-client-user=\"#{node[:seconion][:server][:sguil_client_username]}\" --server-client-pass=\"#{node[:seconion][:server][:sguil_client_password]\" --server-auto=yes --force-yes"
+  action :nothing
+end
