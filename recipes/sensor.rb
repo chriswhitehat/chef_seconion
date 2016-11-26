@@ -320,10 +320,10 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
 
   execute 'nsm_sensor_add' do
-    command "/usr/sbin/nsm_sensor_add --sensor-name=\"#{sniff[:sensorname]}\" --sensor-interface=\"#{sniff[:interface]}\" --sensor-interface-auto=no \
-                                          --sensor-server-host=\"#{node[:seconion][:server][:servername]}\" --sensor-server-port=7736 \
-                                          --sensor-barnyard2-port=#{barnyard_port} --sensor-auto=yes --sensor-utc=yes \
-                                          --sensor-vlan-tagging=no --sensor-net-group=\"#{sniff[:sensorname]}\" --force-yes"
+    command "/usr/sbin/nsm_sensor_add --sensor-name=\"#{sniff[:sensorname]}\" --sensor-interface=\"#{sniff[:interface]}\" --sensor-interface-auto=no "\
+                                          "--sensor-server-host=\"#{node[:seconion][:server][:servername]}\" --sensor-server-port=7736 "\
+                                          "--sensor-barnyard2-port=#{barnyard_port} --sensor-auto=yes --sensor-utc=yes "\
+                                          "--sensor-vlan-tagging=no --sensor-net-group=\"#{sniff[:sensorname]}\" --force-yes"
     not_if do ::File.exists?("/nsm/sensor_data/#{sniff[:sensorname]}") end
   end
   
