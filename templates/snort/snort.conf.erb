@@ -192,7 +192,7 @@ config daq_var: clustermode=4
 
 # Configure default snaplen. Snort defaults to MTU of in use interface. For more information see README
 #
-# config snaplen:
+config snaplen: <%= @sniff[:mtu] + 24 %>
 #
 
 # Configure default bpf_file to use for filtering what traffic reaches snort. For more information see snort -h command line options (-F)
@@ -312,7 +312,7 @@ preprocessor stream5_tcp: log_asymmetric_traffic no, policy windows, \
 preprocessor stream5_udp: timeout 180
 
 # performance statistics.  For more information, see the Snort Manual, Configuring Snort - Preprocessors - Performance Monitor
-preprocessor perfmonitor: time 300 file /nsm/sensor_data/DCA-DMZ-DMZ-ob1/snort.stats pktcnt 10000
+preprocessor perfmonitor: time 300 file /nsm/sensor_data/<%= @sniff[:sensorname] %>/snort.stats pktcnt 10000
 
 # HTTP normalization and anomaly detection.  For more information, see README.http_inspect
 preprocessor http_inspect: global iis_unicode_map unicode.map 1252 compress_depth 65535 decompress_depth 65535

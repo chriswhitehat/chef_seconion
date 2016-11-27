@@ -56,7 +56,7 @@
 ##########################
 
 # Example
-#default[:seconion][:sensor][:pulledpork][:disablesid]['hostname.example.com']['pcre:MS(0[7-9]|10)-\d+'] = true
+#default[:seconion][:sensor][:pulledpork][:disablesid]['sosensor']['pcre:MS(0[7-9]|10)-\d+'] = true
 
 ##########################
 # Sensor 

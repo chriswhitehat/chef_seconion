@@ -16,7 +16,8 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/ghc_extraction',
                '/opt/bro/share/bro/etpro',
                '/opt/bro/share/bro/smtp-embedded-url-bloom',
-                '/opt/bro/share/bro/networks']
+               '/opt/bro/share/bro/networks',
+               '/var/log/nsm']
 
 directories.each do |path|
   directory path do
@@ -78,17 +79,12 @@ template '/etc/nsm/securityonion.conf' do
   group 'root'
 end
 
-
-
-
-# template templates/sensor/sensor.conf
-
-# template '/etc/nsm/sensortab' do
-#   source 'source.erb'
-#   owner 'root'
-#   group 'root'
-#   mode '0644'
-# end
+file "/etc/nsm/sensortab" do
+  mode '0644'
+  owner 'root'
+  group 'root'
+  action :create
+end
 
 ############
 # Configure Bro 
@@ -226,11 +222,10 @@ end
 ############
 node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
-  barnyard_port = 8000
-
-  directories = ["/etc/nsm/#{sniff[:sensorname]}",
-                  "/etc/nsm/pulledpork/#{sniff[:sensorname]}",
-                  "/opt/bro/share/bro/networks"]
+  # List of directories to create
+  directories = ["/etc/nsm/pulledpork/#{sniff[:sensorname]}",
+                  "/opt/bro/share/bro/networks",
+                  "/usr/local/lib/snort_dynamicrules"]
 
   directories.each do |path|
     directory path do
@@ -242,9 +237,19 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end
 
 
-  ############
-  # Add options to sensor.conf 
-  ############
+  # Set default starting barnyard port
+  barnyard_port = 8000
+
+  # Run sensor add command creating directories and other state
+  execute 'nsm_sensor_add' do
+    command "/usr/sbin/nsm_sensor_add --sensor-name=\"#{sniff[:sensorname]}\" --sensor-interface=\"#{sniff[:interface]}\" --sensor-interface-auto=no "\
+                                          "--sensor-server-host=\"#{node[:seconion][:server][:servername]}\" --sensor-server-port=7736 "\
+                                          "--sensor-barnyard2-port=#{barnyard_port} --sensor-auto=yes --sensor-utc=yes "\
+                                          "--sensor-vlan-tagging=no --sensor-net-group=\"#{sniff[:sensorname]}\" --force-yes"
+    not_if do ::File.exists?("/nsm/sensor_data/#{sniff[:sensorname]}") end
+  end
+  
+
   template "/etc/nsm/#{sniff[:sensorname]}/sensor.conf" do
     source "sensor/sensor.conf.erb"
     owner 'root'
@@ -255,7 +260,170 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     })
   end
 
-  template "/etc/nsm/pulledpork/pulledpork.conf" do
+  template "/etc/nsm/#{sniff[:sensorname]}/snort.conf" do
+    source 'snort/snort.conf.erb'
+    mode '0644'
+    owner 'root'
+    group 'root'
+    variables(
+      :sniff => sniff
+    )
+  end
+
+  file "/etc/nsm/#{sniff[:sensorname]}/attribute_table.dtd" do
+    mode '0644'
+    owner 'root'
+    group 'root'
+    content ::File.open("/etc/nsm/templates/snort/attribute_table.dtd").read
+    action :create
+  end
+
+  file "/etc/nsm/#{sniff[:sensorname]}/unicode.map" do
+    mode '0644'
+    owner 'root'
+    group 'root'
+    content ::File.open("/etc/nsm/templates/snort/unicode.map").read
+    action :create
+  end
+
+  file "/etc/nsm/rules/gen-msg.map" do
+    mode '0644'
+    owner 'root'
+    group 'root'
+    content ::File.open("/etc/nsm/templates/snort/gen-msg.map").read
+    action :create
+  end
+
+  file "/nsm/sensor_data/#{sniff[:sensorname]}/snort.stats" do
+    mode '0644'
+    owner 'root'
+    group 'root'
+    action :create
+  end
+  
+  :create_if_missing
+
+  template "/etc/nsm/#{sniff[:sensorname]}/suricata.yaml" do
+    source 'suricata/suricata.yaml.erb'
+    mode '0644'
+    owner 'root'
+    group 'root'
+    variables({
+      :sniff => sniff,
+      :barnyard_port => barnyard_port
+    })
+  end
+
+  template "/etc/nsm/#{sniff[:sensorname]}/classification.config" do
+    source 'snort/classification.config.erb'
+    mode '0644'
+    owner 'root'
+    group 'root'
+    variables({
+      :sniff => sniff,
+    })
+  end
+
+  template "/etc/nsm/#{sniff[:sensorname]}/reference.config" do
+    source 'snort/reference.config.erb'
+    mode '0644'
+    owner 'root'
+    group 'root'
+    variables({
+      :sniff => sniff,
+    })
+  end
+
+
+  if node[:seconion][:sensor][:threshold] 
+    if node[:seconion][:sensor][:threshold][:global] 
+      global = node[:seconion][:sensor][:threshold][:global]
+    else
+      global = {}
+    end
+    if node[:seconion][:sensor][:threshold][:regional] 
+      regional = node[:seconion][:sensor][:threshold][:regional]
+    else
+      regional = {}
+    end
+    if node[:seconion][:sensor][:threshold][node[:fqdn]] 
+      host = node[:seconion][:sensor][:threshold][node[:fqdn]]
+    else
+      host = {}
+    end
+    if node[:seconion][:sensor][:threshold][sniff[:sensorname]] 
+      sensor = node[:seconion][:sensor][:threshold][sniff[:sensorname]]
+    else
+      sensor = {}
+    end
+  else
+    global = {}
+    regional = {}
+    host = {}
+    sensor = {}
+  end
+
+  template "/etc/nsm/#{sniff[:sensorname]}/threshold.conf" do
+    source "snort/threshold.conf.erb"
+    owner 'root'
+    group 'root'
+    mode '0644'
+    variables({
+      :sniff => sniff,
+      :global_sigs => global,
+      :regional_sigs => regional,
+      :host_sigs => host,
+      :sensor_sigs => sensor
+    })
+  end
+
+  if node[:seconion][:sensor][:bpf] 
+    if node[:seconion][:sensor][:bpf][:global] 
+      global = node[:seconion][:sensor][:bpf][:global]
+    else
+      global = {}
+    end
+    if node[:seconion][:sensor][:bpf][:regional] 
+      regional = node[:seconion][:sensor][:bpf][:regional]
+    else
+      regional = {}
+    end
+    if node[:seconion][:sensor][:bpf][node[:fqdn]] 
+      host = node[:seconion][:sensor][:bpf][node[:fqdn]]
+    else
+      host = {}
+    end
+    if node[:seconion][:sensor][:bpf][sniff[:sensorname]] 
+      sensor = node[:seconion][:sensor][:bpf][sniff[:sensorname]]
+    else
+      sensor = {}
+    end
+  else
+    global = {}
+    regional = {}
+    host = {}
+    sensor = {}
+  end
+
+  bpf_confs = ["bpf.conf", "bpf-bro.conf", "bpf-ids.conf", "bpf-pcap.conf", "bpf-prads.conf"]
+  bpf_confs.each do |bpf_conf|
+ 
+    template "/etc/nsm/#{sniff[:sensorname]}/#{bpf_conf}" do
+      source "sensor/bpf.conf.erb"
+      owner 'root'
+      group 'root'
+      mode '0644'
+      variables({
+        :sniff => sniff,
+        :global_sigs => global,
+        :regional_sigs => regional,
+        :host_sigs => host,
+        :sensor_sigs => sensor
+      })
+    end
+  end
+
+  template "/etc/nsm/pulledpork/#{sniff[:sensorname]}/pulledpork.conf" do
       source "pulledpork/pulledpork.conf.erb"
       owner 'root'
       group 'root'
@@ -309,17 +477,11 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
         :sensor_sigs => sensor
       })
     end
+
+    # Increment baryard port by 100 for next interface
+    barnyard_port = barnyard_port + 100
   end  
 
-  template "/etc/nsm/#{sniff[:sensorname]}/snort.conf" do
-    source 'snort/snort.conf.erb'
-    mode '0644'
-    owner 'root'
-    group 'root'
-    variables(
-      :sniff => sniff
-    )
-  end
 
 
   template "/opt/bro/share/bro/networks/#{sniff[:sensorname]}_networks.bro" do
@@ -331,16 +493,5 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       :sniff => sniff
     )
   end
-
-
-  execute 'nsm_sensor_add' do
-    command "/usr/sbin/nsm_sensor_add --sensor-name=\"#{sniff[:sensorname]}\" --sensor-interface=\"#{sniff[:interface]}\" --sensor-interface-auto=no "\
-                                          "--sensor-server-host=\"#{node[:seconion][:server][:servername]}\" --sensor-server-port=7736 "\
-                                          "--sensor-barnyard2-port=#{barnyard_port} --sensor-auto=yes --sensor-utc=yes "\
-                                          "--sensor-vlan-tagging=no --sensor-net-group=\"#{sniff[:sensorname]}\" --force-yes"
-    not_if do ::File.exists?("/nsm/sensor_data/#{sniff[:sensorname]}") end
-  end
-  
-  barnyard_port = barnyard_port + 100
 
 end
