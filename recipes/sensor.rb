@@ -246,7 +246,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
                                           "--sensor-server-host=\"#{node[:seconion][:server][:servername]}\" --sensor-server-port=7736 "\
                                           "--sensor-barnyard2-port=#{barnyard_port} --sensor-auto=yes --sensor-utc=yes "\
                                           "--sensor-vlan-tagging=no --sensor-net-group=\"#{sniff[:sensorname]}\" --force-yes"
-    not_if do ::File.exists?("/nsm/sensor_data/#{sniff[:sensorname]}") end
+    not_if do ::File.exists?("/etc/nsm/#{sniff[:sensorname]}") end
   end
   
 
