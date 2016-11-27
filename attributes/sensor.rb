@@ -87,7 +87,7 @@ default[:seconion][:sensor][:sniff][:ids_lb_procs] = 1,
 # enable squil agent to send ids alerts to server (applies to snort and suricata)
 default[:seconion][:sensor][:sniff][:snort_agent_enabled] = true,
 # choose which search method to use, ac-split (cpu/memory neutral), ac (favor cpu, heavy memory usage)
-default[:seconion][:sensor][:sniff][:snort_search_method] = 'ac-split'
+default[:seconion][:sensor][:sniff][:snort_search_method] = 'ac'
 # barnyard2 sends snort/suricata alerts to the snort agent and other destinations
 default[:seconion][:sensor][:sniff][:barnyard2_enabled] = true,
 # enable the Bro IDS
