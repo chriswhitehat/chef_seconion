@@ -192,7 +192,7 @@ config daq_var: clustermode=4
 
 # Configure default snaplen. Snort defaults to MTU of in use interface. For more information see README
 #
-config snaplen: <%= @sniff[:mtu] + 24 %>
+config snaplen: <%= @sniff[:mtu].to_i + 24 %>
 #
 
 # Configure default bpf_file to use for filtering what traffic reaches snort. For more information see snort -h command line options (-F)
