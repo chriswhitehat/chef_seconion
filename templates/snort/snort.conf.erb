@@ -214,7 +214,7 @@ config pcre_match_limit: 3500
 config pcre_match_limit_recursion: 1500
 
 # Configure the detection engine  See the Snort Manual, Configuring Snort - Includes - Config
-config detection: search-method ac search-optimize max-pattern-len 20
+config detection: search-method <%= @sniff[:snort_search_method] %> search-optimize max-pattern-len 20
 
 # Configure the event queue.  For more information, see README.event_queue
 config event_queue: max_queue 8 log 5 order_events content_length

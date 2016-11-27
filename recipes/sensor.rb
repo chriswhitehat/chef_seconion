@@ -21,8 +21,8 @@ directories = ['/nsm/sensor_data',
 
 directories.each do |path|
   directory path do
-	  owner 'root'
-	  group 'root'
+	  owner 'sguil'
+	  group 'sguil'
 	  mode '0755'
 	  action :create
 	end
@@ -46,8 +46,8 @@ end
 template '/root/.ssh/securityonion_ssh.conf' do
   source 'sensor/securityonion_ssh.conf.erb'
   mode '0600'
-  owner 'root'
-  group 'root'
+  owner 'sguil'
+  group 'sguil'
 end
 
 
@@ -60,8 +60,8 @@ end
 template '/etc/network/testinterfaces' do
   source 'sensor/interfaces.erb'
   mode '0644'
-  owner 'root'
-  group 'root'
+  owner 'sguil'
+  group 'sguil'
   variables( 
     :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
@@ -75,14 +75,14 @@ end
 template '/etc/nsm/securityonion.conf' do
   source 'default/securityonion.conf.erb'
   mode '0644'
-  owner 'root'
-  group 'root'
+  owner 'sguil'
+  group 'sguil'
 end
 
 file "/etc/nsm/sensortab" do
   mode '0644'
-  owner 'root'
-  group 'root'
+  owner 'sguil'
+  group 'sguil'
   action :create
 end
 
@@ -92,8 +92,8 @@ end
 template '/opt/bro/etc/node.cfg' do
   source 'bro/node.cfg.erb'
   mode '0644'
-  owner 'root'
-  group 'root'
+  owner 'sguil'
+  group 'sguil'
   variables( 
     :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
@@ -102,8 +102,8 @@ end
 template '/opt/bro/etc/network.cfg' do
   source 'bro/network.cfg.erb'
   mode '0644'
-  owner 'root'
-  group 'root'
+  owner 'sguil'
+  group 'sguil'
   variables( 
     :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
@@ -112,8 +112,8 @@ end
 template '/opt/bro/share/bro/networks/__load__.bro' do
   source 'bro/networks/__load__.bro.erb'
   mode '0644'
-  owner 'root'
-  group 'root'
+  owner 'sguil'
+  group 'sguil'
   variables( 
     :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
@@ -127,15 +127,15 @@ end
 # Create files for ET Intelligence in Bro
 # template '/opt/bro/share/bro/etpro/__load__.bro' do
 #    source 'bro/etpro/__load__.bro.erb'
-#    owner 'root'
-#    group 'root'
+#    owner 'sguil'
+#    group 'sguil'
 #    mode '0644'
 # end
 
 # template '/opt/bro/share/bro/etpro/etpro_intel.bro' do
 #    source 'bro/etpro/etpro_intel.bro.erb'
-#    owner 'root'
-#    group 'root'
+#    owner 'sguil'
+#    group 'sguil'
 #    mode '0644'
 # end
 
@@ -148,44 +148,44 @@ end
 # Create files for SMTP embedded Url Bloom
 template '/opt/bro/share/bro/smtp-embedded-url-bloom/__load__.bro' do
    source 'bro/smtp-embedded-url-bloom/__load__.bro.erb'
-   owner 'root'
-   group 'root'
+   owner 'sguil'
+   group 'sguil'
    mode '0644'
 end
 
 template '/opt/bro/share/bro/smtp-embedded-url-bloom/smtp-embedded-url-bloom-ghc.bro' do
    source 'bro/smtp-embedded-url-bloom/smtp-embedded-url-bloom-ghc.bro.erb'
-   owner 'root'
-   group 'root'
+   owner 'sguil'
+   group 'sguil'
    mode '0644'
 end
 
 template '/opt/bro/share/bro/smtp-embedded-url-bloom/smtp-embedded-url-cluster.bro' do
    source 'bro/smtp-embedded-url-bloom/smtp-embedded-url-cluster.bro.erb'
-   owner 'root'
-   group 'root'
+   owner 'sguil'
+   group 'sguil'
    mode '0644'
 end
 
 # Create files for GHC File Extraction
 template '/opt/bro/share/bro/ghc_extraction/__load__.bro' do
    source 'bro/extraction/ghc/__load__.bro.erb'
-   owner 'root'
-   group 'root'
+   owner 'sguil'
+   group 'sguil'
    mode '0644'
 end
 
 template '/opt/bro/share/bro/ghc_extraction/extract.bro' do
    source 'bro/extraction/ghc/extract.bro.erb'
-   owner 'root'
-   group 'root'
+   owner 'sguil'
+   group 'sguil'
    mode '0644'
 end
 
 template '/opt/bro/share/bro/site/local.bro' do
    source 'bro/site/local.bro.erb'
-   owner 'root'
-   group 'root'
+   owner 'sguil'
+   group 'sguil'
    mode '0644'
    variables({
     :bro_scripts => node[:seconion][:sensor][:bro_script],
@@ -210,8 +210,8 @@ end
 
 template '/etc/modprobe.d/pf_ring.conf' do
    source 'sensor/pf_ring.conf.erb'
-   owner 'root'
-   group 'root'
+   owner 'sguil'
+   group 'sguil'
    mode '0644'
 end
 
@@ -220,6 +220,9 @@ end
 ############
 # Configure Sensors
 ############
+# Set default starting barnyard port
+barnyard_port = 8000
+
 node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   # List of directories to create
@@ -229,16 +232,12 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   directories.each do |path|
     directory path do
-      owner 'root'
-      group 'root'
+      owner 'sguil'
+      group 'sguil'
       mode '0755'
       action :create
     end
   end
-
-
-  # Set default starting barnyard port
-  barnyard_port = 8000
 
   # Run sensor add command creating directories and other state
   execute 'nsm_sensor_add' do
@@ -252,8 +251,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   template "/etc/nsm/#{sniff[:sensorname]}/sensor.conf" do
     source "sensor/sensor.conf.erb"
-    owner 'root'
-    group 'root'
+    owner 'sguil'
+    group 'sguil'
     mode '0644'
     variables({
       :sniff => sniff,
@@ -263,8 +262,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   template "/etc/nsm/#{sniff[:sensorname]}/snort.conf" do
     source 'snort/snort.conf.erb'
     mode '0644'
-    owner 'root'
-    group 'root'
+    owner 'sguil'
+    group 'sguil'
     variables(
       :sniff => sniff
     )
@@ -272,32 +271,32 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   file "/etc/nsm/#{sniff[:sensorname]}/attribute_table.dtd" do
     mode '0644'
-    owner 'root'
-    group 'root'
+    owner 'sguil'
+    group 'sguil'
     content lazy {::File.open("/etc/nsm/templates/snort/attribute_table.dtd").read }
     action :create
   end
 
   file "/etc/nsm/#{sniff[:sensorname]}/unicode.map" do
     mode '0644'
-    owner 'root'
-    group 'root'
+    owner 'sguil'
+    group 'sguil'
     content lazy {::File.open("/etc/nsm/templates/snort/unicode.map").read }
     action :create
   end
 
   file "/etc/nsm/rules/gen-msg.map" do
     mode '0644'
-    owner 'root'
-    group 'root'
+    owner 'sguil'
+    group 'sguil'
     content lazy {::File.open("/etc/nsm/templates/snort/gen-msg.map").read }
     action :create
   end
 
   file "/nsm/sensor_data/#{sniff[:sensorname]}/snort.stats" do
     mode '0644'
-    owner 'root'
-    group 'root'
+    owner 'sguil'
+    group 'sguil'
     action :create
   end
   
@@ -306,8 +305,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   template "/etc/nsm/#{sniff[:sensorname]}/suricata.yaml" do
     source 'suricata/suricata.yaml.erb'
     mode '0644'
-    owner 'root'
-    group 'root'
+    owner 'sguil'
+    group 'sguil'
     variables({
       :sniff => sniff,
       :barnyard_port => barnyard_port
@@ -317,8 +316,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   template "/etc/nsm/#{sniff[:sensorname]}/classification.config" do
     source 'snort/classification.config.erb'
     mode '0644'
-    owner 'root'
-    group 'root'
+    owner 'sguil'
+    group 'sguil'
     variables({
       :sniff => sniff,
     })
@@ -327,8 +326,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   template "/etc/nsm/#{sniff[:sensorname]}/reference.config" do
     source 'snort/reference.config.erb'
     mode '0644'
-    owner 'root'
-    group 'root'
+    owner 'sguil'
+    group 'sguil'
     variables({
       :sniff => sniff,
     })
@@ -365,8 +364,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   template "/etc/nsm/#{sniff[:sensorname]}/threshold.conf" do
     source "snort/threshold.conf.erb"
-    owner 'root'
-    group 'root'
+    owner 'sguil'
+    group 'sguil'
     mode '0644'
     variables({
       :sniff => sniff,
@@ -410,8 +409,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
  
     template "/etc/nsm/#{sniff[:sensorname]}/#{bpf_conf}" do
       source "sensor/bpf.conf.erb"
-      owner 'root'
-      group 'root'
+      owner 'sguil'
+      group 'sguil'
       mode '0644'
       variables({
         :sniff => sniff,
@@ -425,8 +424,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   template "/etc/nsm/pulledpork/#{sniff[:sensorname]}/pulledpork.conf" do
       source "pulledpork/pulledpork.conf.erb"
-      owner 'root'
-      group 'root'
+      owner 'sguil'
+      group 'sguil'
       mode '0644'
       variables({
         :sniff => sniff,
@@ -466,8 +465,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
     template "/etc/nsm/pulledpork/#{sniff[:sensorname]}/#{conf}.conf" do
       source "pulledpork/#{conf}.conf.erb"
-      owner 'root'
-      group 'root'
+      owner 'sguil'
+      group 'sguil'
       mode '0644'
       variables({
         :sniff => sniff,
@@ -487,8 +486,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   template "/opt/bro/share/bro/networks/#{sniff[:sensorname]}_networks.bro" do
     source 'bro/networks/sniff_networks.bro.erb'
     mode '0644'
-    owner 'root'
-    group 'root'
+    owner 'sguil'
+    group 'sguil'
     variables(
       :sniff => sniff
     )

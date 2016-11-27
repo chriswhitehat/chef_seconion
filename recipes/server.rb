@@ -17,8 +17,8 @@ directories = [ '/nsm',
 
 directories.each do |path|
   directory path do
-    owner 'root'
-    group 'root'
+    owner 'sguil'
+    group 'sguil'
     mode '0755'
     action :create
   end
@@ -30,8 +30,8 @@ package ['securityonion-server', 'syslog-ng-core']
 template '/etc/nsm/securityonion.conf' do
   source 'default/securityonion.conf.erb'
   mode '0644'
-  owner 'root'
-  group 'root'
+  owner 'sguil'
+  group 'sguil'
 end
 
 
@@ -49,8 +49,8 @@ sorted_sensors.each do |sensor|
 end
 
 directory '/root/.ssh' do
-  owner 'root'
-  group 'root'
+  owner 'sguil'
+  group 'sguil'
   mode '0700'
   action :create
 end
@@ -58,8 +58,8 @@ end
 template '/root/.ssh/authorized_keys' do
   source 'server/authorized_keys.erb'
   mode '0640'
-  owner 'root'
-  group 'root'
+  owner 'sguil'
+  group 'sguil'
   variables(
     :ssh_pub_keys => sensor_ssh_keys
   )
@@ -68,15 +68,15 @@ end
 file '/etc/mysql/conf.d/securityonion-sguild.cnf' do
   source 'server/mysql/securityonion-sguild.cnf.erb'
   mode '0640'
-  owner 'root'
-  group 'root'
+  owner 'sguil'
+  group 'sguil'
 end
 
 file '/etc/mysql/conf.d/securityonion-ibdata1.cnf' do
   source 'server/mysql/securityonion-ibdata1.cnf.erb'
   mode '0640'
-  owner 'root'
-  group 'root'
+  owner 'sguil'
+  group 'sguil'
 end
 
 
