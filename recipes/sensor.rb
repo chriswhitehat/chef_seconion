@@ -274,7 +274,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'root'
     group 'root'
-    content ::File.open("/etc/nsm/templates/snort/attribute_table.dtd").read
+    content lazy {::File.open("/etc/nsm/templates/snort/attribute_table.dtd").read }
     action :create
   end
 
@@ -282,7 +282,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'root'
     group 'root'
-    content ::File.open("/etc/nsm/templates/snort/unicode.map").read
+    content lazy {::File.open("/etc/nsm/templates/snort/unicode.map").read }
     action :create
   end
 
@@ -290,7 +290,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'root'
     group 'root'
-    content ::File.open("/etc/nsm/templates/snort/gen-msg.map").read
+    content lazy {::File.open("/etc/nsm/templates/snort/gen-msg.map").read }
     action :create
   end
 
