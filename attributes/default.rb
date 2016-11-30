@@ -1,3 +1,8 @@
+#
+# Cookbook Name:: seconion
+# Attribute:: default
+#
+
 
 # This is the account sensors will SSH to 
 default[:seconion][:ssh_username] = 'sosystem'

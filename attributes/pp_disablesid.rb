@@ -1,3 +1,7 @@
+#
+# Cookbook Name:: seconion
+# Attribute:: pp_disablesid
+#
 
 ##########################
 # Pulledpork formatting

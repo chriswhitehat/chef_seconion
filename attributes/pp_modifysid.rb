@@ -1,3 +1,7 @@
+#
+# Cookbook Name:: seconion
+# Attribute:: pp_modifysid
+#
 
 ##########################
 # Pulledpork formatting

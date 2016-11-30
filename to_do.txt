@@ -1,9 +1,8 @@
 To Do:
 
-SSH Key exchange
 Create Environment Scheme (kp_washington_prod)
 Account for servername localhost on sguil server.
-
+Remove test from network/interfacestest
 
 Bro: 
 Determine Home_Net configuration for sensors - network.cfg.erb

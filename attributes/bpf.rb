@@ -1,3 +1,8 @@
+#
+# Cookbook Name:: seconion
+# Attribute:: bpf
+#
+
 # [src|dst] host <host>                       Matches a host as the IP source, destination, or either
 # ether [src|dst] host <ehost>                Matches a host as the Ethernet source, destination, or either
 # gateway host <host>                         Matches packets which used host as a gateway
