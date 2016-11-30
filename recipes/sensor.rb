@@ -10,6 +10,10 @@ end
 
 package ['securityonion-sensor', 'syslog-ng-core']
 
+user 'sguil' do
+  system true
+  shell '/bin/false'
+end
 
 directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/ghc_extraction',
@@ -27,11 +31,6 @@ directories.each do |path|
 	end
 end
 
-
-user 'sguil' do
-  system true
-  shell '/bin/false'
-end
 
 ###########
 # SSH Sensor Config
