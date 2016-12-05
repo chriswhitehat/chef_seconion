@@ -48,7 +48,7 @@ sorted_sensors.each do |sensor|
       not_if do ::File.exists?("#{symlink}") end
     end
 
-    range(sniff[:ids_lb_procs]).each do |i| 
+    (1..sniff[:ids_lb_procs]).each do |i| 
       symlink = "/nsm/server_data/#{ node[:seconion][:server][:sguil_server_name] }/rules/#{ sniff[:sensorname] }-#{i}" 
       execute 'symlink_rules' do
         command "ln -f -s /etc/nsm/rules #{symlink}"
