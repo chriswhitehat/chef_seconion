@@ -7,6 +7,9 @@ apt_repository 'SecurityOnion' do
   uri 'ppa:securityonion/stable'
 end
 
+package ['securityonion-server', 'syslog-ng-core']
+
+
 directories = [ '/nsm',
                 '/nsm/server_data/',
                 '/nsm/server_data/securityonion/',
@@ -22,9 +25,6 @@ directories.each do |path|
     action :create
   end
 end
-
-package ['securityonion-server', 'syslog-ng-core']
-
 
 template '/etc/nsm/securityonion.conf' do
   source 'default/securityonion.conf.erb'
