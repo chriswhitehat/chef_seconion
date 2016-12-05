@@ -37,6 +37,12 @@ template '/etc/nsm/securityonion.conf' do
   group 'sguil'
 end
 
+file "/etc/nsm/sensortab" do
+  mode '0644'
+  owner 'sguil'
+  group 'sguil'
+  action :create
+end
 
 # Collect sensor pub keys
 sensor_ssh_keys = ''
@@ -107,7 +113,14 @@ end
 execute 'restart_mysql' do
   command 'pgrep -lf mysqld >/dev/null && restart mysql'
   action :nothing
+  notifies :run, 'execute[restart_sguil]', :delayed
 end
+
+execute 'restart_sguil' do
+  command 'service nsm restart'
+  action :nothing
+end
+
 
 # Final action 
 # Needs idempotency
