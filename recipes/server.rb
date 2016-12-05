@@ -14,22 +14,6 @@ end
 package ['securityonion-server', 'syslog-ng-core']
 
 
-# directories = [ '/nsm',
-#                 '/nsm/server_data/',
-#                 '/nsm/server_data/securityonion/',
-#                 '/nsm/server_data/securityonion/archive/',
-#                 '/nsm/server_data/securityonion/load/',
-#                 '/nsm/server_data/securityonion/rules/',]
-
-# directories.each do |path|
-#   directory path do
-#     owner 'sguil'
-#     group 'sguil'
-#     mode '0755'
-#     action :create
-#   end
-# end
-
 template '/etc/nsm/securityonion.conf' do
   source 'default/securityonion.conf.erb'
   mode '0644'
@@ -59,14 +43,14 @@ sorted_sensors.each do |sensor|
   sensor[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
     symlink = "/nsm/server_data/#{ node[:seconion][:server][:sguil_server_name] }/rules/#{ sniff[:sensorname] }" 
-    execute symlink_rules do
+    execute 'symlink_rules' do
       command "ln -f -s /etc/nsm/rules #{symlink}"
       not_if do ::File.exists?("#{symlink}") end
     end
 
     range(sniff[:ids_lb_procs]).each do |i| 
       symlink = "/nsm/server_data/#{ node[:seconion][:server][:sguil_server_name] }/rules/#{ sniff[:sensorname] }-#{i}" 
-      execute symlink_rules do
+      execute 'symlink_rules' do
         command "ln -f -s /etc/nsm/rules #{symlink}"
         not_if do ::File.exists?("#{symlink}") end
       end
@@ -93,7 +77,6 @@ template '/root/.ssh/authorized_keys' do
   )
 end
 
-#TODO look at notifies verb to see if you can queue up the restart
 template '/etc/mysql/conf.d/securityonion-sguild.cnf' do
   source 'server/mysql/securityonion-sguild.cnf.erb'
   mode '0640'
@@ -122,8 +105,6 @@ execute 'restart_sguil' do
 end
 
 
-# Final action 
-# Needs idempotency
 execute 'nsm_server_add' do
   command "/usr/sbin/nsm_server_add --server-name=\"#{node[:seconion][:server][:sguil_server_name]}\" --server-sensor-name=NULL --server-sensor-port=7736 --server-client-port=7734 --server-client-user=\"#{node[:seconion][:server][:sguil_client_username]}\" --server-client-pass=\"#{node[:seconion][:server][:sguil_client_password]}\" --server-auto=yes --force-yes"
   not_if do ::File.exists?("/nsm/server_data/#{ node[:seconion][:server][:sguil_server_name] }") end
