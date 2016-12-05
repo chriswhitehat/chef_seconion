@@ -457,7 +457,7 @@ af-packet:
     # Number of receive threads. "auto" uses the number of cores
     #threads: auto
     # Default clusterid. AF_PACKET will load balance packets based on flow.
-    cluster-id: @barnyard_port
+    cluster-id: <%= @ids_cluster_id %>
     # Default AF_PACKET cluster type. AF_PACKET can load balance per flow or per hash.
     # This is only supported for Linux kernel > 3.1
     # possible value are:
@@ -1454,12 +1454,12 @@ pfring:
   - interface: eth0
     # Number of receive threads (>1 will enable experimental flow pinned
     # runmode)
-    threads: 1
+    threads: <%= @sniff[:ids_lb_procs] %>
 
     # Default clusterid.  PF_RING will load balance packets based on flow.
     # All threads/processes that will participate need to have the same
     # clusterid.
-    cluster-id: 99
+    cluster-id: <%= @ids_cluster_id %>
 
     # Default PF_RING cluster type. PF_RING can load balance per flow.
     # Possible values are cluster_flow or cluster_round_robin.

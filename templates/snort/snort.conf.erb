@@ -182,7 +182,7 @@ config checksum_mode: all
 # <dir> ::= path as to where to look for DAQ module so's
 config daq: pfring
 config daq_dir: /opt/pfring/lib/daq
-config daq_var: clusterid=55
+config daq_var: clusterid=<%= @ids_cluster_id %>
 config daq_var: clustermode=4
 
 # Configure specific UID and GID to run snort as after dropping privs. For more information see snort -h command line options

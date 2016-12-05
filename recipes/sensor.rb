@@ -225,6 +225,8 @@ end
 # Set default starting barnyard port
 barnyard_port = 8000
 
+ids_cluster_id = 51
+
 node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   # List of directories to create
@@ -266,8 +268,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'sguil'
     group 'sguil'
-    variables(
-      :sniff => sniff
+    variables({
+      :sniff => sniff,
+      :ids_cluster_id => ids_cluster_id
     )
   end
 
@@ -311,7 +314,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     group 'sguil'
     variables({
       :sniff => sniff,
-      :barnyard_port => barnyard_port
+      :barnyard_port => barnyard_port,
+      :ids_cluster_id => ids_cluster_id
     })
   end
 
@@ -478,11 +482,12 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
         :sensor_sigs => sensor
       })
     end
-
-    # Increment baryard port by 100 for next interface
-    barnyard_port = barnyard_port + 100
   end  
 
+  # Increment baryard port by 100 for next interface
+  barnyard_port = barnyard_port + 100
+
+  ids_cluster_id = ids_cluster_id + 1
 
 
   template "/opt/bro/share/bro/networks/#{sniff[:sensorname]}_networks.bro" do
