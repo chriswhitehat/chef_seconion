@@ -88,25 +88,26 @@ template '/root/.ssh/authorized_keys' do
 end
 
 #TODO look at notifies verb to see if you can queue up the restart
-file '/etc/mysql/conf.d/securityonion-sguild.cnf' do
+template '/etc/mysql/conf.d/securityonion-sguild.cnf' do
   source 'server/mysql/securityonion-sguild.cnf.erb'
   mode '0640'
   owner 'sguil'
   group 'sguil'
-  notifies :run, 'execute[restart_mysql]', :immediately
+  notifies :run, 'execute[restart_mysql]', :delayed
 end
 
-file '/etc/mysql/conf.d/securityonion-ibdata1.cnf' do
+template '/etc/mysql/conf.d/securityonion-ibdata1.cnf' do
   source 'server/mysql/securityonion-ibdata1.cnf.erb'
   mode '0640'
   owner 'sguil'
   group 'sguil'
-  notifies :run, 'execute[restart_mysql]', :immediately
+  notifies :run, 'execute[restart_mysql]', :delayed
 end
 
 execute 'restart_mysql' do
   command 'pgrep -lf mysqld >/dev/null && restart mysql'
   action :nothing
+  notifies :run, 'execute[nsm_server_add]', :delayed
 end
 
 # Final action 
