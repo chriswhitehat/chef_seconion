@@ -271,7 +271,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     variables({
       :sniff => sniff,
       :ids_cluster_id => ids_cluster_id
-    )
+    })
   end
 
   file "/etc/nsm/#{sniff[:sensorname]}/attribute_table.dtd" do
