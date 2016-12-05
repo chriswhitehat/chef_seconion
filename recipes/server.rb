@@ -14,21 +14,21 @@ end
 package ['securityonion-server', 'syslog-ng-core']
 
 
-directories = [ '/nsm',
-                '/nsm/server_data/',
-                '/nsm/server_data/securityonion/',
-                '/nsm/server_data/securityonion/archive/',
-                '/nsm/server_data/securityonion/load/',
-                '/nsm/server_data/securityonion/rules/',]
+# directories = [ '/nsm',
+#                 '/nsm/server_data/',
+#                 '/nsm/server_data/securityonion/',
+#                 '/nsm/server_data/securityonion/archive/',
+#                 '/nsm/server_data/securityonion/load/',
+#                 '/nsm/server_data/securityonion/rules/',]
 
-directories.each do |path|
-  directory path do
-    owner 'sguil'
-    group 'sguil'
-    mode '0755'
-    action :create
-  end
-end
+# directories.each do |path|
+#   directory path do
+#     owner 'sguil'
+#     group 'sguil'
+#     mode '0755'
+#     action :create
+#   end
+# end
 
 template '/etc/nsm/securityonion.conf' do
   source 'default/securityonion.conf.erb'
@@ -107,12 +107,11 @@ end
 execute 'restart_mysql' do
   command 'pgrep -lf mysqld >/dev/null && restart mysql'
   action :nothing
-  notifies :run, 'execute[nsm_server_add]', :delayed
 end
 
 # Final action 
 # Needs idempotency
 execute 'nsm_server_add' do
   command "/usr/sbin/nsm_server_add --server-name=\"#{node[:seconion][:server][:sguil_server_name]}\" --server-sensor-name=NULL --server-sensor-port=7736 --server-client-port=7734 --server-client-user=\"#{node[:seconion][:server][:sguil_client_username]}\" --server-client-pass=\"#{node[:seconion][:server][:sguil_client_password]}\" --server-auto=yes --force-yes"
-  action :nothing
+  not_if do ::File.exists?("/nsm/server_data/#{ node[:seconion][:server][:sguil_server_name] }") end
 end
