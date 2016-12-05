@@ -7,6 +7,10 @@ apt_repository 'SecurityOnion' do
   uri 'ppa:securityonion/stable'
 end
 
+user 'sguil' do
+  system true
+end
+
 package ['securityonion-server', 'syslog-ng-core']
 
 
