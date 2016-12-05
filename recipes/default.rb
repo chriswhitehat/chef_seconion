@@ -3,6 +3,11 @@
 # Recipe:: default
 #
 
+user 'sguil' do
+  system true
+  shell '/bin/false'
+end
+
 directories = ['/nsm',
         			 '/var/log/nsm/',
                '/var/log/nsm/securityonion/',
