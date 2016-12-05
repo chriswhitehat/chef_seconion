@@ -2,10 +2,10 @@
 # Cookbook Name:: seconion
 # Recipe:: default
 #
-# Copyright 2016, YOUR_COMPANY_NAME
-#
-# All rights reserved - Do Not Redistribute
-#
+
+user 'sguil' do
+  system true
+end
 
 directories = ['/nsm',
         			 '/var/log/nsm/',

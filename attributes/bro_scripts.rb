@@ -1,3 +1,8 @@
+#
+# Cookbook Name:: seconion
+# Attribute:: bro_scripts
+#
+
 ##########################
 # Load Bro Sigs
 ##########################

@@ -2,11 +2,13 @@
 # Cookbook Name:: seconion
 # Recipe:: sensor
 #
-# Copyright (c) 2016 The Authors, All Rights Reserved.
-
 
 apt_repository 'SecurityOnion' do
   uri 'ppa:securityonion/stable'
+end
+
+user 'sguil' do
+  system true
 end
 
 package ['securityonion-sensor', 'syslog-ng-core']

@@ -2,11 +2,17 @@
 # Cookbook Name:: seconion
 # Recipe:: server
 #
-# Copyright (c) 2016 The Authors, All Rights Reserved.
 
 apt_repository 'SecurityOnion' do
   uri 'ppa:securityonion/stable'
 end
+
+user 'sguil' do
+  system true
+end
+
+package ['securityonion-server', 'syslog-ng-core']
+
 
 directories = [ '/nsm',
                 '/nsm/server_data/',
@@ -23,9 +29,6 @@ directories.each do |path|
     action :create
   end
 end
-
-package ['securityonion-server', 'syslog-ng-core']
-
 
 template '/etc/nsm/securityonion.conf' do
   source 'default/securityonion.conf.erb'
@@ -46,6 +49,25 @@ sorted_sensors.each do |sensor|
   if sensor[:seconion][:so_ssh_pub]
     sensor_ssh_keys << sensor[:seconion][:so_ssh_pub]  
   end
+
+  sensor[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
+
+    symlink = "/nsm/server_data/#{ node[:seconion][:server][:sguil_server_name] }/rules/#{ sniff[:sensorname] }" 
+    execute symlink_rules do
+      command "ln -f -s /etc/nsm/rules #{symlink}"
+      not_if do ::File.exists?("#{symlink}") end
+    end
+
+    range(sniff[:ids_lb_procs]).each do |i| 
+      symlink = "/nsm/server_data/#{ node[:seconion][:server][:sguil_server_name] }/rules/#{ sniff[:sensorname] }-#{i}" 
+      execute symlink_rules do
+        command "ln -f -s /etc/nsm/rules #{symlink}"
+        not_if do ::File.exists?("#{symlink}") end
+      end
+    end
+
+  end
+
 end
 
 directory '/root/.ssh' do
@@ -65,11 +87,13 @@ template '/root/.ssh/authorized_keys' do
   )
 end
 
+#TODO look at notifies verb to see if you can queue up the restart
 file '/etc/mysql/conf.d/securityonion-sguild.cnf' do
   source 'server/mysql/securityonion-sguild.cnf.erb'
   mode '0640'
   owner 'sguil'
   group 'sguil'
+  notifies :run, 'execute[restart_mysql]', :immediately
 end
 
 file '/etc/mysql/conf.d/securityonion-ibdata1.cnf' do
@@ -77,8 +101,13 @@ file '/etc/mysql/conf.d/securityonion-ibdata1.cnf' do
   mode '0640'
   owner 'sguil'
   group 'sguil'
+  notifies :run, 'execute[restart_mysql]', :immediately
 end
 
+execute 'restart_mysql' do
+  command 'pgrep -lf mysqld >/dev/null && restart mysql'
+  action :nothing
+end
 
 # Final action 
 # Needs idempotency

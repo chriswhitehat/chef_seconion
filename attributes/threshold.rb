@@ -1,3 +1,8 @@
+#
+# Cookbook Name:: seconion
+# Attribute:: threshold
+#
+
 # Configure Thresholding and Suppression
 # ======================================
 #
