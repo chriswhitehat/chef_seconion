@@ -38,13 +38,63 @@ PCAP_OPTIONS=<%= @sniff[:pcap_options] %>
 PCAP_SIZE=<%= @sniff[:pcap_size] %>MiB
 PCAP_RING_SIZE=<%= @sniff[:pcap_ring_size] %>MiB
 IDS_LB_PROCS=<%= @sniff[:ids_lb_procs] %>
-PCAP_ENABLED="<%= @sniff[:pcap_enabled] %>"
-PCAP_AGENT_ENABLED="<%= @sniff[:pcap_agent_enabled] %>"
-SNORT_AGENT_ENABLED="<%= @sniff[:snort_agent_enabled] %>"
-IDS_ENGINE_ENABLED="<%= @sniff[:ids_engine_enabled] %>"
-BARNYARD2_ENABLED="<%= @sniff[:barnyard2_enabled] %>"
-PRADS_ENABLED="<%= @sniff[:prads_enabled] %>"
-SANCP_AGENT_ENABLED="<%= @sniff[:sancp_agent_enabled] %>"
-PADS_AGENT_ENABLED="<%= @sniff[:pads_agent_enabled] %>"
-ARGUS_ENABLED="<%= @sniff[:argus_enabled] %>"
-HTTP_AGENT_ENABLED="<%= @sniff[:http_agent_enabled] %>"
+
+<% if @sniff[:pcap_enabled] %>
+PCAP_ENABLED="yes"
+<% else %>
+PCAP_ENABLED="no"
+<% end %>
+
+<% if @sniff[:pcap_agent_enabled] %>
+PCAP_AGENT_ENABLED="yes"
+<% else %>
+PCAP_AGENT_ENABLED="no"
+<% end %>
+
+<% if @sniff[:snort_agent_enabled] %>
+SNORT_AGENT_ENABLED="yes"
+<% else %>
+SNORT_AGENT_ENABLED="no"
+<% end %>
+
+<% if @sniff[:ids_engine_enabled] %>
+IDS_ENGINE_ENABLED="yes"
+<% else %>
+IDS_ENGINE_ENABLED="no"
+<% end %>
+
+<% if @sniff[:barnyard2_enabled] %>
+BARNYARD2_ENABLED="yes"
+<% else %>
+BARNYARD2_ENABLED="no"
+<% end %>
+
+<% if @sniff[:prads_enabled] %>
+PRADS_ENABLED="yes"
+<% else %>
+PRADS_ENABLED="no"
+<% end %>
+
+<% if @sniff[:sancp_agent_enabled] %>
+SANCP_AGENT_ENABLED="yes"
+<% else %>
+SANCP_AGENT_ENABLED="no"
+<% end %>
+
+<% if @sniff[:pads_agent_enabled] %>
+PADS_AGENT_ENABLED="yes"
+<% else %>
+PADS_AGENT_ENABLED="no"
+<% end %>
+
+<% if @sniff[:argus_enabled] %>
+ARGUS_ENABLED="yes"
+<% else %>
+ARGUS_ENABLED="no"
+<% end %>
+
+<% if @sniff[:http_agent_enabled] %>
+HTTP_AGENT_ENABLED="yes"
+<% else %>
+HTTP_AGENT_ENABLED="no"
+<% end %>
