@@ -60,7 +60,7 @@ default[:seconion][:sensor][:sniff][:mtu] = '1530'
 # name of sensor in sguil and directory structure
 default[:seconion][:sensor][:sniff][:sensorname] = 'sensorname'
 # Sensor net group
-default[:seconion][:sensor][:sniff][:sensor_net_group] = default[:seconion][:sensor][:sniff][:sensorname]
+default[:seconion][:sensor][:sniff][:sensor_net_group] = 'sensorname'
 # homenet definition
 default[:seconion][:sensor][:sniff][:homenet] = {'192.168.0.0/16' => 'rfc1918 IP Space',
 																									'10.0.0.0/8' => 'rfc1918 IP Space',
@@ -102,7 +102,7 @@ template = {
   'interface' => node[:seconion][:sensor][:sniff][:interface],
   'mtu' => node[:seconion][:sensor][:sniff][:mtu],
   'sensorname' => node[:seconion][:sensor][:sniff][:sensorname],
-  'sensor_net_group' => node[:seconion][:sensor][:sniff][:sensor_net_group],
+  'sensor_net_group' => node[:seconion][:sensor][:sniff][:sensorname],
   'homenet' => node[:seconion][:sensor][:sniff][:homenet],
   'ids_engine_enabled' => node[:seconion][:sensor][:sniff][:ids_engine_enabled],
   'ids_engine' => node[:seconion][:sensor][:sniff][:ids_engine],
