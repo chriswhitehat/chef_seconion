@@ -54,7 +54,7 @@ end
 
 
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-# Need to remove test in destination
+# TODO Need to remove test in destination
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 ###########
 # Network Interfaces Config
@@ -227,7 +227,11 @@ barnyard_port = 8000
 
 ids_cluster_id = 51
 
+sensortab = ""
+
 node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
+
+  sensortab += "#{sniff[:sensorname]}    1    #{barnyard_port}    #{sniff[:interface]}\n"
 
   # List of directories to create
   directories = ["/etc/nsm/pulledpork/#{sniff[:sensorname]}",
@@ -248,20 +252,21 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     command "/usr/sbin/nsm_sensor_add --sensor-name=\"#{sniff[:sensorname]}\" --sensor-interface=\"#{sniff[:interface]}\" --sensor-interface-auto=no "\
                                           "--sensor-server-host=\"#{node[:seconion][:server][:servername]}\" --sensor-server-port=7736 "\
                                           "--sensor-barnyard2-port=#{barnyard_port} --sensor-auto=yes --sensor-utc=yes "\
-                                          "--sensor-vlan-tagging=no --sensor-net-group=\"#{sniff[:sensorname]}\" --force-yes"
+                                          "--sensor-vlan-tagging=no --sensor-net-group=\"#{sniff[:sensor_net_group]}\" --force-yes"
     not_if do ::File.exists?("/etc/nsm/#{sniff[:sensorname]}") end
   end
   
 
-  template "/etc/nsm/#{sniff[:sensorname]}/sensor.conf" do
-    source "sensor/sensor.conf.erb"
-    owner 'sguil'
-    group 'sguil'
-    mode '0644'
-    variables({
-      :sniff => sniff,
-    })
-  end
+  # template "/etc/nsm/#{sniff[:sensorname]}/sensor.conf" do
+  #   source "sensor/sensor.conf.erb"
+  #   owner 'sguil'
+  #   group 'sguil'
+  #   mode '0644'
+  #   variables({
+  #     :sniff => sniff,
+  #     :barnyard_port = barnyard_port
+  #   })
+  # end
 
   template "/etc/nsm/#{sniff[:sensorname]}/snort.conf" do
     source 'snort/snort.conf.erb'
@@ -500,4 +505,15 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     )
   end
 
+end
+
+
+template "/etc/nsm/sensortab" do
+  source "sensor/sensortab.erb"
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  variables({
+    :sensortab => sensortab,
+  })
 end
