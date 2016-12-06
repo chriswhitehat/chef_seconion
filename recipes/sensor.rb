@@ -19,7 +19,8 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/etpro',
                '/opt/bro/share/bro/smtp-embedded-url-bloom',
                '/opt/bro/share/bro/networks',
-               '/var/log/nsm']
+               '/var/log/nsm',
+               '/usr/local/lib/snort_dynamicrules']
 
 directories.each do |path|
   directory path do
@@ -234,9 +235,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   sensortab += "#{sniff[:sensorname]}    1    #{barnyard_port}    #{sniff[:interface]}\n"
 
   # List of directories to create
-  directories = ["/etc/nsm/pulledpork/#{sniff[:sensorname]}",
-                  "/opt/bro/share/bro/networks",
-                  "/usr/local/lib/snort_dynamicrules"]
+  directories = ["/etc/nsm/pulledpork/#{sniff[:sensorname]}"]
 
   directories.each do |path|
     directory path do
@@ -257,16 +256,16 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end
   
 
-  # template "/etc/nsm/#{sniff[:sensorname]}/sensor.conf" do
-  #   source "sensor/sensor.conf.erb"
-  #   owner 'sguil'
-  #   group 'sguil'
-  #   mode '0644'
-  #   variables({
-  #     :sniff => sniff,
-  #     :barnyard_port = barnyard_port
-  #   })
-  # end
+  template "/etc/nsm/#{sniff[:sensorname]}/sensor.conf" do
+    source "sensor/sensor.conf.erb"
+    owner 'sguil'
+    group 'sguil'
+    mode '0644'
+    variables({
+      :sniff => sniff,
+      :barnyard_port = barnyard_port
+    })
+  end
 
   template "/etc/nsm/#{sniff[:sensorname]}/snort.conf" do
     source 'snort/snort.conf.erb'
