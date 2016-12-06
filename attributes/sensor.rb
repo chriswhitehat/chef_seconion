@@ -54,67 +54,72 @@ default[:seconion][:sensor][:pf_ring_slots] = 4096
 # Sniffing Defaults
 #####################
 # interface to drop into promiscuious mode
-default[:seconion][:sensor][:sniff][:interface] = 'eth1',
+default[:seconion][:sensor][:sniff][:interface] = 'eth1'
 # mtu for promiscuious nic
-default[:seconion][:sensor][:sniff][:mtu] = '1530',
+default[:seconion][:sensor][:sniff][:mtu] = '1530'
 # name of sensor in sguil and directory structure
-default[:seconion][:sensor][:sniff][:sensorname] = 'sensorname',
+default[:seconion][:sensor][:sniff][:sensorname] = 'sensorname'
+# Sensor net group
+default[:seconion][:sensor][:sniff][:sensor_net_group] = default[:seconion][:sensor][:sniff][:sensorname]
 # homenet definition
 default[:seconion][:sensor][:sniff][:homenet] = {'192.168.0.0/16' => 'rfc1918 IP Space',
 																									'10.0.0.0/8' => 'rfc1918 IP Space',
 																									'172.16.0.0/12' => 'rfc1918 IP Space'
-																									},
+																									}
 # enable the ids engine 
-default[:seconion][:sensor][:sniff][:ids_engine_enabled] = true,
+default[:seconion][:sensor][:sniff][:ids_engine_enabled] = true
 # type of ids engine (snort/suriciata)
-default[:seconion][:sensor][:sniff][:ids_engine] = 'snort',
+default[:seconion][:sensor][:sniff][:ids_engine] = 'snort'
 # load balance instances for ids engine
-default[:seconion][:sensor][:sniff][:ids_lb_procs] = 1,
+default[:seconion][:sensor][:sniff][:ids_lb_procs] = 1
 # enable squil agent to send ids alerts to server (applies to snort and suricata)
-default[:seconion][:sensor][:sniff][:snort_agent_enabled] = true,
+default[:seconion][:sensor][:sniff][:snort_agent_enabled] = true
 # choose which search method to use, ac-split (cpu/memory neutral), ac (favor cpu, heavy memory usage)
 default[:seconion][:sensor][:sniff][:snort_search_method] = 'ac'
 # barnyard2 sends snort/suricata alerts to the snort agent and other destinations
-default[:seconion][:sensor][:sniff][:barnyard2_enabled] = true,
+default[:seconion][:sensor][:sniff][:barnyard2_enabled] = true
 # enable the Bro IDS
-default[:seconion][:sensor][:sniff][:bro_enabled] = true,
+default[:seconion][:sensor][:sniff][:bro_enabled] = true
 # load balance instances for Bro IDS
-default[:seconion][:sensor][:sniff][:bro_lb_procs] = 1,
+default[:seconion][:sensor][:sniff][:bro_lb_procs] = 1
 # extract files using bro based on mimetypes
-default[:seconion][:sensor][:sniff][:bro_extract_files] = false,
+default[:seconion][:sensor][:sniff][:bro_extract_files] = false
 # enable netsniff-ng full packet capture
-default[:seconion][:sensor][:sniff][:pcap_enabled] = true,
+default[:seconion][:sensor][:sniff][:pcap_enabled] = true
 # enable sguil agent to pull pcaps from the sguil client
-default[:seconion][:sensor][:sniff][:pcap_agent_enabled] = true,
+default[:seconion][:sensor][:sniff][:pcap_agent_enabled] = true
 # how large to make the pcap files in MB
-default[:seconion][:sensor][:sniff][:pcap_size] = 150,
+default[:seconion][:sensor][:sniff][:pcap_size] = 150
 # how big of a ring buffer for netsniff-ng
-default[:seconion][:sensor][:sniff][:pcap_ring_size] = 128,
+default[:seconion][:sensor][:sniff][:pcap_ring_size] = 128
 # additional pcap options to be sent to the netsniff-ng command
 default[:seconion][:sensor][:sniff][:pcap_options] = '--mmap'
 
 
 # This is a convenience variable, copy and paste into sensor recipes.
+=begin
 template = {
-  'interface' => default[:seconion][:sensor][:sniff][:interface],
-  'mtu' => default[:seconion][:sensor][:sniff][:mtu],
-  'sensorname' => default[:seconion][:sensor][:sniff][:sensorname],
-  'homenet' => default[:seconion][:sensor][:sniff][:homenet],
-  'ids_engine_enabled' => default[:seconion][:sensor][:sniff][:ids_engine_enabled],
-  'ids_engine' => default[:seconion][:sensor][:sniff][:ids_engine],
-  'ids_lb_procs' => default[:seconion][:sensor][:sniff][:ids_lb_procs],
-  'snort_search_method' => default[:seconion][:sensor][:sniff][:snort_search_method],
-  'snort_agent_enabled' => default[:seconion][:sensor][:sniff][:snort_agent_enabled],
-  'barnyard2_enabled' => default[:seconion][:sensor][:sniff][:barnyard2_enabled],
-  'bro_enabled' => default[:seconion][:sensor][:sniff][:bro_enabled],
-  'bro_lb_procs' => default[:seconion][:sensor][:sniff][:bro_lb_procs],
-  'bro_extract_files' => default[:seconion][:sensor][:sniff][:bro_extract_files],
-  'pcap_enabled' => default[:seconion][:sensor][:sniff][:pcap_enabled],
-  'pcap_agent_enabled' => default[:seconion][:sensor][:sniff][:pcap_agent_enabled],
-  'pcap_size' => default[:seconion][:sensor][:sniff][:pcap_size],
-  'pcap_ring_size' => default[:seconion][:sensor][:sniff][:pcap_ring_size],
-  'pcap_options' => default[:seconion][:sensor][:sniff][:pcap_options]
+  'interface' => node[:seconion][:sensor][:sniff][:interface],
+  'mtu' => node[:seconion][:sensor][:sniff][:mtu],
+  'sensorname' => node[:seconion][:sensor][:sniff][:sensorname],
+  'sensor_net_group' => node[:seconion][:sensor][:sniff][:sensor_net_group],
+  'homenet' => node[:seconion][:sensor][:sniff][:homenet],
+  'ids_engine_enabled' => node[:seconion][:sensor][:sniff][:ids_engine_enabled],
+  'ids_engine' => node[:seconion][:sensor][:sniff][:ids_engine],
+  'ids_lb_procs' => node[:seconion][:sensor][:sniff][:ids_lb_procs],
+  'snort_search_method' => node[:seconion][:sensor][:sniff][:snort_search_method],
+  'snort_agent_enabled' => node[:seconion][:sensor][:sniff][:snort_agent_enabled],
+  'barnyard2_enabled' => node[:seconion][:sensor][:sniff][:barnyard2_enabled],
+  'bro_enabled' => node[:seconion][:sensor][:sniff][:bro_enabled],
+  'bro_lb_procs' => node[:seconion][:sensor][:sniff][:bro_lb_procs],
+  'bro_extract_files' => node[:seconion][:sensor][:sniff][:bro_extract_files],
+  'pcap_enabled' => node[:seconion][:sensor][:sniff][:pcap_enabled],
+  'pcap_agent_enabled' => node[:seconion][:sensor][:sniff][:pcap_agent_enabled],
+  'pcap_size' => node[:seconion][:sensor][:sniff][:pcap_size],
+  'pcap_ring_size' => node[:seconion][:sensor][:sniff][:pcap_ring_size],
+  'pcap_options' => node[:seconion][:sensor][:sniff][:pcap_options]
 }
+=end
 
 #########################
 # Network IDS Rules
