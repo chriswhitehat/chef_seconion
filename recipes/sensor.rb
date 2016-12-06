@@ -507,8 +507,6 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
 end
 
-puts sensortab
-
 template "/etc/nsm/sensortab" do
   source "sensor/sensortab.erb"
   owner 'sguil'
