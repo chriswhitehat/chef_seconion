@@ -263,7 +263,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     variables({
       :sniff => sniff,
-      :barnyard_port = barnyard_port
+      :barnyard_port => barnyard_port
     })
   end
 
