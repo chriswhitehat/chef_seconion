@@ -511,7 +511,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   # Collect all rule_url entries in pulledpork for each sensor
   File.open("/etc/nsm/pulledpork/#{sniff[:sensorname]}/pulledpork.conf").each_line do |li|
-    if (li[/^rule_url/]) && not rule_urls.include?(li) do
+    if (li[/^rule_url/]) && not rule_urls.include?(li) 
       rule_urls << li 
     end
   end
