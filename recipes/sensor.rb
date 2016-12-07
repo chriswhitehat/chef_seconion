@@ -194,6 +194,12 @@ template '/opt/bro/share/bro/site/local.bro' do
     :bro_scripts => node[:seconion][:sensor][:bro_script],
     :bro_sigs => node[:seconion][:sensor][:bro_sig]
   })
+  notifies :run, 'execute[restart_sguil]', :immediately
+end
+
+execute 'deploy_bro' do
+  command "/opt/bro/bin/broctl deploy"
+  action :nothing
 end
 
 
@@ -230,12 +236,15 @@ ids_cluster_id = 51
 
 sensortab = ""
 
+rule_urls = []
+
 node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   sensortab += "#{sniff[:sensorname]}    1    #{barnyard_port}    #{sniff[:interface]}\n"
 
   # List of directories to create
-  directories = ["/etc/nsm/pulledpork/#{sniff[:sensorname]}"]
+  directories = ["/etc/nsm/pulledpork/#{sniff[:sensorname]}",
+                  "/etc/nsm/rules/#{sniff[:sensorname]}"]
 
   directories.each do |path|
     directory path do
@@ -258,6 +267,17 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   template "/etc/nsm/#{sniff[:sensorname]}/sensor.conf" do
     source "sensor/sensor.conf.erb"
+    owner 'sguil'
+    group 'sguil'
+    mode '0644'
+    variables({
+      :sniff => sniff,
+      :barnyard_port => barnyard_port
+    })
+  end
+  
+  template "/etc/nsm/#{sniff[:sensorname]}/barnyard2.conf" do
+    source "sensor/barnyard2.conf.erb"
     owner 'sguil'
     group 'sguil'
     mode '0644'
@@ -488,6 +508,12 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     end
   end  
 
+
+  # Collect all rule_url entries in pulledpork for each sensor
+  File.each_line("/etc/nsm/pulledpork/#{sniff[:sensorname]}/pulledpork.conf") do |li|
+    rule_urls << li if (li[/^rule_url/])
+  end
+  
   # Increment baryard port by 100 for next interface
   barnyard_port = barnyard_port + 100
 
@@ -505,6 +531,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end
 
 end
+
+puts rule_urls
 
 template "/etc/nsm/sensortab" do
   source "sensor/sensortab.erb"
