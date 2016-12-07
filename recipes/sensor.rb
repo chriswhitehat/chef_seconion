@@ -535,7 +535,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 end
 
 # Set rule_urls attribute
-node[:seconion][:sensor][:rule_urls] = rule_urls
+node.default[:seconion][:sensor][:rule_urls] = rule_urls
 
 template "/etc/nsm/sensortab" do
   source "sensor/sensortab.erb"
