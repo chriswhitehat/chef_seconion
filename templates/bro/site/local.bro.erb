@@ -12,9 +12,9 @@
 
 <% @bro_sigs.each do |sig, enabled| %>
 	<% if enabled %>
-<%= "\@load #{sig}" %>
+<%= "\@load-sigs #{sig}" %>
 	<% else %>
-<%= "\#\@load #{sig}" %>
+<%= "\#\@load-sigs #{sig}" %>
 	<% end %>
 <% end %>
 
