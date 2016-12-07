@@ -508,13 +508,17 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     end
   end  
 
-
-  # Collect all rule_url entries in pulledpork for each sensor
-  File.open("/etc/nsm/pulledpork/#{sniff[:sensorname]}/pulledpork.conf").each_line do |li|
-    if (li[/^rule_url/]) and not rule_urls.include?(li) 
-      rule_urls << li 
+  ruby_block "get rule urls" do
+    block do
+      # Collect all rule_url entries in pulledpork for each sensor
+      File.open("/etc/nsm/pulledpork/#{sniff[:sensorname]}/pulledpork.conf").each_line do |li|
+        if (li[/^rule_url/]) and not rule_urls.include?(li) 
+          rule_urls << li 
+        end
+      end
     end
   end
+
   
   # Increment baryard port by 100 for next interface
   barnyard_port = barnyard_port + 100
@@ -534,8 +538,12 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
 end
 
-# Set rule_urls attribute
-node.default[:seconion][:sensor][:rule_urls] = rule_urls
+ruby_block "set rule_urls" do
+  block do
+    # Set rule_urls attribute
+    node.default[:seconion][:sensor][:rule_urls] = rule_urls
+  end
+end
 
 template "/etc/nsm/sensortab" do
   source "sensor/sensortab.erb"
