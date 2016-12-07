@@ -194,7 +194,7 @@ template '/opt/bro/share/bro/site/local.bro' do
     :bro_scripts => node[:seconion][:sensor][:bro_script],
     :bro_sigs => node[:seconion][:sensor][:bro_sig]
   })
-  notifies :run, 'execute[restart_sguil]', :immediately
+  notifies :run, 'execute[deploy_bro]', :immediately
 end
 
 execute 'deploy_bro' do
@@ -533,6 +533,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end
 
 end
+
+# Set rule_urls attribute
+node[:seconion][:sensor][:rule_urls] = rule_urls
 
 template "/etc/nsm/sensortab" do
   source "sensor/sensortab.erb"
