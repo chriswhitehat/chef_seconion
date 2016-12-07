@@ -29,7 +29,7 @@ file "/etc/nsm/sensortab" do
 end
 
 # Collect sensor rule urls
-rule_urls
+rule_urls = ''
 
 # Collect sensor pub keys
 sensor_ssh_keys = ''
