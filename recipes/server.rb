@@ -28,6 +28,9 @@ file "/etc/nsm/sensortab" do
   action :create
 end
 
+# Collect sensor rule urls
+rule_urls
+
 # Collect sensor pub keys
 sensor_ssh_keys = ''
 sensors = search(:node, 'recipes:seconion\:\:sensor')
@@ -38,6 +41,12 @@ sorted_sensors = sensors.sort_by!{ |n| n[:fqdn] }
 sorted_sensors.each do |sensor|
   if sensor[:seconion][:so_ssh_pub]
     sensor_ssh_keys << sensor[:seconion][:so_ssh_pub]  
+  end
+
+  if sensor[:seconion][:sensor][:rule_urls]
+    sensor[:seconion][:sensor][:rule_urls].each do |rule_url|
+      rule_urls << rule_url if not rule_urls.include?(rule_url)
+    end
   end
 
   sensor[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
@@ -76,6 +85,16 @@ template '/root/.ssh/authorized_keys' do
   group 'sguil'
   variables(
     :ssh_pub_keys => sensor_ssh_keys
+  )
+end
+
+template '/etc/nsm/pulledpork/pulledpork.conf' do
+  source 'server/pulledpork.conf.erb'
+  mode '0640'
+  owner 'sguil'
+  group 'sguil'
+  variables(
+    :rule_urls => rule_urls
   )
 end
 
