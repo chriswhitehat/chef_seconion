@@ -522,7 +522,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   ids_cluster_id = ids_cluster_id + 1
 
 
-  template "/opt/bro/share/bro/networks/#{sniff[:sensorname]}_networks.bro" do
+  template "/opt/bro/share/bro/networks/#{sniff[:sensorname]}.bro" do
     source 'bro/networks/sniff_networks.bro.erb'
     mode '0644'
     owner 'sguil'
