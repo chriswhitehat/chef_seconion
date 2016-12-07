@@ -511,7 +511,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   # Collect all rule_url entries in pulledpork for each sensor
   File.open("/etc/nsm/pulledpork/#{sniff[:sensorname]}/pulledpork.conf").each_line do |li|
-    rule_urls << li if (li[/^rule_url/]) && not rule_urls.include?(li)
+    if (li[/^rule_url/]) && not rule_urls.include?(li) do
+      rule_urls << li 
+    end
   end
   
   # Increment baryard port by 100 for next interface
