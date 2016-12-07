@@ -194,7 +194,7 @@ template '/opt/bro/share/bro/site/local.bro' do
     :bro_scripts => node[:seconion][:sensor][:bro_script],
     :bro_sigs => node[:seconion][:sensor][:bro_sig]
   })
-  notifies :run, 'execute[deploy_bro]', :immediately
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 execute 'deploy_bro' do
