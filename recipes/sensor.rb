@@ -3,8 +3,6 @@
 # Recipe:: sensor
 #
 
-require Set
-
 apt_repository 'SecurityOnion' do
   uri 'ppa:securityonion/stable'
 end
@@ -238,7 +236,7 @@ ids_cluster_id = 51
 
 sensortab = ""
 
-rule_urls = Set.new
+rule_urls = []
 
 node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
@@ -513,7 +511,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   # Collect all rule_url entries in pulledpork for each sensor
   File.open("/etc/nsm/pulledpork/#{sniff[:sensorname]}/pulledpork.conf").each_line do |li|
-    rule_urls.add(li) if (li[/^rule_url/])
+    rule_urls << li if (li[/^rule_url/])
   end
   
   # Increment baryard port by 100 for next interface
