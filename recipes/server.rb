@@ -37,6 +37,7 @@ snort_versions = ''
 ruby_block "get snort versions" do
   block do
     version = `snort --version 2>&1 >/dev/null | egrep -o "Version \S+" | cut -d ' ' -f 2`
+    puts version
     snort_versions << version if not snort_versions.include?(version)
   end
 end
