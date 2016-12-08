@@ -38,10 +38,11 @@ end
 
 execute 'ssh-keygen -f "/root/.ssh/securityonion" -N \'\'' do
   not_if do ::File.exists?('/root/.ssh/securityonion') end
+  notifies :run, 'ruby_block[set_pub_ssh_keys_attribute]', :delayed
 end
 
 # Ruby block converge hack
-ruby_block "set pub ssh keys attribute" do
+ruby_block "set_pub_ssh_keys_attribute" do
   block do
     if File.exists?('/root/.ssh/securityonion.pub')
       node.default[:seconion][:so_ssh_pub] = File.open('/root/.ssh/securityonion.pub', "r").read 
@@ -49,6 +50,7 @@ ruby_block "set pub ssh keys attribute" do
       node.default[:seconion][:so_ssh_pub] = '' 
     end
   end
+  action :nothing
 end
 
 template '/root/.ssh/securityonion_ssh.conf' do
@@ -303,6 +305,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       :sniff => sniff,
       :ids_cluster_id => ids_cluster_id
     })
+    notifies :run, 'ruby_block[get_snort_versions]', :delayed
   end
 
   file "/etc/nsm/#{sniff[:sensorname]}/attribute_table.dtd" do
@@ -465,6 +468,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       variables({
         :sniff => sniff,
       })
+      notifies :run, 'ruby_block[get_rule_urls]', :delayed
     end
 
   pulledpork_confs = ['disablesid', 'dropsid', 'enablesid', 'modifysid']
@@ -510,7 +514,6 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
         :host_sigs => host,
         :sensor_sigs => sensor
       })
-      notifies :run, 'ruby_block[get_rule_urls]', :delayed
     end
   end  
 
@@ -522,15 +525,17 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
           rule_urls << li 
         end
       end
+      node.default[:seconion][:sensor][:rule_urls] = rule_urls
     end
     action :nothing
   end
 
-  ruby_block "get snort versions" do
+  ruby_block "get_snort_versions" do
     block do
-      version = `snort --version 2>&1 >/dev/null | egrep -o "Version \S+" | cut -d ' ' -f 2`
+      version = `snort --version 2>&1 >/dev/null | egrep -o "Version \\S+" | cut -d ' ' -f 2`
       node.default[:seconion][:sensor][:snort_version] = version
     end
+    action :nothing
   end
   
   
@@ -552,12 +557,6 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
 end
 
-ruby_block "set rule_urls" do
-  block do
-    # Set rule_urls attribute
-    node.default[:seconion][:sensor][:rule_urls] = rule_urls
-  end
-end
 
 template "/etc/nsm/sensortab" do
   source "sensor/sensortab.erb"
