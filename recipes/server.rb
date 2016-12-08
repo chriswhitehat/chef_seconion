@@ -56,7 +56,6 @@ sorted_sensors.each do |sensor|
   if sensor[:seconion][:sensor][:snort_version]
     version = sensor[:seconion][:sensor][:snort_version]
     snort_versions << version if not snort_versions.include?(version)
-    end
   end
 
   if sensor[:seconion][:sensor][:rule_urls]
