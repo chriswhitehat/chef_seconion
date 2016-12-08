@@ -99,7 +99,7 @@ template '/root/.ssh/authorized_keys' do
   owner 'sguil'
   group 'sguil'
   variables(
-    :ssh_pub_keys => lazy { sensor_ssh_keys }
+    :ssh_pub_keys => sensor_ssh_keys
   )
 end
 
@@ -109,7 +109,7 @@ template '/etc/nsm/pulledpork/snort_versions' do
   owner 'sguil'
   group 'sguil'
   variables(
-    :snort_versions => lazy { snort_versions }
+    :snort_versions => snort_versions
   )
 end
 
@@ -119,7 +119,7 @@ template '/etc/nsm/pulledpork/pulledpork.conf' do
   owner 'sguil'
   group 'sguil'
   variables(
-    :rule_urls => lazy { rule_urls }
+    :rule_urls => rule_urls
   )
 end
 
