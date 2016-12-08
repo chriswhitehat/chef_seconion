@@ -336,8 +336,6 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     action :create
   end
   
-  :create_if_missing
-
   template "/etc/nsm/#{sniff[:sensorname]}/suricata.yaml" do
     source 'suricata/suricata.yaml.erb'
     mode '0644'
@@ -512,10 +510,11 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
         :host_sigs => host,
         :sensor_sigs => sensor
       })
+      notifies :run, 'ruby_block[get_rule_urls]', :delayed
     end
   end  
 
-  ruby_block "get rule urls" do
+  ruby_block "get_rule_urls" do
     block do
       # Collect all rule_url entries in pulledpork for each sensor
       File.open("/etc/nsm/pulledpork/#{sniff[:sensorname]}/pulledpork.conf").each_line do |li|
@@ -524,6 +523,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
         end
       end
     end
+    action :nothing
   end
 
   ruby_block "get snort versions" do
