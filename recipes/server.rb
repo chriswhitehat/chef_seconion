@@ -31,6 +31,17 @@ end
 # Collect sensor rule urls
 rule_urls = ''
 
+# Collect snort versions
+snort_versions = ''
+
+ruby_block "get snort versions" do
+  block do
+    version = `snort --version 2>&1 >/dev/null | egrep -o "Version \S+" | cut -d ' ' -f 2`
+    snort_versions << version if not snort_versions.include?(version)
+    end
+  end
+end
+
 # Collect sensor pub keys
 sensor_ssh_keys = ''
 sensors = search(:node, 'recipes:seconion\:\:sensor')
@@ -41,6 +52,12 @@ sorted_sensors = sensors.sort_by!{ |n| n[:fqdn] }
 sorted_sensors.each do |sensor|
   if sensor[:seconion][:so_ssh_pub]
     sensor_ssh_keys << sensor[:seconion][:so_ssh_pub]  
+  end
+
+  if sensor[:seconion][:sensor][:snort_version]
+    version = sensor[:seconion][:sensor][:snort_version]
+    snort_versions << version if not snort_versions.include?(version)
+    end
   end
 
   if sensor[:seconion][:sensor][:rule_urls]
@@ -84,17 +101,27 @@ template '/root/.ssh/authorized_keys' do
   owner 'sguil'
   group 'sguil'
   variables(
-    :ssh_pub_keys => sensor_ssh_keys
+    :ssh_pub_keys => lazy { sensor_ssh_keys }
+  )
+end
+
+template '/etc/nsm/pulledpork/snort_versions' do
+  source 'server/snort_versions.erb'
+  mode '0640'
+  owner 'sguil'
+  group 'sguil'
+  variables(
+    :snort_versions => lazy { snort_versions }
   )
 end
 
 template '/etc/nsm/pulledpork/pulledpork.conf' do
   source 'server/pulledpork.conf.erb'
-  mode '0640'
+  mode '0644'
   owner 'sguil'
   group 'sguil'
   variables(
-    :rule_urls => rule_urls
+    :rule_urls => lazy { rule_urls }
   )
 end
 
