@@ -530,10 +530,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     block do
       version = `snort --version 2>&1 >/dev/null | egrep -o "Version \S+" | cut -d ' ' -f 2`
       node.default[:seconion][:sensor][:snort_version] = version
-      end
     end
   end
-
+  
   
   # Increment baryard port by 100 for next interface
   barnyard_port = barnyard_port + 100
