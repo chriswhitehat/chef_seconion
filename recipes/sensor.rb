@@ -243,6 +243,8 @@ sensortab = ""
 
 rule_urls = []
 
+snort_versions = []
+
 node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   sensortab += "#{sniff[:sensorname]}    1    #{barnyard_port}    #{sniff[:interface]}\n"
@@ -520,6 +522,14 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
         if (li[/^rule_url/]) and not rule_urls.include?(li) 
           rule_urls << li 
         end
+      end
+    end
+  end
+
+  ruby_block "get snort versions" do
+    block do
+      version = `snort --version 2>&1 >/dev/null | egrep -o "Version \S+" | cut -d ' ' -f 2`
+      node.default[:seconion][:sensor][:snort_version] = version
       end
     end
   end
