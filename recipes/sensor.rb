@@ -3,13 +3,8 @@
 # Recipe:: sensor
 #
 
-apt_repository 'SecurityOnion' do
-  uri 'ppa:securityonion/stable'
-end
+include_recipe 'seconion::default'
 
-user 'sguil' do
-  system true
-end
 
 package ['securityonion-sensor', 'syslog-ng-core']
 
@@ -192,7 +187,7 @@ template '/opt/bro/share/bro/ghc_extraction/extract.bro' do
    mode '0644'
 end
 
-template '/opt/bro/share/bro/site/local.bro' do
+template '/opt/bro/share/bro/site/local.bro.old' do
    source 'bro/site/local.bro.erb'
    owner 'sguil'
    group 'sguil'
@@ -246,6 +241,8 @@ sensortab = ""
 rule_urls = []
 
 snort_versions = []
+
+bro_networks = []
 
 node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
