@@ -3,36 +3,6 @@
 # Recipe:: default
 #
 
-user 'sguil' do
-  system true
-end
-
-directories = ['/nsm',
-        			 '/var/log/nsm/',
-               '/var/log/nsm/securityonion/',
-        			 '/root/.ssh/',
-        			 '/etc/nsm/',
-               '/etc/nsm/rules/',
-               '/etc/nsm/rules/backup/',
-               '/etc/nsm/pulledpork',
-        			 '/usr/local/lib/snort_dynamicrules',
-        			 '/etc/mysql/',
-               '/etc/mysql/conf.d/',
-               '/nsm/bro',
-        			 '/nsm/bro/spool',
-        			 '/nsm/bro/logs',
-        			 '/nsm/bro/extracted']
-
-
-directories.each do |path|
-  directory path do
-	  owner 'root'
-	  group 'root'
-	  mode '0755'
-	  action :create
-	end
-end
-
 ##########################
 # Timezone
 ##########################
@@ -49,3 +19,13 @@ execute 'set-timezone' do
   command 'dpkg-reconfigure --frontend noninteractive tzdata'
   action :nothing
 end
+
+user 'sguil' do
+  system true
+end
+
+apt_repository 'SecurityOnion' do
+  uri 'ppa:securityonion/stable'
+end
+
+

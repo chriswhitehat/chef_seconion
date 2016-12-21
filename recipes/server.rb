@@ -3,12 +3,20 @@
 # Recipe:: server
 #
 
-apt_repository 'SecurityOnion' do
-  uri 'ppa:securityonion/stable'
-end
+include_recipe 'seconion::default'
 
-user 'sguil' do
-  system true
+
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# TODO Need to remove test in destination
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+###########
+# Network Interfaces Config
+###########
+template '/etc/network/testinterfaces' do
+  source 'server/interfaces.erb'
+  mode '0644'
+  owner 'sguil'
+  group 'sguil'
 end
 
 package ['securityonion-server', 'syslog-ng-core']
@@ -26,6 +34,7 @@ file "/etc/nsm/sensortab" do
   owner 'sguil'
   group 'sguil'
   action :create
+  notifies :run, 'ruby_block[get_snort_versions]', :delayed
 end
 
 # Collect sensor rule urls
@@ -34,12 +43,13 @@ rule_urls = ''
 # Collect snort versions
 snort_versions = ''
 
-ruby_block "get snort versions" do
+ruby_block "get_snort_versions" do
   block do
     version = `snort --version 2>&1 >/dev/null | egrep -o "Version \\S+" | cut -d ' ' -f 2`
     puts version
     snort_versions << version if not snort_versions.include?(version)
   end
+  action :nothing
 end
 
 # Collect sensor pub keys
@@ -104,9 +114,9 @@ template '/root/.ssh/authorized_keys' do
   )
 end
 
-template '/etc/nsm/pulledpork/snort_versions' do
+template '/etc/nsm/pulledpork/snort_versions.chef' do
   source 'server/snort_versions.erb'
-  mode '0640'
+  mode '0644'
   owner 'sguil'
   group 'sguil'
   variables(

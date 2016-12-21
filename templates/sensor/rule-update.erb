@@ -35,18 +35,6 @@ function update(){
 # How many days of rule backups do you want to keep?
 DAYSTOKEEP_RULE_BACKUPS=30
 
-# Do you want to enable local tuning of NIDS rules?
-# Default is false (rules are copied as-is from master server)
-# Setting to true will result in the raw rules tarball(s)
-# being copied from the master and then pulledpork running locally
-# for additional tuning
-LOCAL_NIDS_RULE_TUNING=false
-
-# Do you want to enable local tuning of HIDS rules?
-# Default is false (OSSEC local_rules.xml is copied from master server)
-# Setting to true bypasses this so that you can tune local_rules.xml locally
-LOCAL_HIDS_RULE_TUNING=false
-
 # What user account should be used to execute pulledpork?
 PULLEDPORK_USER=sguil
 
@@ -59,24 +47,6 @@ source /etc/nsm/securityonion.conf
 # Current date
 date
 
-#########################################
-# OSSEC HIDS Variables and Backups
-#########################################
-
-# OSSEC HIDS rules
-HIDS=/var/ossec/rules
-HIDS_RULES=$HIDS/local_rules.xml
-
-# Create backup directory if it doesn't already exist
-HIDS_RULES_BACK=$HIDS/backup
-mkdir -p $HIDS_RULES_BACK
-
-# Backup local_rules.xml and remove old backups
-HIDS_RULES_PREV=$HIDS_RULES_BACK/local_rules.xml.`date +%Y%m%d%H%M%S`
-echo "Backing up current local_rules.xml file."
-cp $HIDS_RULES $HIDS_RULES_PREV
-echo "Cleaning up local_rules.xml backup files older than $DAYSTOKEEP_RULE_BACKUPS days."
-find $HIDS_RULES_BACK/local_rules.xml.* -type f -mtime +$DAYSTOKEEP_RULE_BACKUPS -exec /bin/rm -f '{}' +
 
 #########################################
 # NIDS Variables and Backups
