@@ -24,12 +24,16 @@ default[:seconion][:sensor][:bro_script]['tuning/defaults'] = true
 # Load the scan detection script.
 default[:seconion][:sensor][:bro_script]['misc/scan'] = true
 
-# Log some information about web applications being used by users
-# on your network.
-default[:seconion][:sensor][:bro_script]['misc/app-stats'] = true
+# Estimate and log capture loss.
+default[:seconion][:sensor][:bro_script]['misc/capture-loss'] = true
 
-# Detect traceroute being run on the network.
-default[:seconion][:sensor][:bro_script]['misc/detect-traceroute'] = true
+# Enable logging of memory, packet and lag statistics.
+default[:seconion][:sensor][:bro_script]['misc/stats'] = true
+
+# Detect traceroute being run on the network. This could possibly cause
+# performance trouble when there are a lot of traceroutes on your network.
+# Enable cautiously.
+default[:seconion][:sensor][:bro_script]['misc/detect-traceroute'] = false
 
 # Generate notices when vulnerable versions of software are discovered.
 # The default is to only monitor software found in the address space defined
@@ -45,6 +49,7 @@ default[:seconion][:sensor][:bro_script]['protocols/ftp/software'] = true
 default[:seconion][:sensor][:bro_script]['protocols/smtp/software'] = true
 default[:seconion][:sensor][:bro_script]['protocols/ssh/software'] = true
 default[:seconion][:sensor][:bro_script]['protocols/http/software'] = true
+
 # The detect-webapps script could possibly cause performance trouble when
 # running on live traffic.  Enable it cautiously.
 default[:seconion][:sensor][:bro_script]['protocols/http/detect-webapps'] = false
@@ -95,6 +100,18 @@ default[:seconion][:sensor][:bro_script]['frameworks/files/detect-MHR'] = true
 # this might impact performance a bit.
 default[:seconion][:sensor][:bro_script]['policy/protocols/ssl/heartbleed'] = false
 
+# Uncomment the following line to enable logging of connection VLANs. Enabling
+# this adds two VLAN fields to the conn.log file.
+default[:seconion][:sensor][:bro_script]['policy/protocols/conn/vlan-logging'] = false
+
+# Uncomment the following line to enable logging of link-layer addresses. Enabling
+# this adds the link-layer address for each connection endpoint to the conn.log file.
+default[:seconion][:sensor][:bro_script]['policy/protocols/conn/mac-logging'] = false
+
+# Uncomment the following line to enable the SMB analyzer.  The analyzer
+# is currently considered a preview and therefore not loaded by default.
+default[:seconion][:sensor][:bro_script]['policy/protocols/smb'] = true
+
 # Security Onion default scripts
 default[:seconion][:sensor][:bro_script]['securityonion'] = true
 
@@ -119,3 +136,11 @@ default[:seconion][:sensor][:bro_script]['ghc_extraction'] = false
 
 # Load ETPro IOC's into intel framekwork
 default[:seconion][:sensor][:bro_script]['etpro'] = false
+
+
+############
+# Deprectated in 2.5
+############
+# Log some information about web applications being used by users
+# on your network.
+# default[:seconion][:sensor][:bro_script]['misc/app-stats'] = true
