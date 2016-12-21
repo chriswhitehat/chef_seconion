@@ -187,7 +187,7 @@ template '/opt/bro/share/bro/ghc_extraction/extract.bro' do
    mode '0644'
 end
 
-template '/opt/bro/share/bro/site/local.bro.old' do
+template '/opt/bro/share/bro/site/local.bro' do
    source 'bro/site/local.bro.erb'
    owner 'sguil'
    group 'sguil'
