@@ -24,7 +24,7 @@
 # i.e. url|tarball|123456789, 
 
 <% if node[:seconion][:sensor][:vrt_rules_enabled] %>
-rule_url=https://www.snort.org/reg-rules/|snortrules-snapshot.tar.gz|<%= node[:seconion][:server][:vrt_oinkcode] %>
+rule_url=https://www.snort.org/reg-rules/|snortrules-snapshot.tar.gz|<%= node[:seconion][:vrt_oinkcode] %>
 <% else %>
 #rule_url=https://www.snort.org/reg-rules/|snortrules-snapshot.tar.gz|<oinkcode>
 <% end %>
@@ -35,7 +35,7 @@ rule_url=https://www.snort.org/reg-rules/|snortrules-snapshot.tar.gz|<%= node[:s
 #rule_url=http://labs.snort.org/feeds/ip-filter.blf|IPBLACKLIST|open
 # URL for rule documentation! (slow to process)
 <% if node[:seconion][:sensor][:vrtopen_rules_enabled] %>
-rule_url=https://www.snort.org/reg-rules/|opensource.gz|<%= node[:seconion][:server][:vrt_oinkcode] %>
+rule_url=https://www.snort.org/reg-rules/|opensource.gz|<%= node[:seconion][:vrt_oinkcode] %>
 <% else %>
 #rule_url=https://www.snort.org/reg-rules/|opensource.gz|<oinkcode>
 <% end %>
@@ -50,7 +50,7 @@ rule_url=https://rules.emergingthreatspro.com/|emerging.rules.tar.gz|open
 # and the et oinkcode requirement!
 
 <% if node[:seconion][:sensor][:etpro_rules_enabled] %>
-rule_url=https://rules.emergingthreatspro.com/|etpro.rules.tar.gz|<%= node[:seconion][:server][:etpro_oinkcode] %> 
+rule_url=https://rules.emergingthreatspro.com/|etpro.rules.tar.gz|<%= node[:seconion][:etpro_oinkcode] %> 
 <% else %>
 #rule_url=https://rules.emergingthreatspro.com/|etpro.rules.tar.gz|<et oinkcode>
 <% end %>
