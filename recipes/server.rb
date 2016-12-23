@@ -15,8 +15,8 @@ include_recipe 'seconion::default'
 template '/etc/network/testinterfaces' do
   source 'server/interfaces.erb'
   mode '0644'
-  owner 'sguil'
-  group 'sguil'
+  owner 'root'
+  group 'root'
 end
 
 package ['securityonion-server', 'syslog-ng-core']
