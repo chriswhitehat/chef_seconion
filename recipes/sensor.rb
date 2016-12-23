@@ -305,7 +305,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       :sniff => sniff,
       :ids_cluster_id => ids_cluster_id
     })
-    notifies :run, 'ruby_block[get_snort_versions]', :delayed
+    notifies :run, "ruby_block[get_snort_versions_#{sniff[:sensorname]}]", :delayed
   end
 
   file "/etc/nsm/#{sniff[:sensorname]}/attribute_table.dtd" do
@@ -530,7 +530,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     action :nothing
   end
 
-  ruby_block "get_snort_versions" do
+  ruby_block "get_snort_versions_#{sniff[:sensorname]}" do
     block do
       version = `snort --version 2>&1 >/dev/null | egrep -o "Version \\S+" | cut -d ' ' -f 2`
       node.default[:seconion][:sensor][:snort_version] = version
