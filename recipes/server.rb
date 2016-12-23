@@ -77,17 +77,17 @@ sorted_sensors.each do |sensor|
 
   sensor[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
-    symlink = "/nsm/server_data/#{ node[:seconion][:server][:sguil_server_name] }/rules/#{ sniff[:sensorname] }" 
-    execute 'base_symlink_rules' do
+    symlink = "/nsm/server_data/#{node[:seconion][:server][:sguil_server_name]}/rules/#{sniff[:sensorname]}" 
+    execute "base_symlink_rules_#{sniff[:sensorname]}" do
       command "ln -f -s /etc/nsm/rules #{symlink}"
       not_if do ::File.exists?("#{symlink}") end
     end
 
     (1..sniff[:ids_lb_procs]).each do |i| 
-      symlink = "/nsm/server_data/#{ node[:seconion][:server][:sguil_server_name] }/rules/#{ sniff[:sensorname] }-#{i}" 
+      symlink = "/nsm/server_data/#{node[:seconion][:server][:sguil_server_name]}/rules/#{sniff[:sensorname]}-#{i}" 
       puts symlink
       puts (1..sniff[:ids_lb_procs])
-      execute 'lbproc_symlink_rules' do
+      execute "lbproc_symlink_rules_#{sniff[:sensorname]}-#{i}" do
         command "ln -f -s /etc/nsm/rules #{symlink}"
         not_if do ::File.exists?("#{symlink}") end
       end
