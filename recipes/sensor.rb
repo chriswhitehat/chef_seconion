@@ -324,7 +324,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     action :create
   end
 
-  file "/etc/nsm/#{sniff[:sensorname]}/rules/gen-msg.map" do
+  file "/etc/nsm/rules/#{sniff[:sensorname]}/gen-msg.map" do
     mode '0644'
     owner 'sguil'
     group 'sguil'
