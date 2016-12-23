@@ -265,7 +265,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end
 
   # Run sensor add command creating directories and other state
-  execute 'nsm_sensor_add' do
+  execute "nsm_sensor_add_#{sniff[:sensorname]}" do
     command "/usr/sbin/nsm_sensor_add --sensor-name=\"#{sniff[:sensorname]}\" --sensor-interface=\"#{sniff[:interface]}\" --sensor-interface-auto=no "\
                                           "--sensor-server-host=\"#{node[:seconion][:server][:servername]}\" --sensor-server-port=7736 "\
                                           "--sensor-barnyard2-port=#{barnyard_port} --sensor-auto=yes --sensor-utc=yes "\
@@ -324,7 +324,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     action :create
   end
 
-  file "/etc/nsm/rules/gen-msg.map" do
+  file "/etc/nsm/#{sniff[:sensorname]}/rules/gen-msg.map" do
     mode '0644'
     owner 'sguil'
     group 'sguil'
@@ -468,7 +468,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       variables({
         :sniff => sniff,
       })
-      notifies :run, 'ruby_block[get_rule_urls]', :delayed
+      notifies :run, "ruby_block[get_rule_urls_#{sniff[:sensorname]}]", :delayed
     end
 
   pulledpork_confs = ['disablesid', 'dropsid', 'enablesid', 'modifysid']
@@ -517,7 +517,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     end
   end  
 
-  ruby_block "get_rule_urls" do
+  ruby_block "get_rule_urls_#{sniff[:sensorname]}" do
     block do
       # Collect all rule_url entries in pulledpork for each sensor
       File.open("/etc/nsm/pulledpork/#{sniff[:sensorname]}/pulledpork.conf").each_line do |li|
