@@ -250,7 +250,10 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   # List of directories to create
   directories = ["/etc/nsm/pulledpork/#{sniff[:sensorname]}",
-                  "/etc/nsm/rules/#{sniff[:sensorname]}"]
+                  "/etc/nsm/rules/#{sniff[:sensorname]}",
+                  "/etc/nsm/rules/#{sniff[:sensorname]}/backup",
+                  "/usr/local/lib/snort_dynamicrules/#{sniff[:sensorname]}",
+                  "/usr/local/lib/snort_dynamicrules_backup/#{sniff[:sensorname]}"]
 
   directories.each do |path|
     directory path do

@@ -9,7 +9,7 @@
 
 template '/etc/timezone' do
   source 'default/timezone.erb'
-  mode '0655'
+  mode '0644'
   owner 'root'
   group 'root'
   notifies :run, 'execute[set-timezone]', :immediately
@@ -28,4 +28,13 @@ apt_repository 'SecurityOnion' do
   uri 'ppa:securityonion/stable'
 end
 
+##########################
+# Replace existing rule-update
+##########################
+template '/usr/bin/rule-update' do
+  source '/rule-update/rule-update.erb'
+  mode '0755'
+  owner 'root'
+  group 'root'
+end
 
