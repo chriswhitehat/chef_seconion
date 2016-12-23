@@ -65,8 +65,8 @@ end
 template '/etc/network/testinterfaces' do
   source 'sensor/interfaces.erb'
   mode '0644'
-  owner 'sguil'
-  group 'sguil'
+  owner 'root'
+  group 'root'
   variables( 
     :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
