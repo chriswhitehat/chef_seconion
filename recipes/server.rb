@@ -99,18 +99,25 @@ sorted_sensors.each do |sensor|
 
 end
 
-directory '/root/.ssh' do
-  owner 'sguil'
-  group 'sguil'
-  mode '0700'
+directory "/home/#{node[:seconion][:ssh_username]}" do
+  owner node[:seconion][:ssh_username]
+  group node[:seconion][:ssh_username]
+  mode '0755'
   action :create
 end
 
-template '/root/.ssh/authorized_keys' do
+directory "/home/#{node[:seconion][:ssh_username]}/.ssh/" do
+  owner node[:seconion][:ssh_username]
+  group node[:seconion][:ssh_username]
+  mode '0755'
+  action :create
+end
+
+template "/home/#{node[:seconion][:ssh_username]}/.ssh/authorized_keys" do
   source 'server/authorized_keys.erb'
   mode '0640'
-  owner 'sguil'
-  group 'sguil'
+  owner node[:seconion][:ssh_username]
+  group node[:seconion][:ssh_username]
   variables(
     :ssh_pub_keys => sensor_ssh_keys
   )
