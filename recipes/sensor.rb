@@ -15,7 +15,8 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/smtp-embedded-url-bloom',
                '/opt/bro/share/bro/networks',
                '/var/log/nsm',
-               '/usr/local/lib/snort_dynamicrules']
+               '/usr/local/lib/snort_dynamicrules',
+               '/usr/local/lib/snort_dynamicrules_backup']
 
 directories.each do |path|
   directory path do
