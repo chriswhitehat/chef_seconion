@@ -6,6 +6,10 @@
 include_recipe 'seconion::default'
 
 
+user node[:seconion][:ssh_username] do
+  system true
+end
+
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # TODO Need to remove test in destination
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
