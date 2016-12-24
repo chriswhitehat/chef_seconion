@@ -6,9 +6,7 @@
 include_recipe 'seconion::default'
 
 
-user node[:seconion][:ssh_username] do
-  system true
-end
+user node[:seconion][:ssh_username]
 
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # TODO Need to remove test in destination
