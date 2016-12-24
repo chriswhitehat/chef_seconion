@@ -7,8 +7,8 @@
 config logdir: /nsm/sensor_data/<%= @sniff[:sensorname] %>
 config classification_file: /etc/nsm/<%= @sniff[:sensorname] %>/classification.config
 config reference_file:      /etc/nsm/<%= @sniff[:sensorname] %>/reference.config
-config sid_file:            /etc/nsm/<%= @sniff[:sensorname] %>/sid-msg.map
-config gen_file:            /etc/nsm/<%= @sniff[:sensorname] %>/gen-msg.map
+config sid_file:            /etc/nsm/rules/<%= @sniff[:sensorname] %>/sid-msg.map
+config gen_file:            /etc/nsm/rules/<%= @sniff[:sensorname] %>/gen-msg.map
 config hostname: <%= @sniff[:sensorname] %>
 config interface: <%= @sniff[:interface] %>
 input unified2
