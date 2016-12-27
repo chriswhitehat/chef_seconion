@@ -239,8 +239,6 @@ sensortab = ""
 
 rule_urls = []
 
-snort_versions = []
-
 bro_networks = []
 
 node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
@@ -398,15 +396,15 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     sensor = {}
   end
 
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-# TODO add local.rules management
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-# TODO add white_list.rules management
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-# TODO add black_list.rules management
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  # TODO add local.rules management
+  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  # TODO add white_list.rules management
+  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  # TODO add black_list.rules management
+  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   template "/etc/nsm/#{sniff[:sensorname]}/threshold.conf" do
     source "snort/threshold.conf.erb"
     owner 'sguil'
@@ -535,13 +533,6 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     end
   end
 
-  ruby_block "get_snort_versions_#{sniff[:sensorname]}" do
-    block do
-      version = `snort --version 2>&1 >/dev/null | egrep -o "Version \\S+" | cut -d ' ' -f 2`
-      node.default[:seconion][:sensor][:snort_version] = version
-    end
-  end
-  
   
   # Increment baryard port by 100 for next interface
   barnyard_port = barnyard_port + 100
