@@ -328,7 +328,119 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     action :create
   end
 
-  file "/nsm/sensor_data/#{sniff[:sensorname]}/snort.stats" do
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/local.rules" do
+    source 'snort/local.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/white_list.map" do
+    source 'snort/white_list.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/black_list.rules" do
+    source 'snort/black_list.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/app-layer-events.rules" do
+    source 'snort/app-layer-events.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/decoder-events.rules" do
+    source 'snort/decoder-events.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/dnp3-events.rules" do
+    source 'snort/dnp3-events.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/dns-events.rules" do
+    source 'snort/dns-events.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/files" do
+    source 'snort/files.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/http-events.rules" do
+    source 'snort/http-events.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/modbus-events.rules" do
+    source 'snort/modbus-events.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/smtp-events.rules" do
+    source 'snort/smtp-events.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/so_rules.rules" do
+    source 'snort/so_rules.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/stream-events.rules" do
+    source 'snort/stream-events.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/tls-events.rules" do
+    source 'snort/tls-events.rules.erb'
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :create
+  end
+
+  template  "/nsm/sensor_data/#{sniff[:sensorname]}/snort.stats" do
+    source 'snort/.rules.erb'
     mode '0644'
     owner 'sguil'
     group 'sguil'
