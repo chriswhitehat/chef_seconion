@@ -24,6 +24,16 @@ end
 package ['securityonion-server', 'syslog-ng-core']
 
 
+##########################
+# Replace existing rule-update
+##########################
+template '/usr/bin/rule-update' do
+  source '/rule-update/rule-update.erb'
+  mode '0755'
+  owner 'root'
+  group 'root'
+end
+
 template '/etc/nsm/securityonion.conf' do
   source 'default/securityonion.conf.erb'
   mode '0644'

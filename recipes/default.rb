@@ -28,13 +28,3 @@ apt_repository 'SecurityOnion' do
   uri 'ppa:securityonion/stable'
 end
 
-##########################
-# Replace existing rule-update
-##########################
-template '/usr/bin/rule-update' do
-  source '/rule-update/rule-update.erb'
-  mode '0755'
-  owner 'root'
-  group 'root'
-end
-
