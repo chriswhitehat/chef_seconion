@@ -339,7 +339,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     action :create
   end
 
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/white_list.map" do
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/white_list.rules" do
     source 'snort/white_list.rules.erb'
     mode '0644'
     owner 'sguil'
