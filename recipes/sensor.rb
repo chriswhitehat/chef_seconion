@@ -8,6 +8,15 @@ include_recipe 'seconion::default'
 
 package ['securityonion-sensor', 'syslog-ng-core']
 
+##########################
+# Replace existing rule-update
+##########################
+template '/usr/bin/rule-update' do
+  source '/rule-update/rule-update.erb'
+  mode '0755'
+  owner 'root'
+  group 'root'
+end
 
 directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/ghc_extraction',
