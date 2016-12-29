@@ -37,6 +37,7 @@ directories.each do |path|
 end
 
 
+
 ###########
 # SSH Sensor Config
 ###########
@@ -270,6 +271,10 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     end
   end
 
+  #TODO touch log files that warn on first run.
+  touch_files = ["/var/log/nsm/#{sniff[:sensorname]}/netsniff-ng.log",
+                 ""]
+
   # Run sensor add command creating directories and other state
   execute "nsm_sensor_add_#{sniff[:sensorname]}" do
     command "/usr/sbin/nsm_sensor_add --sensor-name=\"#{sniff[:sensorname]}\" --sensor-interface=\"#{sniff[:interface]}\" --sensor-interface-auto=no "\
@@ -277,8 +282,15 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
                                           "--sensor-barnyard2-port=#{barnyard_port} --sensor-auto=yes --sensor-utc=yes "\
                                           "--sensor-vlan-tagging=no --sensor-net-group=\"#{sniff[:sensor_net_group]}\" --force-yes"
     not_if do ::File.exists?("/etc/nsm/#{sniff[:sensorname]}") end
+    notifies :run, 'execute[chown-nsm]', :immediately
   end
   
+  execute "chown-nsm" do
+    command "chown -R sguil:sguil /nsm"
+    user "root"
+    action :nothing
+  end
+
 
   template "/etc/nsm/#{sniff[:sensorname]}/sensor.conf" do
     source "sensor/sensor.conf.erb"
@@ -551,15 +563,6 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     sensor = {}
   end
 
-  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  # TODO add local.rules management
-  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  # TODO add white_list.rules management
-  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  # TODO add black_list.rules management
-  #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   template "/etc/nsm/#{sniff[:sensorname]}/threshold.conf" do
     source "snort/threshold.conf.erb"
     owner 'sguil'
