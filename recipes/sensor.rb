@@ -333,6 +333,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'sguil'
     group 'sguil'
+    variables({
+      :sniff => sniff,
+    })
     action :create
   end
 
@@ -341,6 +344,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'sguil'
     group 'sguil'
+    variables({
+      :sniff => sniff,
+    })
     action :create
   end
 
@@ -349,6 +355,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'sguil'
     group 'sguil'
+    variables({
+      :sniff => sniff,
+    })
     action :create
   end
   template  "/etc/nsm/rules/#{sniff[:sensorname]}/app-layer-events.rules" do
@@ -356,6 +365,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'sguil'
     group 'sguil'
+    variables({
+      :sniff => sniff,
+    })
     action :create
   end
 
@@ -364,6 +376,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'sguil'
     group 'sguil'
+    variables({
+      :sniff => sniff,
+    })
     action :create
   end
 
@@ -372,6 +387,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'sguil'
     group 'sguil'
+    variables({
+      :sniff => sniff,
+    })
     action :create
   end
 
@@ -381,13 +399,19 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     owner 'sguil'
     group 'sguil'
     action :create
+    variables({
+      :sniff => sniff,
+    })
   end
 
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/files" do
+  template  "/etc/nsm/rules/#{sniff[:sensorname]}/files.rules" do
     source 'snort/files.rules.erb'
     mode '0644'
     owner 'sguil'
     group 'sguil'
+    variables({
+      :sniff => sniff,
+    })
     action :create
   end
 
@@ -396,6 +420,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'sguil'
     group 'sguil'
+    variables({
+      :sniff => sniff,
+    })
     action :create
   end
 
@@ -404,6 +431,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'sguil'
     group 'sguil'
+    variables({
+      :sniff => sniff,
+    })
     action :create
   end
 
@@ -412,6 +442,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'sguil'
     group 'sguil'
+    variables({
+      :sniff => sniff,
+    })
     action :create
   end
 
@@ -420,6 +453,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'sguil'
     group 'sguil'
+    variables({
+      :sniff => sniff,
+    })
     action :create
   end
 
@@ -428,6 +464,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'sguil'
     group 'sguil'
+    variables({
+      :sniff => sniff,
+    })
     action :create
   end
 
@@ -436,6 +475,9 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     mode '0644'
     owner 'sguil'
     group 'sguil'
+    variables({
+      :sniff => sniff,
+    })
     action :create
   end
 
