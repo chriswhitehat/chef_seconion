@@ -480,14 +480,6 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     })
     action :create
   end
-
-  template  "/nsm/sensor_data/#{sniff[:sensorname]}/snort.stats" do
-    source 'snort/.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    action :create
-  end
   
   template "/etc/nsm/#{sniff[:sensorname]}/suricata.yaml" do
     source 'suricata/suricata.yaml.erb'
