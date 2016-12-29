@@ -219,7 +219,8 @@ end
 #########################################
 
 
-
+# TODO investigate pulledpork run/rule-update
+# An error occurred: ERROR: /etc/nsm/templates/snort//etc/nsm/rules/downloaded.rules(0) Unable to open rules file "/etc/nsm/templates/snort//etc/nsm/rules/downloaded.rules": No such file or directory.
 
 
 #########################################
@@ -273,7 +274,17 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   #TODO touch log files that warn on first run.
   touch_files = ["/var/log/nsm/#{sniff[:sensorname]}/netsniff-ng.log",
-                 ""]
+                 "/var/log/nsm/#{sniff[:sensorname]}/sid_changes.log"]
+
+  touch_files.each do |path|
+    file path do
+      mode '0644'
+      owner 'sguil'
+      group 'sguil'
+      action :touch
+      not_if do ::File.exists?(path) end
+    end
+  end
 
   # Run sensor add command creating directories and other state
   execute "nsm_sensor_add_#{sniff[:sensorname]}" do
@@ -285,7 +296,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     notifies :run, 'execute[chown-nsm]', :immediately
   end
   
-  execute "chown-nsm" do
+  execute "chown-nsm-#{sniff[:snesorname]}" do
     command "chown -R sguil:sguil /nsm"
     user "root"
     action :nothing
