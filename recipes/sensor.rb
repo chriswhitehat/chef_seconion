@@ -293,7 +293,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
                                           "--sensor-barnyard2-port=#{barnyard_port} --sensor-auto=yes --sensor-utc=yes "\
                                           "--sensor-vlan-tagging=no --sensor-net-group=\"#{sniff[:sensor_net_group]}\" --force-yes"
     not_if do ::File.exists?("/etc/nsm/#{sniff[:sensorname]}") end
-    notifies :run, 'execute[chown-nsm]', :immediately
+    notifies :run, 'execute[chown-nsm-#{sniff[:snesorname]}]', :immediately
   end
   
   execute "chown-nsm-#{sniff[:snesorname]}" do
