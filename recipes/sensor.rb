@@ -42,7 +42,7 @@ end
 # SSH Sensor Config
 ###########
 
-execute 'ssh-keygen -f "/root/.ssh/securityonion" -N \'\'' do
+execute 'ssh-keygen -f "/root/.ssh/securityonion" -N \'\'; chmod 755 /root/.ssh' do
   not_if do ::File.exists?('/root/.ssh/securityonion') end
 end
 
