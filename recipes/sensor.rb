@@ -287,8 +287,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     end
   end
 
-  touch_lb_files = ["/var/log/nsm/#{sniff[:sensorname]}snort_agent"
-                    "/var/log/nsm/#{sniff[:sensorname]}/snortu"
+  touch_lb_files = ["/var/log/nsm/#{sniff[:sensorname]}snort_agent",
+                    "/var/log/nsm/#{sniff[:sensorname]}/snortu",
                     "/var/log/nsm/#{sniff[:sensorname]}/barnyard2"]
 
   touch_lb_files.each do |path|
