@@ -118,9 +118,19 @@ if [ ! -f $SSH_CONF ]; then
         echo "ENGINE=suricata, so we'll execute PulledPork with the -T option to avoid adding soid rules to downloaded.rules."
     fi
 
+    SNORT_VERSION_MAJOR="$(snort --version 2>&1 >/dev/null | egrep -o "Version (.\..\..)" | cut -d " " -f 2)"
+    SNORT_VERSION_SHORT="$(snort --version 2>&1 >/dev/null | egrep -o "Version (\S+)" | cut -d " " -f 2 | tr -d ".")"
+
+    <% if node[:seconion][:sensor][:vrt_rules_enabled] %>
+    wget "https://www.snort.org/reg-rules/snortrules-snapshot-$SNORT_VERSION_SHORT.tar.gz/<%=node[:seconion][:vrt_oinkcode]%>" -O /tmp/snortrules-snapshot-$SNORT_VERSION_SHORT.tar.gz
+    <% end %>
+    <% if node[:seconion][:sensor][:vrt_rules_enabled] %>
+    wget "https://rules.emergingthreatspro.com/<%=node[:seconion][:etpro_oinkcode]%>/snort-$SNORT_VERSION_MAJOR/etpro.rules.tar.gz" -O /tmp/etpro.rules.tar.gz
+    <% end %>
+    
     # Go get rules from Internet.
     echo "Running PulledPork."
-    /usr/bin/pulledpork.pl -P $PP_OPTIONS -c /etc/nsm/pulledpork/pulledpork.conf |
+    /usr/bin/pulledpork.pl -P $PP_OPTIONS -n -c /etc/nsm/pulledpork/pulledpork.conf |
             grep -v "normalizations disabled because not inline" |grep -v "^$"
 
 else
