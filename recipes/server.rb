@@ -24,6 +24,19 @@ end
 package ['securityonion-server', 'syslog-ng-core']
 
 
+#TODO touch log files that warn on first run.
+touch_files = ["/var/log/nsm/sguild.log"]
+
+touch_files.each do |path|
+  file path do
+    mode '0644'
+    owner 'sguil'
+    group 'sguil'
+    action :touch
+    not_if do ::File.exists?(path) end
+  end
+end
+
 ##########################
 # Replace existing rule-update
 ##########################
