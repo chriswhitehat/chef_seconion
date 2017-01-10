@@ -273,7 +273,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end
 
   #TODO touch log files that warn on first run.
-  touch_files = ["/var/log/nsm/#{sniff[:sensorname]}/netsniff-ng.log",
+  touch_files = ["/var/log/nsm/#{sniff[:sensorname]}",
+                 "/var/log/nsm/#{sniff[:sensorname]}/netsniff-ng.log",
                  "/var/log/nsm/#{sniff[:sensorname]}/sid_changes.log"]
 
   touch_files.each do |path|
