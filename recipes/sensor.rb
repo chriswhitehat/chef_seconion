@@ -11,7 +11,7 @@ package ['securityonion-sensor', 'syslog-ng-core']
 ##########################
 # Replace existing rule-update
 ##########################
-template '/usr/bin/rule-update' do
+template '/usr/sbin/rule-update' do
   source '/rule-update/rule-update.erb'
   mode '0755'
   owner 'root'
