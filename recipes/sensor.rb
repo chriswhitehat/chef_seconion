@@ -257,7 +257,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   sensortab += "#{sniff[:sensorname]}    1    #{barnyard_port}    #{sniff[:interface]}\n"
 
   # List of directories to create
-  directories = ["/etc/nsm/pulledpork/#{sniff[:sensorname]}",
+  directories = ["/var/log/nsm/#{sniff[:sensorname]}",
+                  "/etc/nsm/pulledpork/#{sniff[:sensorname]}",
                   "/etc/nsm/rules/#{sniff[:sensorname]}",
                   "/etc/nsm/rules/#{sniff[:sensorname]}/backup",
                   "/usr/local/lib/snort_dynamicrules/#{sniff[:sensorname]}",
@@ -273,8 +274,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end
 
   #TODO touch log files that warn on first run.
-  touch_files = ["/var/log/nsm/#{sniff[:sensorname]}",
-                 "/var/log/nsm/#{sniff[:sensorname]}/netsniff-ng.log",
+  touch_files = ["/var/log/nsm/#{sniff[:sensorname]}/netsniff-ng.log",
                  "/var/log/nsm/#{sniff[:sensorname]}/sid_changes.log"]
 
   touch_files.each do |path|
