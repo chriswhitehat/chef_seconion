@@ -275,7 +275,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
   #TODO touch log files that warn on first run.
   touch_files = ["/var/log/nsm/#{sniff[:sensorname]}/netsniff-ng.log",
-                 "/var/log/nsm/#{sniff[:sensorname]}/sid_changes.log"]
+                 "/var/log/nsm/#{sniff[:sensorname]}/pcap_agent.log"]
 
   touch_files.each do |path|
     file path do
@@ -284,6 +284,23 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       group 'sguil'
       action :touch
       not_if do ::File.exists?(path) end
+    end
+  end
+
+  touch_lb_files = ["/var/log/nsm/#{sniff[:sensorname]}snort_agent"
+                    "/var/log/nsm/#{sniff[:sensorname]}/snortu"
+                    "/var/log/nsm/#{sniff[:sensorname]}/barnyard2"]
+
+  touch_lb_files.each do |path|
+    (1..sniff[:ids_lb_procs]).each do |i| 
+      lb_path = "#{path}-#{i}.log" 
+      file lb_path do
+        mode '0644'
+        owner 'sguil'
+        group 'sguil'
+        action :touch
+        not_if do ::File.exists?(lb_path) end
+      end
     end
   end
 
