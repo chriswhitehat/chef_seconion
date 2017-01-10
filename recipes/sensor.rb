@@ -297,7 +297,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     notifies :run, "execute[chown-nsm-#{sniff[:snesorname]}]", :immediately
   end
   
-  execute "chown-nsm-#{sniff[:snesorname]}" do
+  execute "chown-nsm-#{sniff[:sensorname]}" do
     command "chown -R sguil:sguil /nsm"
     user "root"
     action :nothing
