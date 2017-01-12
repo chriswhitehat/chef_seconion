@@ -122,10 +122,10 @@ if [ ! -f $SSH_CONF ]; then
     SNORT_VERSION_SHORT="$(snort --version 2>&1 >/dev/null | egrep -o "Version (\S+)" | cut -d " " -f 2 | tr -d ".")"
 
     <% if node[:seconion][:sensor][:vrt_rules_enabled] %>
-    wget "https://www.snort.org/reg-rules/snortrules-snapshot-$SNORT_VERSION_SHORT.tar.gz/<%=node[:seconion][:vrt_oinkcode]%>" -O /tmp/snortrules-snapshot-$SNORT_VERSION_SHORT.tar.gz
+    wget -q "https://www.snort.org/reg-rules/snortrules-snapshot-$SNORT_VERSION_SHORT.tar.gz/<%=node[:seconion][:vrt_oinkcode]%>" -O /tmp/snortrules-snapshot-$SNORT_VERSION_SHORT.tar.gz
     <% end %>
     <% if node[:seconion][:sensor][:vrt_rules_enabled] %>
-    wget "https://rules.emergingthreatspro.com/<%=node[:seconion][:etpro_oinkcode]%>/snort-$SNORT_VERSION_MAJOR/etpro.rules.tar.gz" -O /tmp/etpro.rules.tar.gz
+    wget -q "https://rules.emergingthreatspro.com/<%=node[:seconion][:etpro_oinkcode]%>/snort-$SNORT_VERSION_MAJOR/etpro.rules.tar.gz" -O /tmp/etpro.rules.tar.gz
     <% end %>
     
     # Go get rules from Internet.
