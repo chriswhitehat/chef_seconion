@@ -46,6 +46,11 @@ execute 'ssh-keygen -f "/root/.ssh/securityonion" -N \'\'; chmod 755 /root/.ssh'
   not_if do ::File.exists?('/root/.ssh/securityonion') end
 end
 
+execute 'add_soserver_to_known_hosts' do
+  command "ssh-keyscan -H #{node[:seconion][:server][:servername]}"
+  not_if do ::File.exists?('/root/.ssh/known_hosts') end
+end
+
 # Ruby block converge hack
 ruby_block "set_pub_ssh_keys_attribute" do
   block do
@@ -63,6 +68,7 @@ template '/root/.ssh/securityonion_ssh.conf' do
   owner 'sguil'
   group 'sguil'
 end
+
 
 
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -749,3 +755,9 @@ template "/etc/nsm/sensortab" do
     :sensortab => sensortab,
   })
 end
+
+execute 'run_rule-update' do
+  command "rule-update"
+  action :nothing
+end
+
