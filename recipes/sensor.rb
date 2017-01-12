@@ -320,6 +320,12 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     notifies :run, "execute[chown-nsm-#{sniff[:sensorname]}]", :immediately
   end
   
+  execute "check-for-downloaded.rules_#{sniff[:sensorname]}" do
+    command "ls"
+    not_if do ::File.exists?("/etc/nsm/rules/#{sniff[:sensorname]}/downloaded.rules")
+    notifies :run, "execute[run_rule-update]", :delayed
+  end
+
   execute "chown-nsm-#{sniff[:sensorname]}" do
     command "chown -R sguil:sguil /nsm"
     user "root"
