@@ -322,7 +322,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   
   execute "check-for-downloaded.rules_#{sniff[:sensorname]}" do
     command "ls /etc/nsm/rules/#{sniff[:sensorname]}/downloaded.rules"
-    not_if do ::File.exists?("/etc/nsm/rules/#{sniff[:sensorname]}") end
+    not_if do ::File.exists?("/etc/nsm/rules/#{sniff[:sensorname]}/downloaded.rules") end
     notifies :run, "execute[run_rule-update]", :delayed
   end
 
