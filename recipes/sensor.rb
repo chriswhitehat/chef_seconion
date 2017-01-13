@@ -47,7 +47,7 @@ execute 'ssh-keygen -f "/root/.ssh/securityonion" -N \'\'; chmod 755 /root/.ssh'
 end
 
 execute 'add_soserver_to_known_hosts' do
-  command "ssh-keyscan -H #{node[:seconion][:server][:servername]}"
+  command "ssh-keyscan -H #{node[:seconion][:server][:servername]} >> /root/.ssh/known_hosts"
   not_if do ::File.exists?('/root/.ssh/known_hosts') end
 end
 
