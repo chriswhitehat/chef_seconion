@@ -723,7 +723,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
 end
 
-execute 'nsm_sensor_ps-restart --bro-only' do
+execute 'nsm_sensor_ps-restart --only-bro' do
   not_if do ::File.exists?('/nsm/bro/spool/broctl-config.sh') end
   notifies :run, 'execute[deploy_bro]', :immediately
 end
