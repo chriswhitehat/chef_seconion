@@ -54,6 +54,13 @@ template '/etc/nsm/securityonion.conf' do
   group 'sguil'
 end
 
+template '/etc/nsm/securityonion/sguild.conf' do
+  source 'server/sguild.conf.erb'
+  mode '0644'
+  owner 'sguil'
+  group 'sguil'
+end
+
 file "/etc/nsm/sensortab" do
   mode '0644'
   owner 'sguil'

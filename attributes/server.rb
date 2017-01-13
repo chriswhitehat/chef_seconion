@@ -22,6 +22,11 @@ default[:seconion][:server][:sguil_client_username] = 'onionuser'
 default[:seconion][:server][:sguil_client_password] = 'asdfasdf'
 
 
+# Sguild Logging
+# DEBUG 0=off 1=important stuff 2=everything. Option 2 is VERY chatty.
+default[:seconion][:server][:sguild][:debug] = 2
+
+
 #########################
 # NIDS Rules
 #########################
