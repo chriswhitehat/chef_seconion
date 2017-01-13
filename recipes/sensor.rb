@@ -211,7 +211,7 @@ template '/opt/bro/share/bro/site/local.bro' do
     :bro_scripts => node[:seconion][:sensor][:bro_script],
     :bro_sigs => node[:seconion][:sensor][:bro_sig]
   })
-  notifies :run, 'execute[deploy_bro]', :delayed
+   notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 execute 'deploy_bro' do
@@ -293,7 +293,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     end
   end
 
-  touch_lb_files = ["/var/log/nsm/#{sniff[:sensorname]}snort_agent",
+  touch_lb_files = ["/var/log/nsm/#{sniff[:sensorname]}/snort_agent",
                     "/var/log/nsm/#{sniff[:sensorname]}/snortu",
                     "/var/log/nsm/#{sniff[:sensorname]}/barnyard2"]
 
@@ -733,6 +733,10 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     )
   end
 
+end
+
+execute 'nsm_sensor_ps-restart --bro-only' do
+  not_if do ::File.exists?('/nsm/bro/spool/broctl-config.sh') end
 end
 
 
