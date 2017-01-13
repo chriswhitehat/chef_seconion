@@ -76,6 +76,8 @@ default[:seconion][:sensor][:sniff][:ids_lb_procs] = 1
 default[:seconion][:sensor][:sniff][:snort_agent_enabled] = true
 # choose which search method to use, ac-split (cpu/memory neutral), ac (favor cpu, heavy memory usage)
 default[:seconion][:sensor][:sniff][:snort_search_method] = 'ac'
+# bpf for snort/suricata
+default[:seconion][:sensor][:sniff][:ids_bpf] = ''
 # barnyard2 sends snort/suricata alerts to the snort agent and other destinations
 default[:seconion][:sensor][:sniff][:barnyard2_enabled] = true
 # enable the Bro IDS
@@ -84,6 +86,8 @@ default[:seconion][:sensor][:sniff][:bro_enabled] = true
 default[:seconion][:sensor][:sniff][:bro_lb_procs] = 1
 # extract files using bro based on mimetypes
 default[:seconion][:sensor][:sniff][:bro_extract_files] = false
+# bpf for bro
+default[:seconion][:sensor][:sniff][:bro_bpf] = ''
 # enable netsniff-ng full packet capture
 default[:seconion][:sensor][:sniff][:pcap_enabled] = true
 # enable sguil agent to pull pcaps from the sguil client
@@ -94,7 +98,8 @@ default[:seconion][:sensor][:sniff][:pcap_size] = 150
 default[:seconion][:sensor][:sniff][:pcap_ring_size] = 128
 # additional pcap options to be sent to the netsniff-ng command
 default[:seconion][:sensor][:sniff][:pcap_options] = '--mmap'
-
+# bpf for pcaps
+default[:seconion][:sensor][:sniff][:pcap_bpf] = ''
 
 # This is a convenience variable, copy and paste into sensor recipes.
 =begin
@@ -109,15 +114,18 @@ template = {
   'ids_lb_procs' => node[:seconion][:sensor][:sniff][:ids_lb_procs],
   'snort_search_method' => node[:seconion][:sensor][:sniff][:snort_search_method],
   'snort_agent_enabled' => node[:seconion][:sensor][:sniff][:snort_agent_enabled],
+  'ids_bpf' => node[:seconion][:sensor][:sniff][:ids_bpf],
   'barnyard2_enabled' => node[:seconion][:sensor][:sniff][:barnyard2_enabled],
   'bro_enabled' => node[:seconion][:sensor][:sniff][:bro_enabled],
   'bro_lb_procs' => node[:seconion][:sensor][:sniff][:bro_lb_procs],
   'bro_extract_files' => node[:seconion][:sensor][:sniff][:bro_extract_files],
+  'bro_bpf' => node[:seconion][:sensor][:sniff][:bro_bpf],
   'pcap_enabled' => node[:seconion][:sensor][:sniff][:pcap_enabled],
   'pcap_agent_enabled' => node[:seconion][:sensor][:sniff][:pcap_agent_enabled],
   'pcap_size' => node[:seconion][:sensor][:sniff][:pcap_size],
   'pcap_ring_size' => node[:seconion][:sensor][:sniff][:pcap_ring_size],
-  'pcap_options' => node[:seconion][:sensor][:sniff][:pcap_options]
+  'pcap_options' => node[:seconion][:sensor][:sniff][:pcap_options],
+  'pcap_bpf' => node[:seconion][:sensor][:sniff][:pcap_bpf]
 }
 =end
 

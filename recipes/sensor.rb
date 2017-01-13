@@ -618,50 +618,34 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     })
   end
 
-  if node[:seconion][:sensor][:bpf] 
-    if node[:seconion][:sensor][:bpf][:global] 
-      global = node[:seconion][:sensor][:bpf][:global]
-    else
-      global = {}
-    end
-    if node[:seconion][:sensor][:bpf][:regional] 
-      regional = node[:seconion][:sensor][:bpf][:regional]
-    else
-      regional = {}
-    end
-    if node[:seconion][:sensor][:bpf][node[:fqdn]] 
-      host = node[:seconion][:sensor][:bpf][node[:fqdn]]
-    else
-      host = {}
-    end
-    if node[:seconion][:sensor][:bpf][sniff[:sensorname]] 
-      sensor = node[:seconion][:sensor][:bpf][sniff[:sensorname]]
-    else
-      sensor = {}
-    end
-  else
-    global = {}
-    regional = {}
-    host = {}
-    sensor = {}
+  template "/etc/nsm/#{sniff[:sensorname]}/bpf-bro.conf" do
+    source "sensor/bpf-bro.conf.erb"
+    owner 'sguil'
+    group 'sguil'
+    mode '0644'
+    variables({
+      :sniff => sniff,
+    })
   end
 
-  bpf_confs = ["bpf.conf", "bpf-bro.conf", "bpf-ids.conf", "bpf-pcap.conf", "bpf-prads.conf"]
-  bpf_confs.each do |bpf_conf|
- 
-    template "/etc/nsm/#{sniff[:sensorname]}/#{bpf_conf}" do
-      source "sensor/bpf.conf.erb"
-      owner 'sguil'
-      group 'sguil'
-      mode '0644'
-      variables({
-        :sniff => sniff,
-        :global_sigs => global,
-        :regional_sigs => regional,
-        :host_sigs => host,
-        :sensor_sigs => sensor
-      })
-    end
+  template "/etc/nsm/#{sniff[:sensorname]}/bpf-ids.conf" do
+    source "sensor/bpf-ids.conf.erb"
+    owner 'sguil'
+    group 'sguil'
+    mode '0644'
+    variables({
+      :sniff => sniff,
+    })
+  end
+
+  template "/etc/nsm/#{sniff[:sensorname]}/bpf-pcap.conf" do
+    source "sensor/bpf-pcap.conf.erb"
+    owner 'sguil'
+    group 'sguil'
+    mode '0644'
+    variables({
+      :sniff => sniff,
+    })
   end
 
   template "/etc/nsm/pulledpork/#{sniff[:sensorname]}/pulledpork.conf" do
