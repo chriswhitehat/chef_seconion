@@ -54,12 +54,6 @@ template '/etc/nsm/securityonion.conf' do
   group 'sguil'
 end
 
-template '/etc/nsm/securityonion/sguild.conf' do
-  source 'server/sguild.conf.erb'
-  mode '0644'
-  owner 'sguil'
-  group 'sguil'
-end
 
 file "/etc/nsm/sensortab" do
   mode '0644'
@@ -176,4 +170,12 @@ end
 execute 'nsm_server_add' do
   command "/usr/sbin/nsm_server_add --server-name=\"#{node[:seconion][:server][:sguil_server_name]}\" --server-sensor-name=NULL --server-sensor-port=7736 --server-client-port=7734 --server-client-user=\"#{node[:seconion][:server][:sguil_client_username]}\" --server-client-pass=\"#{node[:seconion][:server][:sguil_client_password]}\" --server-auto=yes --force-yes"
   not_if do ::File.exists?("/nsm/server_data/#{ node[:seconion][:server][:sguil_server_name] }") end
+end
+
+
+template '/etc/nsm/securityonion/sguild.conf' do
+  source 'server/sguild.conf.erb'
+  mode '0644'
+  owner 'sguil'
+  group 'sguil'
 end

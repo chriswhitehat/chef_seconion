@@ -211,22 +211,10 @@ template '/opt/bro/share/bro/site/local.bro' do
     :bro_scripts => node[:seconion][:sensor][:bro_script],
     :bro_sigs => node[:seconion][:sensor][:bro_sig]
   })
-   notifies :run, 'execute[deploy_bro]', :delayed
-end
-
-execute 'deploy_bro' do
-  command "/opt/bro/bin/broctl deploy"
-  action :nothing
 end
 
 
-#########################################
-# Download rules using Pulledpork
-#########################################
 
-
-# TODO investigate pulledpork run/rule-update
-# An error occurred: ERROR: /etc/nsm/templates/snort//etc/nsm/rules/downloaded.rules(0) Unable to open rules file "/etc/nsm/templates/snort//etc/nsm/rules/downloaded.rules": No such file or directory.
 
 
 #########################################
@@ -737,8 +725,13 @@ end
 
 execute 'nsm_sensor_ps-restart --bro-only' do
   not_if do ::File.exists?('/nsm/bro/spool/broctl-config.sh') end
+  notifies :run, 'execute[deploy_bro]', :immediately
 end
 
+execute 'deploy_bro' do
+  command "/opt/bro/bin/broctl deploy"
+  action :nothing
+end
 
 template "/etc/nsm/sensortab" do
   source "sensor/sensortab.erb"
