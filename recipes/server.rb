@@ -137,6 +137,7 @@ template '/etc/nsm/pulledpork/pulledpork.conf' do
   variables(
     :rule_urls => rule_urls
   )
+  notifies :run, 'execute[run_rule-update]', delayed
 end
 
 template '/etc/mysql/conf.d/securityonion-sguild.cnf' do
@@ -178,4 +179,9 @@ template '/etc/nsm/securityonion/sguild.conf' do
   mode '0644'
   owner 'sguil'
   group 'sguil'
+end
+
+execute 'run_rule-update' do
+  command "rule-update"
+  action :nothing
 end
