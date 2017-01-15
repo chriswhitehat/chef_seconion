@@ -746,5 +746,9 @@ end
 execute 'run_rule-update' do
   command "rule-update"
   action :nothing
+  notifies :restart, 'service[nsm]', :delayed
 end
 
+service 'nsm' do
+  action :nothing
+end

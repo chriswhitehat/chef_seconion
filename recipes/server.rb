@@ -184,4 +184,5 @@ end
 execute 'run_rule-update' do
   command "rule-update"
   action :nothing
+  notifies :run, 'execute[restart_sguil]', :delayed
 end
