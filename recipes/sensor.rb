@@ -71,22 +71,22 @@ end
 
 
 
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-# TODO Need to remove test in destination
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 ###########
 # Network Interfaces Config
 ###########
-template '/etc/network/testinterfaces' do
-  source 'sensor/interfaces.erb'
-  mode '0644'
-  owner 'root'
-  group 'root'
-  variables( 
-    :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
-  )
-end
 
+if node[:seconion][:sensor][:mgmt][:configure]
+
+  template '/etc/network/interfaces' do
+    source 'sensor/interfaces.erb'
+    mode '0644'
+    owner 'root'
+    group 'root'
+    variables( 
+      :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
+    )
+  end
+end
 
 ###########
 #

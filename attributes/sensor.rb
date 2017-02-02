@@ -25,6 +25,7 @@ default[:seconion][:sensor][:crit_disk_usage] = 95
 # Which network interface should be the management interface?
 # The management interface has an IP address and is NOT used for sniffing.
 # We recommend that you always make this eth0 if possible for consistency.
+default[:seconion][:sensor][:mgmt][:configure] = true
 default[:seconion][:sensor][:mgmt][:interface] = 'eth0'
 default[:seconion][:sensor][:mgmt][:ipv4] = '127.0.0.1'
 default[:seconion][:sensor][:mgmt][:netmask] = '255.255.255.0'

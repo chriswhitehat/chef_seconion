@@ -8,17 +8,19 @@ include_recipe 'seconion::default'
 
 user node[:seconion][:ssh_username]
 
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-# TODO Need to remove test in destination
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 ###########
 # Network Interfaces Config
 ###########
-template '/etc/network/testinterfaces' do
-  source 'server/interfaces.erb'
-  mode '0644'
-  owner 'root'
-  group 'root'
+if node[:seconion][:server][:mgmt][:configure]
+
+  template '/etc/network/interfaces' do
+    source 'server/interfaces.erb'
+    mode '0644'
+    owner 'root'
+    group 'root'
+  end
+
 end
 
 package ['securityonion-server', 'syslog-ng-core']
