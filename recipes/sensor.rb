@@ -109,13 +109,18 @@ end
 # OSSEC Disable
 ###########
 if node[:seconion][:sensor][:ossec_enabled]
+  execute 'enable_ossec' do
+    command 'service ossec-hids-server start; update-rc.d -f ossec-hids-server enable; service ossec-hids-server start'
+    action :run
+    not_if do ::File.exists?('/etc/rc0.d/K20ossec-hids-server') end
+  end
+else 
   execute 'disable_ossec' do
     command 'service ossec-hids-server stop; update-rc.d -f ossec-hids-server disable'
-    action :run
+    action :nothing
     only_if do ::File.exists?('/etc/rc0.d/K20ossec-hids-server') end
   end
 end
-
 
 ###########
 #
