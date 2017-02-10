@@ -35,6 +35,11 @@ default[:seconion][:sensor][:mgmt][:domain] = 'example.com'
 
 
 #########################
+# OSSEC
+#########################
+default[:seconion][:sensor][:ossec_enabled] = false
+
+#########################
 # Network IDS
 #########################
 default[:seconion][:sensor][:ids_engine] = 'snort'

@@ -23,6 +23,13 @@ default[:seconion][:server][:mgmt][:nameserver] = '127.0.0.1'
 default[:seconion][:server][:mgmt][:domain] = 'example.com'
 
 
+
+#########################
+# OSSEC
+#########################
+default[:seconion][:server][:ossec_enabled] = false
+
+
 # This should be the name/IP of the separate Sguil server:
 default[:seconion][:server][:servername] = 'sguilserver.example.com'
 
