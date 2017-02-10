@@ -39,6 +39,20 @@ touch_files.each do |path|
   end
 end
 
+directory "/home/#{node[:seconion][:ssh_username]}" do
+  owner node[:seconion][:ssh_username]
+  group node[:seconion][:ssh_username]
+  mode '0755'
+  action :create
+end
+
+directory "/home/#{node[:seconion][:ssh_username]}/.ssh/" do
+  owner node[:seconion][:ssh_username]
+  group node[:seconion][:ssh_username]
+  mode '0755'
+  action :create
+end
+
 ##########################
 # Replace existing rule-update
 ##########################
@@ -64,12 +78,59 @@ file "/etc/nsm/sensortab" do
   action :create
 end
 
+
+
+template '/etc/mysql/conf.d/securityonion-sguild.cnf' do
+  source 'server/mysql/securityonion-sguild.cnf.erb'
+  mode '0640'
+  owner 'sguil'
+  group 'sguil'
+  notifies :run, 'execute[restart_mysql]', :delayed
+end
+
+template '/etc/mysql/conf.d/securityonion-ibdata1.cnf' do
+  source 'server/mysql/securityonion-ibdata1.cnf.erb'
+  mode '0640'
+  owner 'sguil'
+  group 'sguil'
+  notifies :run, 'execute[restart_mysql]', :delayed
+end
+
+execute 'restart_mysql' do
+  command 'pgrep -lf mysqld >/dev/null && restart mysql'
+  action :nothing
+  notifies :run, 'execute[restart_sguil]', :delayed
+end
+
+execute 'restart_sguil' do
+  command 'service nsm restart'
+  action :nothing
+end
+
+execute 'nsm_server_add' do
+  command "/usr/sbin/nsm_server_add --server-name=\"#{node[:seconion][:server][:sguil_server_name]}\" --server-sensor-name=NULL --server-sensor-port=7736 --server-client-port=7734 --server-client-user=\"#{node[:seconion][:server][:sguil_client_username]}\" --server-client-pass=\"#{node[:seconion][:server][:sguil_client_password]}\" --server-auto=yes --force-yes"
+  not_if do ::File.exists?("/nsm/server_data/#{ node[:seconion][:server][:sguil_server_name] }") end
+end
+
+
+template '/etc/nsm/securityonion/sguild.conf' do
+  source 'server/sguild.conf.erb'
+  mode '0644'
+  owner 'sguil'
+  group 'sguil'
+end
+
+
+
+
 # Collect sensor rule urls
 rule_urls = ''
 
 # Collect sensor pub keys
 sensor_ssh_keys = ''
-sensors = search(:node, 'recipes:seconion\:\:sensor')
+
+search_server = "recipes:seconion\\:\\:sensor AND seconion_server_servername:\"#{node[:seconion][:server][:servername]}\""
+sensors = search(:node, search_server)
 
 sorted_sensors = sensors.sort_by!{ |n| n[:fqdn] }
 #sorted_sensors = sensors
@@ -107,29 +168,7 @@ sorted_sensors.each do |sensor|
 
 end
 
-directory "/home/#{node[:seconion][:ssh_username]}" do
-  owner node[:seconion][:ssh_username]
-  group node[:seconion][:ssh_username]
-  mode '0755'
-  action :create
-end
 
-directory "/home/#{node[:seconion][:ssh_username]}/.ssh/" do
-  owner node[:seconion][:ssh_username]
-  group node[:seconion][:ssh_username]
-  mode '0755'
-  action :create
-end
-
-template "/home/#{node[:seconion][:ssh_username]}/.ssh/authorized_keys" do
-  source 'server/authorized_keys.erb'
-  mode '0640'
-  owner node[:seconion][:ssh_username]
-  group node[:seconion][:ssh_username]
-  variables(
-    :ssh_pub_keys => sensor_ssh_keys
-  )
-end
 
 template '/etc/nsm/pulledpork/pulledpork.conf' do
   source 'server/pulledpork.conf.erb'
@@ -142,45 +181,14 @@ template '/etc/nsm/pulledpork/pulledpork.conf' do
   notifies :run, 'execute[run_rule-update]', :delayed
 end
 
-template '/etc/mysql/conf.d/securityonion-sguild.cnf' do
-  source 'server/mysql/securityonion-sguild.cnf.erb'
+template "/home/#{node[:seconion][:ssh_username]}/.ssh/authorized_keys" do
+  source 'server/authorized_keys.erb'
   mode '0640'
-  owner 'sguil'
-  group 'sguil'
-  notifies :run, 'execute[restart_mysql]', :delayed
-end
-
-template '/etc/mysql/conf.d/securityonion-ibdata1.cnf' do
-  source 'server/mysql/securityonion-ibdata1.cnf.erb'
-  mode '0640'
-  owner 'sguil'
-  group 'sguil'
-  notifies :run, 'execute[restart_mysql]', :delayed
-end
-
-execute 'restart_mysql' do
-  command 'pgrep -lf mysqld >/dev/null && restart mysql'
-  action :nothing
-  notifies :run, 'execute[restart_sguil]', :delayed
-end
-
-execute 'restart_sguil' do
-  command 'service nsm restart'
-  action :nothing
-end
-
-
-execute 'nsm_server_add' do
-  command "/usr/sbin/nsm_server_add --server-name=\"#{node[:seconion][:server][:sguil_server_name]}\" --server-sensor-name=NULL --server-sensor-port=7736 --server-client-port=7734 --server-client-user=\"#{node[:seconion][:server][:sguil_client_username]}\" --server-client-pass=\"#{node[:seconion][:server][:sguil_client_password]}\" --server-auto=yes --force-yes"
-  not_if do ::File.exists?("/nsm/server_data/#{ node[:seconion][:server][:sguil_server_name] }") end
-end
-
-
-template '/etc/nsm/securityonion/sguild.conf' do
-  source 'server/sguild.conf.erb'
-  mode '0644'
-  owner 'sguil'
-  group 'sguil'
+  owner node[:seconion][:ssh_username]
+  group node[:seconion][:ssh_username]
+  variables(
+    :ssh_pub_keys => sensor_ssh_keys
+  )
 end
 
 execute 'run_rule-update' do
@@ -188,3 +196,4 @@ execute 'run_rule-update' do
   action :nothing
   notifies :run, 'execute[restart_sguil]', :delayed
 end
+
