@@ -71,6 +71,7 @@ end
 
 
 
+
 ###########
 # Network Interfaces Config
 ###########
@@ -85,8 +86,25 @@ if node[:seconion][:sensor][:mgmt][:configure]
     variables( 
       :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
     )
+    notifies :run, 'execute[initial_soup]', :immediately
   end
 end
+
+
+reboot 'now' do
+  action :nothing
+  reason 'Cannot continue Chef run without a reboot.'
+  delay_mins 2
+end
+
+
+execute 'initial_soup' do
+  command 'soup -y'
+  action :nothing
+  notifies :reboot_now, 'reboot[now]', :immediately
+end
+
+
 
 ###########
 #
