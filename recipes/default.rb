@@ -28,3 +28,13 @@ apt_repository 'SecurityOnion' do
   uri 'ppa:securityonion/stable'
 end
 
+
+package 'install_hwe' do
+  package_name ['linux-image-generic-lts-xenial', 'linux-generic-lts-xenial']
+  action :install
+  notifies :reboot_now, 'reboot[hwe_upgraded]', :immediately
+end
+
+reboot 'hwe_upgraded' do
+	action :nothing
+end	

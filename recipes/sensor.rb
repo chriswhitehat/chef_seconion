@@ -3,10 +3,24 @@
 # Recipe:: sensor
 #
 
+require 'digest/md5'
+
 include_recipe 'seconion::default'
 
 
 package ['securityonion-sensor', 'syslog-ng-core']
+
+
+#############################
+# Deploy Notes
+#############################
+template '/etc/nsm/chef_notes' do
+  source 'chef_notes.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+end
+
 
 ##########################
 # Replace existing rule-update
@@ -25,15 +39,16 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/networks',
                '/var/log/nsm',
                '/usr/local/lib/snort_dynamicrules',
-               '/usr/local/lib/snort_dynamicrules_backup']
+               '/usr/local/lib/snort_dynamicrules_backup',
+               '/etc/nsm/backup']
 
 directories.each do |path|
   directory path do
-	  owner 'sguil'
-	  group 'sguil'
-	  mode '0755'
-	  action :create
-	end
+          owner 'sguil'
+          group 'sguil'
+          mode '0755'
+          action :create
+        end
 end
 
 
@@ -55,9 +70,9 @@ end
 ruby_block "set_pub_ssh_keys_attribute" do
   block do
     if File.exists?('/root/.ssh/securityonion.pub')
-      node.default[:seconion][:so_ssh_pub] = File.open('/root/.ssh/securityonion.pub', "r").read 
+      node.default[:seconion][:so_ssh_pub] = File.open('/root/.ssh/securityonion.pub', "r").read
     else
-      node.default[:seconion][:so_ssh_pub] = '' 
+      node.default[:seconion][:so_ssh_pub] = ''
     end
   end
 end
@@ -83,7 +98,7 @@ if node[:seconion][:sensor][:mgmt][:configure]
     mode '0644'
     owner 'root'
     group 'root'
-    variables( 
+    variables(
       :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
     )
     notifies :run, 'execute[initial_soup]', :immediately
@@ -114,9 +129,9 @@ if node[:seconion][:sensor][:ossec_enabled]
     action :run
     not_if do ::File.exists?('/etc/rc0.d/K20ossec-hids-server') end
   end
-else 
+else
   execute 'disable_ossec' do
-    command 'service ossec-hids-server stop; update-rc.d -f ossec-hids-server disable'
+    command 'service ossec-hids-server stop; update-rc.d -f ossec-hids-server remove'
     action :run
     only_if do ::File.exists?('/etc/rc0.d/K20ossec-hids-server') end
   end
@@ -141,14 +156,14 @@ file "/etc/nsm/sensortab" do
 end
 
 ############
-# Configure Bro 
+# Configure Bro
 ############
 template '/opt/bro/etc/node.cfg' do
   source 'bro/node.cfg.erb'
   mode '0644'
   owner 'sguil'
   group 'sguil'
-  variables( 
+  variables(
     :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
 end
@@ -158,7 +173,7 @@ template '/opt/bro/etc/network.cfg' do
   mode '0644'
   owner 'sguil'
   group 'sguil'
-  variables( 
+  variables(
     :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
 end
@@ -168,7 +183,7 @@ template '/opt/bro/share/bro/networks/__load__.bro' do
   mode '0644'
   owner 'sguil'
   group 'sguil'
-  variables( 
+  variables(
     :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
 end
@@ -248,13 +263,22 @@ template '/opt/bro/share/bro/site/local.bro' do
 end
 
 
+if node[:seconion][:sensor][:bro][:extracted][:rotate]
+  template '/etc/cron.d/bro-rotate-extracted' do
+    source 'bro/cron-bro-rotate-extracted.erb'
+    owner 'root'
+    group 'root'
+    mode '0644'
+  end
+end
+
 
 
 
 #########################################
 # Apache configuration
 #########################################
-#disable apache? Sensors don't use it. 
+#disable apache? Sensors don't use it.
 
 
 template '/etc/modprobe.d/pf_ring.conf' do
@@ -262,6 +286,13 @@ template '/etc/modprobe.d/pf_ring.conf' do
    owner 'sguil'
    group 'sguil'
    mode '0644'
+   notifies :run, 'execute[reload_pf_ring_module]', :delayed
+end
+
+
+execute 'reload_pf_ring_module' do
+  command 'nsm_sensor_ps-stop; modprobe -r pf_ring; modprobe -a pf_ring; nsm_sensor_ps-start' 
+  action :nothing
 end
 
 
@@ -282,7 +313,7 @@ bro_networks = []
 
 node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
-  sensortab += "#{sniff[:sensorname]}    1    #{barnyard_port}    #{sniff[:interface]}\n"
+  sensortab += "#{sniff[:sensorname]}\t1\t#{barnyard_port}\t#{sniff[:interface]}\n"
 
   # List of directories to create
   directories = ["/var/log/nsm/#{sniff[:sensorname]}",
@@ -320,8 +351,8 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
                     "/var/log/nsm/#{sniff[:sensorname]}/barnyard2"]
 
   touch_lb_files.each do |path|
-    (1..sniff[:ids_lb_procs]).each do |i| 
-      lb_path = "#{path}-#{i}.log" 
+    (1..sniff[:ids_lb_procs]).each do |i|
+      lb_path = "#{path}-#{i}.log"
       file lb_path do
         mode '0644'
         owner 'sguil'
@@ -337,11 +368,11 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     command "/usr/sbin/nsm_sensor_add --sensor-name=\"#{sniff[:sensorname]}\" --sensor-interface=\"#{sniff[:interface]}\" --sensor-interface-auto=no "\
                                           "--sensor-server-host=\"#{node[:seconion][:server][:servername]}\" --sensor-server-port=7736 "\
                                           "--sensor-barnyard2-port=#{barnyard_port} --sensor-auto=yes --sensor-utc=yes "\
-                                          "--sensor-vlan-tagging=no --sensor-net-group=\"#{sniff[:sensor_net_group]}\" --force-yes"
+                                          "--sensor-vlan-tagging=no --sensor-net-group=\"#{sniff[:sensorname]}\" --force-yes"
     not_if do ::File.exists?("/etc/nsm/#{sniff[:sensorname]}") end
     notifies :run, "execute[chown-nsm-#{sniff[:sensorname]}]", :immediately
   end
-  
+
   execute "check-for-downloaded.rules_#{sniff[:sensorname]}" do
     command "ls /etc/nsm/rules/#{sniff[:sensorname]}"
     not_if do ::File.exists?("/etc/nsm/rules/#{sniff[:sensorname]}/downloaded.rules") end
@@ -365,7 +396,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       :barnyard_port => barnyard_port
     })
   end
-  
+
   template "/etc/nsm/#{sniff[:sensorname]}/barnyard2.conf" do
     source "sensor/barnyard2.conf.erb"
     owner 'sguil'
@@ -412,159 +443,35 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     action :create
   end
 
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/local.rules" do
-    source 'snort/local.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    variables({
-      :sniff => sniff,
-    })
-    action :create
+
+  rules = [ 'local.rules',
+            'white_list.rules',
+            'black_list.rules',
+            'app-layer-events.rules',
+            'decoder-events.rules',
+            'dnp3-events.rules',
+            'dns-events.rules',
+            'files.rules',
+            'http-events.rules',
+            'modbus-events.rules',
+            'smtp-events.rules',
+            'so_rules.rules',
+            'stream-events.rules',
+            'tls-events.rules']
+
+  rules.each do |rule|
+    template  "/etc/nsm/rules/#{sniff[:sensorname]}/#{rule}" do
+      source "snort/#{rule}.erb"
+      mode '0644'
+      owner 'sguil'
+      group 'sguil'
+      variables({
+        :sniff => sniff,
+      })
+      action :create
+    end
   end
 
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/white_list.rules" do
-    source 'snort/white_list.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    variables({
-      :sniff => sniff,
-    })
-    action :create
-  end
-
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/black_list.rules" do
-    source 'snort/black_list.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    variables({
-      :sniff => sniff,
-    })
-    action :create
-  end
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/app-layer-events.rules" do
-    source 'snort/app-layer-events.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    variables({
-      :sniff => sniff,
-    })
-    action :create
-  end
-
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/decoder-events.rules" do
-    source 'snort/decoder-events.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    variables({
-      :sniff => sniff,
-    })
-    action :create
-  end
-
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/dnp3-events.rules" do
-    source 'snort/dnp3-events.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    variables({
-      :sniff => sniff,
-    })
-    action :create
-  end
-
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/dns-events.rules" do
-    source 'snort/dns-events.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    action :create
-    variables({
-      :sniff => sniff,
-    })
-  end
-
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/files.rules" do
-    source 'snort/files.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    variables({
-      :sniff => sniff,
-    })
-    action :create
-  end
-
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/http-events.rules" do
-    source 'snort/http-events.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    variables({
-      :sniff => sniff,
-    })
-    action :create
-  end
-
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/modbus-events.rules" do
-    source 'snort/modbus-events.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    variables({
-      :sniff => sniff,
-    })
-    action :create
-  end
-
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/smtp-events.rules" do
-    source 'snort/smtp-events.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    variables({
-      :sniff => sniff,
-    })
-    action :create
-  end
-
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/so_rules.rules" do
-    source 'snort/so_rules.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    variables({
-      :sniff => sniff,
-    })
-    action :create
-  end
-
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/stream-events.rules" do
-    source 'snort/stream-events.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    variables({
-      :sniff => sniff,
-    })
-    action :create
-  end
-
-  template  "/etc/nsm/rules/#{sniff[:sensorname]}/tls-events.rules" do
-    source 'snort/tls-events.rules.erb'
-    mode '0644'
-    owner 'sguil'
-    group 'sguil'
-    variables({
-      :sniff => sniff,
-    })
-    action :create
-  end
-  
   template "/etc/nsm/#{sniff[:sensorname]}/suricata.yaml" do
     source 'suricata/suricata.yaml.erb'
     mode '0644'
@@ -598,23 +505,23 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end
 
 
-  if node[:seconion][:sensor][:threshold] 
-    if node[:seconion][:sensor][:threshold][:global] 
+  if node[:seconion][:sensor][:threshold]
+    if node[:seconion][:sensor][:threshold][:global]
       global = node[:seconion][:sensor][:threshold][:global]
     else
       global = {}
     end
-    if node[:seconion][:sensor][:threshold][:regional] 
+    if node[:seconion][:sensor][:threshold][:regional]
       regional = node[:seconion][:sensor][:threshold][:regional]
     else
       regional = {}
     end
-    if node[:seconion][:sensor][:threshold][node[:fqdn]] 
+    if node[:seconion][:sensor][:threshold][node[:fqdn]]
       host = node[:seconion][:sensor][:threshold][node[:fqdn]]
     else
       host = {}
     end
-    if node[:seconion][:sensor][:threshold][sniff[:sensorname]] 
+    if node[:seconion][:sensor][:threshold][sniff[:sensorname]]
       sensor = node[:seconion][:sensor][:threshold][sniff[:sensorname]]
     else
       sensor = {}
@@ -683,23 +590,23 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   pulledpork_confs = ['disablesid', 'dropsid', 'enablesid', 'modifysid']
   pulledpork_confs.each do |conf|
 
-    if node[:seconion][:sensor][:pulledpork] && node[:seconion][:sensor][:pulledpork][conf] 
-      if node[:seconion][:sensor][:pulledpork][conf][:global] 
+    if node[:seconion][:sensor][:pulledpork] && node[:seconion][:sensor][:pulledpork][conf]
+      if node[:seconion][:sensor][:pulledpork][conf][:global]
         global = node[:seconion][:sensor][:pulledpork][conf][:global]
       else
         global = {}
       end
-      if node[:seconion][:sensor][:pulledpork][conf][:regional] 
+      if node[:seconion][:sensor][:pulledpork][conf][:regional]
         regional = node[:seconion][:sensor][:pulledpork][conf][:regional]
       else
         regional = {}
       end
-      if node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]] 
+      if node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]]
         host = node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]]
       else
         host = {}
       end
-      if node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]] 
+      if node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]]
         sensor = node[:seconion][:sensor][:pulledpork][conf][sniff[:sensorname]]
       else
         sensor = {}
@@ -724,21 +631,21 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
         :sensor_sigs => sensor
       })
     end
-  end  
+  end
 
   ruby_block "get_rule_urls_#{sniff[:sensorname]}" do
     block do
       # Collect all rule_url entries in pulledpork for each sensor
       File.open("/etc/nsm/pulledpork/#{sniff[:sensorname]}/pulledpork.conf").each_line do |li|
-        if (li[/^rule_url/]) and not rule_urls.include?(li) 
-          rule_urls << li 
+        if (li[/^rule_url/]) and not rule_urls.include?(li)
+          rule_urls << li
         end
       end
       node.default[:seconion][:sensor][:rule_urls] = rule_urls
     end
   end
 
-  
+
   # Increment baryard port by 100 for next interface
   barnyard_port = barnyard_port + 100
 
@@ -785,5 +692,66 @@ end
 
 service 'nsm' do
   action :nothing
+end
+
+
+
+########################
+# Setup SOUP Automation
+########################
+
+if node[:seconion][:soup][:enabled]
+  if node[:seconion][:sensor][:soup][:cron_overwrite]
+    template '/etc/cron.d/seconion-soup-overwrite' do
+      source 'soup/seconion-soup-overwrite.erb'
+      owner 'root'
+      group 'root'
+      mode '0644'
+      variables(
+        :server => false
+      )
+      notifies :delete, 'file[seconion_soup_cron]', :immediately
+    end
+  else
+    template '/etc/cron.d/seconion-soup' do
+      source 'soup/seconion-soup.erb'
+      owner 'root'
+      group 'root'
+      mode '0644'
+      variables(
+        :server => false
+      )
+      notifies :delete, 'file[seconion_soup_overwrite_cron]', :immediately
+    end
+  end
+end
+
+file 'seconion_soup_cron' do
+  path '/etc/cron.d/seconion-soup'
+  action :nothing
+end
+
+file 'seconion_soup_overwrite_cron' do
+  path '/etc/cron.d/seconion-soup-overwrite'
+  action :nothing
+end
+
+
+
+
+#############################
+# Backup Autocat
+#############################
+
+sleep_time = Digest::MD5.hexdigest(node['fqdn'] || 'unknown-hostname').to_s.hex % 300
+
+template '/etc/cron.d/autocat-backup-pull' do
+  source 'autocat/autocat-backup-pull.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  variables(
+    :sleep_time => sleep_time
+  )
 end
 

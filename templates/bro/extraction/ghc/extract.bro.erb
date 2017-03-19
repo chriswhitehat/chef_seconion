@@ -15,7 +15,7 @@ global ext_map: table[string] of string = {
 
 event file_sniff(f: fa_file, meta: fa_metadata)
     {
-    if ( ! meta?$mime_type || ext_map[meta$mime_type] == "" )
+    if ( ! meta?$mime_type || ext_map[meta$mime_type] == "" || f$source == "SMB")
         return;
 
     local ext = "";

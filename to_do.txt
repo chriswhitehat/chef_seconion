@@ -1,8 +1,13 @@
 To Do:
 
 Create Environment Scheme (kp_washington_prod)
-Account for servername localhost on sguil server.
-Remove test from network/interfacestest
 
-Bro: 
-Determine Home_Net configuration for sensors - network.cfg.erb
+Manage local.rules
+
+compressed rules transfer verification
+
+non-active sensor cleanup
+
+mpath device change checking
+
+stop nsm when adding sensors (sensors will stick around since the sensortab will change out from under nsm now scripts)

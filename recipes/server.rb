@@ -25,6 +25,29 @@ end
 
 package ['securityonion-server', 'syslog-ng-core']
 
+#############################
+# Deploy Notes
+#############################
+template '/etc/nsm/chef_notes' do
+  source 'chef_notes.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+end
+
+
+
+directories = ['/etc/nsm/backup']
+
+directories.each do |path|
+  directory path do
+    owner 'sguil'
+    group 'sguil'
+    mode '0755'
+    action :create
+  end
+end
+
 
 #TODO touch log files that warn on first run.
 touch_files = ["/var/log/nsm/sguild.log"]
@@ -53,6 +76,12 @@ directory "/home/#{node[:seconion][:ssh_username]}/.ssh/" do
   action :create
 end
 
+
+service 'nsm' do
+  supports :status => true, :restart => true, :start => true, :stop => true
+  action :nothing
+end
+
 ##########################
 # Replace existing rule-update
 ##########################
@@ -78,8 +107,6 @@ file "/etc/nsm/sensortab" do
   action :create
 end
 
-
-
 template '/etc/mysql/conf.d/securityonion-sguild.cnf' do
   source 'server/mysql/securityonion-sguild.cnf.erb'
   mode '0640'
@@ -99,8 +126,11 @@ end
 execute 'restart_mysql' do
   command 'pgrep -lf mysqld >/dev/null && restart mysql'
   action :nothing
-  notifies :run, 'execute[restart_sguil]', :delayed
+  notifies :restart, 'service[nsm]', :delayed
 end
+
+
+
 
 execute 'restart_sguil' do
   command 'service nsm restart'
@@ -194,6 +224,74 @@ end
 execute 'run_rule-update' do
   command "rule-update"
   action :nothing
-  notifies :run, 'execute[restart_sguil]', :delayed
+  notifies :restart, 'service[nsm]', :delayed
 end
 
+
+########################
+# Setup SOUP Automation
+########################
+
+if node[:seconion][:soup][:enabled]
+  if node[:seconion][:server][:soup][:cron_overwrite]
+    template '/etc/cron.d/seconion-soup-overwrite' do
+      source 'soup/seconion-soup-overwrite.erb'
+      owner 'root'
+      group 'root'
+      mode '0644'
+      variables(
+        :server => true
+      )
+      notifies :delete, 'file[seconion_soup_cron]', :immediately
+    end
+  else
+    template '/etc/cron.d/seconion-soup' do
+      source 'soup/seconion-soup.erb'
+      owner 'root'
+      group 'root'
+      mode '0644'
+      variables(
+        :server => true
+      )
+      notifies :delete, 'file[seconion_soup_overwrite_cron]', :immediately
+    end
+  end
+end
+
+file 'seconion_soup_cron' do
+  path '/etc/cron.d/seconion-soup'
+  action :nothing
+end
+
+file 'seconion_soup_overwrite_cron' do
+  path '/etc/cron.d/seconion-soup-overwrite'
+  action :nothing
+end
+
+
+#############################
+# Backup Autocat
+#############################
+template '/etc/cron.d/autocat-backup' do
+  source 'autocat/autocat-backup.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
+
+
+#############################
+# Load Autocat
+#############################
+
+execute "autocat_import" do
+  command "service nsm stop; mysql -v -uroot #{node[:seconion][:server][:sguil_server_name]}_db < /tmp/autocat.sql.backup"
+  only_if do ::File.exists?("/tmp/autocat.sql.backup") end
+  notifies :delete, 'file[seconion_autocat]', :immediately
+end
+
+file 'seconion_autocat' do
+  path '/tmp/autocat.sql.backup'
+  action :nothing
+  notifies :restart, 'service[nsm]', :immediately
+end
