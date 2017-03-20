@@ -32,6 +32,28 @@ template '/usr/sbin/rule-update' do
   group 'root'
 end
 
+##########################
+# Add rule update with hard
+# restart
+##########################
+template '/usr/sbin/rule-update-hard' do
+  source '/rule-update/rule-update-hard.erb'
+  mode '0755'
+  owner 'root'
+  group 'root'
+end
+
+##########################
+# Replace rule-update cron
+##########################
+template '/etc/crond.d/rule-update' do
+  source '/rule-update/cron_rule-update.erb'
+  mode '0644'
+  owner 'root'
+  group 'root'
+end
+
+
 directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/ghc_extraction',
                '/opt/bro/share/bro/etpro',

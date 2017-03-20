@@ -230,24 +230,28 @@ fi
 # Restart NIDS processes
 #########################################
 
-# If Barnyard is enabled, restart it
-if grep -i 'BARNYARD2_ENABLED="yes"' /etc/nsm/*/sensor.conf >/dev/null 2>&1; then
-    if pgrep barnyard2 >/dev/null 2>&1; then
-        echo "Restarting Barnyard2."
-        /usr/sbin/nsm_sensor_ps-restart --only-barnyard2
-    fi
-fi
+echo "Rule-Update no longer restarts at the end."
+echo "Run the following:"
+echo "sudo /usr/sbin/nsm_sensor_ps-restart --only-barnyard2; sudo /usr/sbin/nsm_sensor_ps-restart --only-snort-alert"
 
-# If the IDS Engine is enabled, restart it
-if grep -i 'IDS_ENGINE_ENABLED="yes"' /etc/nsm/*/sensor.conf >/dev/null 2>&1; then
-    # We're about to use pgrep to search for the $ENGINE process (snort or suricata).
-    # "pgrep suricata" won't work since the process shows up as Suricata,
-    # so do "pgrep Suricata" instead.
-    [ "$ENGINE" == "suricata" ] && ENGINE="Suricata"
-    if pgrep $ENGINE >/dev/null 2>&1; then
-        echo "Restarting IDS Engine."
-        /usr/sbin/nsm_sensor_ps-restart --only-snort-alert
-    fi
-fi
+## If Barnyard is enabled, restart it
+#if grep -i 'BARNYARD2_ENABLED="yes"' /etc/nsm/*/sensor.conf >/dev/null 2>&1; then
+#    if pgrep barnyard2 >/dev/null 2>&1; then
+#        echo "Restarting Barnyard2."
+#        /usr/sbin/nsm_sensor_ps-restart --only-barnyard2
+#    fi
+#fi
+#
+## If the IDS Engine is enabled, restart it
+#if grep -i 'IDS_ENGINE_ENABLED="yes"' /etc/nsm/*/sensor.conf >/dev/null 2>&1; then
+#    # We're about to use pgrep to search for the $ENGINE process (snort or suricata).
+#    # "pgrep suricata" won't work since the process shows up as Suricata,
+#    # so do "pgrep Suricata" instead.
+#    [ "$ENGINE" == "suricata" ] && ENGINE="Suricata"
+#    if pgrep $ENGINE >/dev/null 2>&1; then
+#        echo "Restarting IDS Engine."
+#        /usr/sbin/nsm_sensor_ps-restart --only-snort-alert
+#    fi
+#fi
 }
 update 2>&1 | tee -a $LOG
