@@ -7,13 +7,16 @@
 #
 
 # Update rules
-/usr/bin/rule-update
+/usr/sbin/rule-update
 
 # Take all sniffing interfaces down causing rebalancing of gigastream
-awk -F '[\t]+' '{if ($4) system("ifconfig "$4" down")}' /etc/nsm/sensortab
+/usr/bin/awk -F '[\t]+' '{if ($4) system("ifconfig "$4" down")}' /etc/nsm/sensortab
 
 # Conventional Stop
 /usr/sbin/nsm_sensor_ps-stop  >> /var/log/nsm/nsm_cron.log
+
+# Give it a moment to actually stop
+/bin/sleep 300
 
 # Hard Stop 
 /usr/bin/killall -9 tclsh  >> /var/log/nsm/nsm_cron.log
@@ -26,10 +29,10 @@ awk -F '[\t]+' '{if ($4) system("ifconfig "$4" down")}' /etc/nsm/sensortab
 # Check for snort initialization complete
 while ! egrep "Initialization Complete" /var/log/nsm/*/snortu*.log > /dev/null; do 
 
-	sleep 1 
+	/bin/sleep 1 
 
 done;
 
 # Once Initialization is complete bring sniffing interfaces back up
 # Rebalancing again to re-introduce sensor into gigastream.
-awk -F '[\t]+' '{if ($4) system("ifconfig "$4" up")}' /etc/nsm/sensortab
+/usr/bin/awk -F '[\t]+' '{if ($4) system("ifconfig "$4" up")}' /etc/nsm/sensortab

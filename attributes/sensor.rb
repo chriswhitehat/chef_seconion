@@ -7,6 +7,11 @@
 default[:seconion][:sensor][:sniffing_interfaces] = []
 
 
+# Sensor group.  A logical grouping which dictates rolling restarts.
+default[:seconion][:sensor][:sensor_group] = node[:fqdn]
+
+default[:seconion][:sensor][:rule_update_phases] = 1
+
 #########################
 # Maintenance
 #########################
