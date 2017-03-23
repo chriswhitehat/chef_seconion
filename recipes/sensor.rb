@@ -53,50 +53,17 @@ template '/usr/sbin/rule-update-hard' do
   group 'root'
 end
 
-# Collect sensor rule urls
-rule_urls = ''
-
-# Collect sensor pub keys
-sensor_ssh_keys = ''
-
+##########################
+# Calculate rolling restart splay
+##########################
 search_sensor_group = "seconion_sensor_sensor_group:\"#{node[:seconion][:sensor][:sensor_group]}\""
-sensors = search(:node, search_server)
+sensors = search(:node, search_sensor_group)
 
 sorted_sensors = sensors.sort_by!{ |n| n[:fqdn] }
-#sorted_sensors = sensors
 
-sorted_sensors.each do |sensor|
-  if sensor[:seconion][:so_ssh_pub]
-    sensor_ssh_keys << sensor[:seconion][:so_ssh_pub]  
-  end
+node.normal[:seconion][:sensor][:restart_splay] = (sorted_sensors.index(node[:fqdn]) % node[:seconion][:sensor][:rule_update_phases][node[:seconion][:sensor][:sensor_group]]) * 3600
 
-  if sensor[:seconion][:sensor][:rule_urls]
-    sensor[:seconion][:sensor][:rule_urls].each do |rule_url|
-      rule_urls << rule_url if not rule_urls.include?(rule_url)
-    end
-  end
-
-  sensor[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
-
-    symlink = "/nsm/server_data/#{node[:seconion][:server][:sguil_server_name]}/rules/#{sniff[:sensorname]}" 
-    execute "base_symlink_rules_#{sniff[:sensorname]}" do
-      command "ln -f -s /etc/nsm/rules #{symlink}"
-      not_if do ::File.exists?("#{symlink}") end
-    end
-
-    (1..sniff[:ids_lb_procs]).each do |i| 
-      symlink = "/nsm/server_data/#{node[:seconion][:server][:sguil_server_name]}/rules/#{sniff[:sensorname]}-#{i}" 
-      puts symlink
-      puts (1..sniff[:ids_lb_procs])
-      execute "lbproc_symlink_rules_#{sniff[:sensorname]}-#{i}" do
-        command "ln -f -s /etc/nsm/rules #{symlink}"
-        not_if do ::File.exists?("#{symlink}") end
-      end
-    end
-
-  end
-
-end
+node.normal[:seconion][:sensor][:restart_hour] = node.normal[:seconion][:sensor][:rule_update_hour][node[:seconion][:sensor][:sensor_group]]
 
 ##########################
 # Replace rule-update cron
