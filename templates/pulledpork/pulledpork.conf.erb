@@ -141,7 +141,7 @@ snort_path=/usr/bin/snort
 
 # We need to know where your snort.conf file lives so that we can
 # generate the stub files
-config_path=/etc/nsm/templates/snort/snort.conf
+config_path=/etc/nsm/<%= @sniff[:sensorname] %>/snort.conf
 
 ##### Deprecated - The stubs are now  categorically written to the  single rule file!
 # sostub_path=/usr/local/etc/snort/rules/so_rules.rules
