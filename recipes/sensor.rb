@@ -33,10 +33,10 @@ template '/usr/sbin/rule-update' do
 end
 
 ##########################
-# Add nsm_sensor_ps-restart-hard
+# Add nsm_sensor_ps-hard-restart
 ##########################
-template '/usr/sbin/nsm_sensor_ps-restart-hard' do
-  source '/nsmnow/nsm_sensor_ps-restart-hard.erb'
+template '/usr/sbin/nsm_sensor_ps-hard-restart' do
+  source '/nsmnow/nsm_sensor_ps-hard-restart.erb'
   mode '0755'
   owner 'root'
   group 'root'
@@ -56,19 +56,29 @@ end
 ##########################
 # Calculate rolling restart splay
 ##########################
-search_sensor_group = "seconion_sensor_sensor_group:\"#{node[:seconion][:sensor][:sensor_group]}\""
-sensors = search(:node, search_sensor_group)
+if node[:seconion][:sensor][:sensor_group] == 'singleton'
+  node.normal[:seconion][:sensor][:restart_splay] = 0
+  node.normal[:seconion][:sensor][:restart_hour] = node[:seconion][:sensor][:rule_update_hour]['singleton']
+else
+  search_sensor_group = "seconion_sensor_sensor_group:\"#{node[:seconion][:sensor][:sensor_group]}\""
 
-sorted_sensors = sensors.sort_by!{ |n| n[:fqdn] }
+  sensors = search(:node, search_sensor_group)
 
-node.normal[:seconion][:sensor][:restart_splay] = (sorted_sensors.index(node[:fqdn]) % node[:seconion][:sensor][:rule_update_phases][node[:seconion][:sensor][:sensor_group]]) * 3600
+  sorted_sensors = []
 
-node.normal[:seconion][:sensor][:restart_hour] = node.normal[:seconion][:sensor][:rule_update_hour][node[:seconion][:sensor][:sensor_group]]
+  sensors.sort_by!{ |n| n[:fqdn] }.each do |sensor|
+    sorted_sensors << sensor[:fqdn]
+  end
+
+  node.normal[:seconion][:sensor][:restart_splay] = (sorted_sensors.index(node[:fqdn]) % node[:seconion][:sensor][:rule_update_phases][node[:seconion][:sensor][:sensor_group]]) * 3600
+  node.normal[:seconion][:sensor][:restart_hour] = node[:seconion][:sensor][:rule_update_hour][node[:seconion][:sensor][:sensor_group]]
+end
+
 
 ##########################
 # Replace rule-update cron
 ##########################
-template '/etc/crond.d/rule-update' do
+template '/etc/cron.d/rule-update' do
   source '/rule-update/cron_rule-update.erb'
   mode '0644'
   owner 'root'
@@ -197,6 +207,7 @@ file "/etc/nsm/sensortab" do
   owner 'sguil'
   group 'sguil'
   action :create
+  notifies :stop, 'service[nsm]', :before
 end
 
 ############
@@ -488,8 +499,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end
 
 
-  rules = [ 'local.rules',
-            'white_list.rules',
+  rules = [ 'white_list.rules',
             'black_list.rules',
             'app-layer-events.rules',
             'decoder-events.rules',
@@ -590,6 +600,49 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       :sensor_sigs => sensor
     })
   end
+
+  if node[:seconion][:sensor][:local_rules]
+    if node[:seconion][:sensor][:local_rules][:global]
+      global = node[:seconion][:sensor][:local_rules][:global]
+    else
+      global = {}
+    end
+    if node[:seconion][:sensor][:local_rules][:regional]
+      regional = node[:seconion][:sensor][:local_rules][:regional]
+    else
+      regional = {}
+    end
+    if node[:seconion][:sensor][:local_rules][node[:fqdn]]
+      host = node[:seconion][:sensor][:local_rules][node[:fqdn]]
+    else
+      host = {}
+    end
+    if node[:seconion][:sensor][:local_rules][sniff[:sensorname]]
+      sensor = node[:seconion][:sensor][:local_rules][sniff[:sensorname]]
+    else
+      sensor = {}
+    end
+  else
+    global = {}
+    regional = {}
+    host = {}
+    sensor = {}
+  end
+
+  template "/etc/nsm/rules/#{sniff[:sensorname]}/local.rules" do
+    source "snort/local.rules.erb"
+    owner 'sguil'
+    group 'sguil'
+    mode '0644'
+    variables({
+      :sniff => sniff,
+      :global_sigs => global,
+      :regional_sigs => regional,
+      :host_sigs => host,
+      :sensor_sigs => sensor
+    })
+  end
+
 
   template "/etc/nsm/#{sniff[:sensorname]}/bpf-bro.conf" do
     source "sensor/bpf-bro.conf.erb"
@@ -798,4 +851,53 @@ template '/etc/cron.d/autocat-backup-pull' do
     :sleep_time => sleep_time
   )
 end
+
+
+#############################
+# Cleanup Sensors that are no longer valid
+#############################
+
+
+ruby_block "rm_old_sensors" do
+  block do
+    current_sensors = []
+
+    node[:seconion][:sensor][:sniffing_interfaces].each do |sensor|
+      current_sensors << sensor[:sensorname]
+    end
+
+    existing_sensors = Dir.entries('/nsm/sensor_data/').select {|entry| File.directory? File.join('/nsm/sensor_data/',entry) and !(entry =='.' || entry == '..') }
+
+    (existing_sensors - current_sensors).each do |sensor|
+      
+      sensor_data_dir = Chef::Resource::Directory.new("rm_sensor_data_#{sensor}", run_context)
+      sensor_data_dir.path       "/nsm/sensor_data/#{sensor}"
+      sensor_data_dir.recursive  true
+      sensor_data_dir.run_action :delete
+
+      sensor_config_dir = Chef::Resource::Directory.new("rm_config_#{sensor}", run_context)
+      sensor_config_dir.path       "/etc/nsm/#{sensor}"
+      sensor_config_dir.recursive  true
+      sensor_config_dir.run_action :delete
+
+      sensor_rules_dir = Chef::Resource::Directory.new("rm_rules_#{sensor}", run_context)
+      sensor_rules_dir.path       "/etc/nsm/rules/#{sensor}"
+      sensor_rules_dir.recursive  true
+      sensor_rules_dir.run_action :delete
+
+      sensor_pulledpork_dir = Chef::Resource::Directory.new("rm_pulledpork_#{sensor}", run_context)
+      sensor_pulledpork_dir.path       "/etc/nsm/pulledpork/#{sensor}"
+      sensor_pulledpork_dir.recursive  true
+      sensor_pulledpork_dir.run_action :delete
+
+      sensor_log_dir = Chef::Resource::Directory.new("rm_log_#{sensor}", run_context)
+      sensor_log_dir.path       "/var/log/nsm/#{sensor}"
+      sensor_log_dir.recursive  true
+      sensor_log_dir.run_action :delete
+
+    end
+
+  end
+end
+
 

@@ -9,8 +9,6 @@
 # Update rules
 /usr/sbin/rule-update
 
-# Take all sniffing interfaces down causing rebalancing of gigastream
-/usr/bin/awk -F '[\t]+' '{if ($4) system("ifconfig "$4" down")}' /etc/nsm/sensortab
 
 # Conventional Stop
 /usr/sbin/nsm_sensor_ps-stop  >> /var/log/nsm/nsm_cron.log
@@ -25,6 +23,9 @@
 
 # Conventional Start
 /usr/sbin/nsm_sensor_ps-start >> /var/log/nsm/nsm_cron.log
+
+# Take all sniffing interfaces down causing rebalancing of gigastream
+/usr/bin/awk -F '[\t]+' '{if ($4) system("ifconfig "$4" down")}' /etc/nsm/sensortab
 
 # Check for snort initialization complete
 while ! egrep "Initialization Complete" /var/log/nsm/*/snortu*.log > /dev/null; do 

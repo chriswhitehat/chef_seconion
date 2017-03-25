@@ -270,7 +270,7 @@ dynamicpreprocessor directory /usr/lib/snort_dynamicpreprocessor/
 dynamicengine /usr/lib/snort_dynamicengine/libsf_engine.so
 
 # path to dynamic rules libraries
-dynamicdetection directory /usr/local/lib/snort_dynamicrules
+dynamicdetection directory /usr/local/lib/snort_dynamicrules/<%= @sniff[:sensorname] %>/
 
 ###################################################
 # Step #5: Configure preprocessors
