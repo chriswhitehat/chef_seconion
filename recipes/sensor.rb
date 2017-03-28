@@ -22,6 +22,12 @@ template '/etc/nsm/chef_notes' do
 end
 
 
+execute 'nsm_sensor_ps-stop' do
+  command "nsm_sensor_ps-stop"
+  action :nothing
+end
+
+
 ##########################
 # Replace existing rule-update
 ##########################
@@ -70,7 +76,7 @@ else
     sorted_sensors << sensor[:fqdn]
   end
 
-  node.normal[:seconion][:sensor][:restart_splay] = (sorted_sensors.index(node[:fqdn]) % node[:seconion][:sensor][:rule_update_phases][node[:seconion][:sensor][:sensor_group]]) * 3600
+  node.normal[:seconion][:sensor][:restart_splay] = (sorted_sensors.index(node[:fqdn]) % node[:seconion][:sensor][:rule_update_phases][node[:seconion][:sensor][:sensor_group]]) * node[:seconion][:sensor][:rule_update_phase_duration][node[:seconion][:sensor][:sensor_group]]
   node.normal[:seconion][:sensor][:restart_hour] = node[:seconion][:sensor][:rule_update_hour][node[:seconion][:sensor][:sensor_group]]
 end
 
@@ -81,6 +87,17 @@ end
 template '/etc/cron.d/rule-update' do
   source '/rule-update/cron_rule-update.erb'
   mode '0644'
+  owner 'root'
+  group 'root'
+end
+
+
+##########################
+# Add nsm_sensor_ps-rolling-restart
+##########################
+template '/usr/sbin/nsm_sensor_ps-rolling-restart' do
+  source '/nsmnow/nsm_sensor_ps-rolling-restart.erb'
+  mode '0755'
   owner 'root'
   group 'root'
 end
@@ -207,7 +224,7 @@ file "/etc/nsm/sensortab" do
   owner 'sguil'
   group 'sguil'
   action :create
-  notifies :stop, 'service[nsm]', :before
+  notifies :run, 'execute[nsm_sensor_ps-stop]', :before
 end
 
 ############
@@ -570,6 +587,11 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     else
       regional = {}
     end
+    if node[:seconion][:sensor][:threshold][node[:seconion][:sensor][:sensor_group]]
+      sensor_group = node[:seconion][:sensor][:threshold][node[:seconion][:sensor][:sensor_group]]
+    else
+      sensor_group = {}
+    end
     if node[:seconion][:sensor][:threshold][node[:fqdn]]
       host = node[:seconion][:sensor][:threshold][node[:fqdn]]
     else
@@ -583,6 +605,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   else
     global = {}
     regional = {}
+    sensor_group = {}
     host = {}
     sensor = {}
   end
@@ -596,6 +619,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       :sniff => sniff,
       :global_sigs => global,
       :regional_sigs => regional,
+      :sensor_group_sigs => sensor_group,
       :host_sigs => host,
       :sensor_sigs => sensor
     })
@@ -612,6 +636,11 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     else
       regional = {}
     end
+    if node[:seconion][:sensor][:local_rules][node[:seconion][:sensor][:sensor_group]]
+      sensor_group = node[:seconion][:sensor][:local_rules][node[:seconion][:sensor][:sensor_group]]
+    else
+      sensor_group = {}
+    end
     if node[:seconion][:sensor][:local_rules][node[:fqdn]]
       host = node[:seconion][:sensor][:local_rules][node[:fqdn]]
     else
@@ -625,6 +654,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   else
     global = {}
     regional = {}
+    sensor_group = {}
     host = {}
     sensor = {}
   end
@@ -638,6 +668,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       :sniff => sniff,
       :global_sigs => global,
       :regional_sigs => regional,
+      :sensor_group_sigs => sensor_group,
       :host_sigs => host,
       :sensor_sigs => sensor
     })
@@ -698,6 +729,11 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       else
         regional = {}
       end
+      if node[:seconion][:sensor][:pulledpork][node[:seconion][:sensor][:sensor_group]]
+        sensor_group = node[:seconion][:sensor][:pulledpork][node[:seconion][:sensor][:sensor_group]]
+      else
+        sensor_group = {}
+      end
       if node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]]
         host = node[:seconion][:sensor][:pulledpork][conf][node[:fqdn]]
       else
@@ -711,6 +747,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     else
       global = {}
       regional = {}
+      sensor_group = {}
       host = {}
       sensor = {}
     end
@@ -724,6 +761,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
         :sniff => sniff,
         :global_sigs => global,
         :regional_sigs => regional,
+        :sensor_group_sigs => sensor_group,
         :host_sigs => host,
         :sensor_sigs => sensor
       })

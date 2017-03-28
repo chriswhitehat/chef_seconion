@@ -72,6 +72,19 @@
 <% end %>
 
 ##########################
+# Sensor Group 
+# <%= node[:seconion][:sensor][:sensor_group] %>
+##########################
+
+<% @sensor_group_sigs.each do |sig, enabled| %>
+	<% if enabled %>
+<%= "#{sig}" %>
+	<% else %>
+<%= "\##{sig}" %>
+	<% end %>
+<% end %>
+
+##########################
 # Host
 ##########################
 
@@ -82,7 +95,6 @@
 <%= "\##{sig}" %>
 	<% end %>
 <% end %>
-
 
 ##########################
 # Sensor 

@@ -2,14 +2,8 @@ To Do:
 
 Create Environment Scheme (kp_washington_prod)
 
-Manage local.rules
-
-compressed rules transfer verification
-
-non-active sensor cleanup
 
 mpath device change checking
 
-stop nsm when adding sensors (sensors will stick around since the sensortab will change out from under nsm now scripts)
 
-Add rolling option to nsm_sensor_ps-restart-hard
+logdap

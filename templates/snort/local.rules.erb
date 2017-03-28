@@ -8,11 +8,11 @@
 # Global
 ##########################
 
-<% @global_sigs.each do |sig, enabled| %>
-	<% if enabled %>
+<% @global_sigs.each do |msg, sig| %>
+	<% if sig %>
+<%= "\# #{msg}" %>
 <%= "#{sig}" %>
-	<% else %>
-<%= "\##{sig}" %>
+
 	<% end %>
 <% end %>
 
@@ -20,11 +20,25 @@
 # Regional
 ##########################
 
-<% @regional_sigs.each do |sig, enabled| %>
-	<% if enabled %>
+<% @regional_sigs.each do |msg, sig| %>
+	<% if sig %>
+<%= "\# #{msg}" %>
 <%= "#{sig}" %>
-	<% else %>
-<%= "\##{sig}" %>
+
+	<% end %>
+<% end %>
+
+
+##########################
+# Sensor Group 
+# <%= node[:seconion][:sensor][:sensor_group] %>
+##########################
+
+<% @sensor_group_sigs.each do |msg, sig| %>
+	<% if sig %>
+<%= "\# #{msg}" %>
+<%= "#{sig}" %>
+
 	<% end %>
 <% end %>
 
@@ -32,11 +46,11 @@
 # Host
 ##########################
 
-<% @host_sigs.each do |sig, enabled| %>
-	<% if enabled %>
+<% @host_sigs.each do |msg, sig| %>
+	<% if sig %>
+<%= "\# #{msg}" %>
 <%= "#{sig}" %>
-	<% else %>
-<%= "\##{sig}" %>
+
 	<% end %>
 <% end %>
 
@@ -45,10 +59,10 @@
 # Sensor 
 ##########################
 
-<% @sensor_sigs.each do |sig, enabled| %>
-	<% if enabled %>
+<% @sensor_sigs.each do |msg, sig| %>
+	<% if sig %>
+<%= "\# #{msg}" %>
 <%= "#{sig}" %>
-	<% else %>
-<%= "\##{sig}" %>
+
 	<% end %>
 <% end %>

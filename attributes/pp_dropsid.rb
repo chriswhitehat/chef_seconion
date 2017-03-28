@@ -56,6 +56,13 @@
 #default[:seconion][:sensor][:pulledpork][:dropsid][:regional]['1:220-1:3264'] = true
 
 ##########################
+# Sensor Group
+##########################
+
+# Example
+#default[:seconion][:sensor][:pulledpork][:dropsid]['sensor_group_name']['1:220-1:3264'] = true
+
+##########################
 # Host
 ##########################
 
