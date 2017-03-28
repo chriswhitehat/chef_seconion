@@ -76,8 +76,13 @@ else
     sorted_sensors << sensor[:fqdn]
   end
 
-  node.normal[:seconion][:sensor][:restart_splay] = (sorted_sensors.index(node[:fqdn]) % node[:seconion][:sensor][:rule_update_phases][node[:seconion][:sensor][:sensor_group]]) * node[:seconion][:sensor][:rule_update_phase_duration][node[:seconion][:sensor][:sensor_group]]
-  node.normal[:seconion][:sensor][:restart_hour] = node[:seconion][:sensor][:rule_update_hour][node[:seconion][:sensor][:sensor_group]]
+  if not sorted_sensors.index(node[:fqdn])
+    node.normal[:seconion][:sensor][:restart_splay] = 0
+    node.normal[:seconion][:sensor][:restart_hour] = node[:seconion][:sensor][:rule_update_hour]['singleton']
+  else
+    node.normal[:seconion][:sensor][:restart_splay] = (sorted_sensors.index(node[:fqdn]) % node[:seconion][:sensor][:rule_update_phases][node[:seconion][:sensor][:sensor_group]]) * node[:seconion][:sensor][:rule_update_phase_duration][node[:seconion][:sensor][:sensor_group]]
+    node.normal[:seconion][:sensor][:restart_hour] = node[:seconion][:sensor][:rule_update_hour][node[:seconion][:sensor][:sensor_group]]
+  end
 end
 
 
