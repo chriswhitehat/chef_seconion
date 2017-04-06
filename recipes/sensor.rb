@@ -365,9 +365,9 @@ if node[:seconion][:sensor][:bro_sigs]
     sensor_group_sigs = {}
   end
   if node[:seconion][:sensor][:bro_sigs][node[:fqdn]]
-    host = node[:seconion][:sensor][:bro_sigs][node[:fqdn]]
+    host_sigs = node[:seconion][:sensor][:bro_sigs][node[:fqdn]]
   else
-    host = {}
+    host_sigs = {}
   end
 else
   global_sigs = {}
