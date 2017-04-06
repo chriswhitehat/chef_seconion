@@ -339,18 +339,6 @@ template '/opt/bro/share/bro/ghc_extraction/extract.bro' do
    mode '0644'
 end
 
-template '/opt/bro/share/bro/site/local.bro' do
-   source 'bro/site/local.bro.erb'
-   owner 'sguil'
-   group 'sguil'
-   mode '0644'
-   variables({
-    :bro_scripts => node[:seconion][:sensor][:bro_script],
-    :bro_sigs => node[:seconion][:sensor][:bro_sig]
-  })
-end
-
-
 if node[:seconion][:sensor][:bro][:extracted][:rotate]
   template '/etc/cron.d/bro-rotate-extracted' do
     source 'bro/cron-bro-rotate-extracted.erb'
@@ -360,7 +348,79 @@ if node[:seconion][:sensor][:bro][:extracted][:rotate]
   end
 end
 
+if node[:seconion][:sensor][:bro_sigs]
+  if node[:seconion][:sensor][:bro_sigs][:global]
+    global_sigs = node[:seconion][:sensor][:bro_sigs][:global]
+  else
+    global_sigs = {}
+  end
+  if node[:seconion][:sensor][:bro_sigs][:regional]
+    regional_sigs = node[:seconion][:sensor][:bro_sigs][:regional]
+  else
+    regional_sigs = {}
+  end
+  if node[:seconion][:sensor][:bro_sigs][node[:seconion][:sensor][:sensor_group]]
+    sensor_group_sigs = node[:seconion][:sensor][:bro_sigs][node[:seconion][:sensor][:sensor_group]]
+  else
+    sensor_group_sigs = {}
+  end
+  if node[:seconion][:sensor][:bro_sigs][node[:fqdn]]
+    host = node[:seconion][:sensor][:bro_sigs][node[:fqdn]]
+  else
+    host = {}
+  end
+else
+  global_sigs = {}
+  regional_sigs = {}
+  sensor_group_sigs = {}
+  host_sigs = {}
+end
 
+if node[:seconion][:sensor][:bro_scripts]
+  if node[:seconion][:sensor][:bro_scripts][:global]
+    global = node[:seconion][:sensor][:bro_scripts][:global]
+  else
+    global = {}
+  end
+  if node[:seconion][:sensor][:bro_scripts][:regional]
+    regional = node[:seconion][:sensor][:bro_scripts][:regional]
+  else
+    regional = {}
+  end
+  if node[:seconion][:sensor][:bro_scripts][node[:seconion][:sensor][:sensor_group]]
+    sensor_group = node[:seconion][:sensor][:bro_scripts][node[:seconion][:sensor][:sensor_group]]
+  else
+    sensor_group = {}
+  end
+  if node[:seconion][:sensor][:bro_scripts][node[:fqdn]]
+    host = node[:seconion][:sensor][:bro_scripts][node[:fqdn]]
+  else
+    host = {}
+  end
+else
+  global = {}
+  regional = {}
+  sensor_group = {}
+  host = {}
+end
+
+template '/opt/bro/share/bro/site/local.bro' do
+  source 'bro/site/local.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  variables({
+    :global_sigs => global_sigs,
+    :regional_sigs => regional_sigs,
+    :sensor_group_sigs => sensor_group_sigs,
+    :host_sigs => host_sigs,
+    :global => global,
+    :regional => regional,
+    :sensor_group => sensor_group,
+    :host => host,
+  })
+  notifies :run, 'execute[deploy_bro]', :delayed
+end
 
 
 #########################################
@@ -796,6 +856,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     end
   end
 
+  
 
   # Increment baryard port by 100 for next interface
   barnyard_port = barnyard_port + 100
@@ -812,8 +873,10 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       :sniff => sniff
     )
   end
-
 end
+
+
+
 
 execute 'nsm_sensor_ps-restart --only-bro' do
   not_if do ::File.exists?('/nsm/bro/spool/broctl-config.sh') end
