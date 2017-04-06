@@ -2,8 +2,22 @@ To Do:
 
 Create Environment Scheme (kp_washington_prod)
 
-
 mpath device change checking
 
 
-logdap
+Runaway snort log file, partition exhaustion
+
+Remove entries from DB
+
+Alert on gaps in coverage check/sguil/splunk during restart
+
+Clear bro_stats logs
+
+splunk cookbook chown dir and restart as splunk:splunk
+
+Stretch goals:
+NUMA CPU pinning.
+
+Add sensorname to each status printout for restarts.
+
+Certificat Authorities in Bro

@@ -11,6 +11,7 @@ config sid_file:            /etc/nsm/rules/<%= @sniff[:sensorname] %>/sid-msg.ma
 config gen_file:            /etc/nsm/rules/<%= @sniff[:sensorname] %>/gen-msg.map
 config hostname: <%= @sniff[:sensorname] %>
 config interface: <%= @sniff[:interface] %>
+config event_cache_size: 8192
 input unified2
 output sguil: sensor_name=<%= @sniff[:sensorname] %> agent_port=<%= @barnyard_port %>
 #output database: alert, mysql, user=root dbname=snorby host=127.0.0.1

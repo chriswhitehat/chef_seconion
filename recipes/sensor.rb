@@ -98,6 +98,17 @@ end
 
 
 ##########################
+# Barnyard2 Restart
+##########################
+template '/etc/cron.d/barnyard2-restart' do
+  source '/sensor/cron_barnyard2-restart.erb'
+  mode '0644'
+  owner 'root'
+  group 'root'
+end
+
+
+##########################
 # Add nsm_sensor_ps-rolling-restart
 ##########################
 template '/usr/sbin/nsm_sensor_ps-rolling-restart' do
@@ -943,4 +954,34 @@ ruby_block "rm_old_sensors" do
   end
 end
 
+
+##########################
+# Purge Rule Stats
+##########################
+
+template '/usr/bin/rule_stats_purge' do
+  source '/sensor/rule_stats_purge.sh.erb'
+  owner 'root'
+  group 'root'
+  mode '0755'
+end
+
+template '/etc/cron.d/rule-stats-purge' do
+  source 'sensor/cron_rule-stats-purge.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
+
+
+##########################
+# SO Health
+##########################
+
+template '/etc/cron.d/bro-stats' do
+  source '/sensor/cron_bro-stats.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
 

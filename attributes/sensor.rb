@@ -12,6 +12,7 @@ default[:seconion][:sensor][:sensor_group] = 'singleton'
 
 default[:seconion][:sensor][:rule_update_hour][:singleton] = 7
 default[:seconion][:sensor][:rule_update_phases][:singleton] = 1
+default[:seconion][:sensor][:rule_update_phase_duration][:singleton] = 3600
 
 
 
@@ -70,7 +71,7 @@ default[:seconion][:sensor][:pf_ring_slots] = 4096
 # interface to drop into promiscuious mode
 default[:seconion][:sensor][:sniff][:interface] = 'eth1'
 # mtu for promiscuious nic
-default[:seconion][:sensor][:sniff][:mtu] = '1530'
+default[:seconion][:sensor][:sniff][:mtu] = 1530
 # name of sensor in sguil and directory structure
 default[:seconion][:sensor][:sniff][:sensorname] = 'sensorname'
 # Sensor net group, should be same as sensorname unless breaking down individual services per server.

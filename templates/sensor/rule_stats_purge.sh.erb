@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for d in /nsm/sensor_data/*/snort-*/; do
+   rm -f `ls -1t $d"rules_stats".txt.* | awk '{if(NR>1)print}' | xargs`
+done
+

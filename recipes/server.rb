@@ -295,3 +295,16 @@ file 'seconion_autocat' do
   action :nothing
   notifies :restart, 'service[nsm]', :immediately
 end
+
+
+#############################
+# On reboot run rule-update
+# to stage /tmp with tarballs
+#############################
+
+template '/etc/cron.d/onboot-rule-update' do
+  source 'server/cron_onboot-rule-update.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end

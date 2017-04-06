@@ -23,6 +23,8 @@ echo "Hard Stop"
 /usr/bin/killall -9 barnyard2
 /usr/bin/killall -9 snort
 
+/bin/rm /var/log/nsm/*/snortu-*.log
+
 # Conventional Start
 /usr/sbin/nsm_sensor_ps-start
 
@@ -33,15 +35,13 @@ echo "Take down sniffing interfaces"
 echo "Waiting for Snort to Initialize, this may take up to an hour."
 echo "Start: `date`"
 # Check for snort initialization complete
-while ! egrep "Initialization Complete" /var/log/nsm/*/snortu*.log ; do 
-
-	/bin/sleep 1 
-
+while ! egrep "Port Based Pattern Matching Memory" /var/log/nsm/*/snortu-*.log ; do 
+	true
 done;
 
+/usr/bin/awk -F '[\t]+' '{if ($4) system("ifconfig "$4" up")}' /etc/nsm/sensortab
 echo "Brining up sniffing interfaces"
 # Once Initialization is complete bring sniffing interfaces back up
 # Rebalancing again to re-introduce sensor into gigastream.
-/usr/bin/awk -F '[\t]+' '{if ($4) system("ifconfig "$4" up")}' /etc/nsm/sensortab
 
 echo "Finish: `date`"

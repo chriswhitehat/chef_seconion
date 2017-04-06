@@ -21,6 +21,8 @@
 /usr/bin/killall -9 barnyard2  >> /var/log/nsm/nsm_cron.log
 /usr/bin/killall -9 snort  >> /var/log/nsm/nsm_cron.log
 
+/bin/rm /var/log/nsm/*/snortu-*.log
+
 # Conventional Start
 /usr/sbin/nsm_sensor_ps-start >> /var/log/nsm/nsm_cron.log
 
@@ -28,10 +30,8 @@
 /usr/bin/awk -F '[\t]+' '{if ($4) system("ifconfig "$4" down")}' /etc/nsm/sensortab
 
 # Check for snort initialization complete
-while ! egrep "Initialization Complete" /var/log/nsm/*/snortu*.log > /dev/null; do 
-
-	/bin/sleep 1 
-
+while ! egrep "Port Based Pattern Matching Memory" /var/log/nsm/*/snortu-*.log ; do 
+	true
 done;
 
 # Once Initialization is complete bring sniffing interfaces back up
