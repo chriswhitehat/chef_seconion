@@ -100,8 +100,8 @@ end
 ##########################
 # Barnyard2 Restart
 ##########################
-template '/etc/cron.d/barnyard2-restart' do
-  source '/sensor/cron_barnyard2-restart.erb'
+template '/etc/cron.d/sensor-newday' do
+  source '/sensor/cron_sensor-newday.erb'
   mode '0644'
   owner 'root'
   group 'root'

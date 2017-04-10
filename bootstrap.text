@@ -1,0 +1,1 @@
+knife bootstrap esa-sodb01-dca.ghc.org -x system --sudo -r 'recipe[ghc-base]' --bootstrap-curl-options "--proxy http://proxy.ghc.org:8080"

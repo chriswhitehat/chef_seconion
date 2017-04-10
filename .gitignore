@@ -1,4 +1,5 @@
 Vagrantfile
 .vagrant/
 Berksfile.lock
-
+snort.log.*
+*.bak
