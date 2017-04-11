@@ -270,6 +270,18 @@ end
 
 
 #############################
+# Active Sensors Cron
+#############################
+
+template '/etc/cron.d/active-sensors' do
+  source 'server/cron_active-sensors.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
+
+
+#############################
 # Backup Autocat
 #############################
 template '/etc/cron.d/autocat-backup' do
