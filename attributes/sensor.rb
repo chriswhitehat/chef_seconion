@@ -91,6 +91,8 @@ default[:seconion][:sensor][:sniff][:ids_lb_procs] = 1
 default[:seconion][:sensor][:sniff][:snort_agent_enabled] = true
 # choose which search method to use, ac-split (cpu/memory neutral), ac (favor cpu, heavy memory usage)
 default[:seconion][:sensor][:sniff][:snort_search_method] = 'ac'
+# The max size of the snort unified2 alert file
+default[:seconion][:sensor][:sniff][:snort_unified2_size] = 128
 # bpf for snort/suricata
 default[:seconion][:sensor][:sniff][:ids_bpf] = ''
 # barnyard2 sends snort/suricata alerts to the snort agent and other destinations
@@ -128,6 +130,7 @@ template = {
   'ids_lb_procs' => node[:seconion][:sensor][:sniff][:ids_lb_procs],
   'snort_search_method' => node[:seconion][:sensor][:sniff][:snort_search_method],
   'snort_agent_enabled' => node[:seconion][:sensor][:sniff][:snort_agent_enabled],
+  'snort_unified2_size' => node[:seconion][:sensor][:sniff][:snort_unified2_size],
   'ids_bpf' => node[:seconion][:sensor][:sniff][:ids_bpf],
   'barnyard2_enabled' => node[:seconion][:sensor][:sniff][:barnyard2_enabled],
   'bro_enabled' => node[:seconion][:sensor][:sniff][:bro_enabled],
