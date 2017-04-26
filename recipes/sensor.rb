@@ -22,6 +22,14 @@ template '/etc/nsm/chef_notes' do
 end
 
 
+template '/usr/sbin/seconion_status' do
+  source 'sensor/seconion_status.erb'
+  owner 'root'
+  group 'root'
+  mode '0755'
+end
+
+
 execute 'nsm_sensor_ps-stop' do
   command "nsm_sensor_ps-stop"
   action :nothing
