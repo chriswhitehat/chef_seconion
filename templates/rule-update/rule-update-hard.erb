@@ -37,3 +37,6 @@ done;
 # Once Initialization is complete bring sniffing interfaces back up
 # Rebalancing again to re-introduce sensor into gigastream.
 /usr/bin/awk -F '[\t]+' '{if ($4) system("ifconfig "$4" up")}' /etc/nsm/sensortab
+
+# Restart pcap to fix down interface 100% cpu.
+/usr/sbin/nsm_sensor_ps-restart --only-pcap >> /var/log/nsm/nsm_cron.log

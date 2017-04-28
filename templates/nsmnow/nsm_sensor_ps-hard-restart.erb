@@ -41,4 +41,7 @@ echo "Brining up sniffing interfaces"
 # Once Initialization is complete bring sniffing interfaces back up
 # Rebalancing again to re-introduce sensor into gigastream.
 
+# Restart pcap to fix down interface 100% cpu.
+/usr/sbin/nsm_sensor_ps-restart --only-pcap 
+
 echo "Finish: `date`"

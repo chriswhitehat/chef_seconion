@@ -135,7 +135,10 @@ directories = ['/nsm/sensor_data',
                '/var/log/nsm',
                '/usr/local/lib/snort_dynamicrules',
                '/usr/local/lib/snort_dynamicrules_backup',
-               '/etc/nsm/backup']
+               '/etc/nsm/backup',
+               '/nsm/bro/',
+               '/nsm/bro/logs',
+               '/nsm/bro/extracted']
 
 directories.each do |path|
   directory path do
@@ -882,8 +885,6 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     )
   end
 end
-
-
 
 
 execute 'nsm_sensor_ps-restart --only-bro' do
