@@ -141,12 +141,12 @@ ruby_block "set_mysql_tuning_variables" do
   block do
     #tricky way to load this Chef::Mixin::ShellOut utilities
     Chef::Resource::RubyBlock.send(:include, Chef::Mixin::ShellOut)      
-    recommendations = shell_out('mysqltuner').stdout.strip.split('\n')
+    recommendations = shell_out('mysqltuner').stdout.strip
     puts recommendations
 
     tuned_total = 0
-    recommendations.each do |line|
-      line_match = line.match(/\s+(?<variable>\w+)\s\(\>\=?\s(?<value>[0-9\.]+)(?<unit>\w)?/)
+    recommendations.each_line do |line|
+         = line.match(/\s+(?<variable>\w+)\s\(\>\=?\s(?<value>[0-9\.]+)(?<unit>\w)?/)
       puts line_match
       if line_match
         if line_match[:unit]
