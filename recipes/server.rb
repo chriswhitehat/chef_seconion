@@ -137,8 +137,7 @@ template '/etc/mysql/conf.d/securityonion-ibdata1.cnf' do
 end
 
 
-
-if Time.now.utc.localtime(node[:seconion][:physical_timezone_offset]).hour == 11
+if Time.now.utc.localtime(node[:seconion][:physical_timezone_offset]).hour == 12
 
   tuned_total = 0
 
