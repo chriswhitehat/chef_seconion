@@ -137,7 +137,9 @@ template '/etc/mysql/conf.d/securityonion-ibdata1.cnf' do
 end
 
 
-if Time.now.utc.localtime(node[:seconion][:physical_timezone_offset]).hour == 12
+# Only optimize on the first Monday of the month at noon local to the physical location of the server
+chef_runtime = Time.now.utc.localtime(node[:seconion][:physical_timezone_offset])
+if chef_runtime.day < 8 and chef_runtime.wday == 1 and chef_runtime.hour == 12
 
   tuned_total = 0
 
