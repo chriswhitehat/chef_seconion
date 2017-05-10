@@ -16,4 +16,5 @@ default[:seconion][:vrt_oinkcode] = ''
 default[:seconion][:etpro_oinkcode] = ''
 
 default[:seconion][:timezone] = 'Etc/UTC'
+default[:seconion][:physical_timezone_offset] = '-07:00'
 
