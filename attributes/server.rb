@@ -23,6 +23,9 @@ default[:seconion][:server][:mgmt][:nameserver] = '127.0.0.1'
 default[:seconion][:server][:mgmt][:domain] = 'example.com'
 
 
+# This should be the name/IP of the separate Sguil server:
+default[:seconion][:server][:servername] = 'sguilserver.example.com'
+
 
 #########################
 # OSSEC
@@ -30,9 +33,9 @@ default[:seconion][:server][:mgmt][:domain] = 'example.com'
 default[:seconion][:server][:ossec_enabled] = false
 
 
-# This should be the name/IP of the separate Sguil server:
-default[:seconion][:server][:servername] = 'sguilserver.example.com'
-
+#########################
+# Sguil
+#########################
 # SGUIL_SERVER_NAME
 # This is the name of the Sguil server mysql database we'll create.
 # You probably shouldn't change this value.
@@ -49,6 +52,11 @@ default[:seconion][:server][:sguil_client_password] = 'asdfasdf'
 # DEBUG 0=off 1=important stuff 2=everything. Option 2 is VERY chatty.
 default[:seconion][:server][:sguild][:debug] = 2
 
+
+#########################
+# Web Services
+#########################
+default[:seconion][:server][:apache][:enabled] = false
 
 #########################
 # NIDS Rules

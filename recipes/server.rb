@@ -23,7 +23,7 @@ if node[:seconion][:server][:mgmt][:configure]
 
 end
 
-package ['securityonion-server', 'syslog-ng-core']
+package ['securityonion-server', 'syslog-ng-core', 'mysqltuner']
 
 #############################
 # Deploy Notes
@@ -49,7 +49,6 @@ directories.each do |path|
 end
 
 
-#TODO touch log files that warn on first run.
 touch_files = ["/var/log/nsm/sguild.log"]
 
 touch_files.each do |path|
@@ -83,6 +82,16 @@ service 'nsm' do
 end
 
 ##########################
+# Web Services
+##########################
+if !node[:seconion][:server][:apache][:enabled]
+  service 'apache2' do
+    action :disable
+  end
+end 
+  
+
+##########################
 # Replace existing rule-update
 ##########################
 template '/usr/sbin/rule-update' do
@@ -107,6 +116,10 @@ file "/etc/nsm/sensortab" do
   action :create
 end
 
+
+############################
+# MySQL tuning
+############################
 template '/etc/mysql/conf.d/securityonion-sguild.cnf' do
   source 'server/mysql/securityonion-sguild.cnf.erb'
   mode '0640'
@@ -122,6 +135,51 @@ template '/etc/mysql/conf.d/securityonion-ibdata1.cnf' do
   group 'sguil'
   notifies :run, 'execute[restart_mysql]', :delayed
 end
+
+# Ruby block converge hack
+ruby_block "set_mysql_tuning_variables" do
+  block do
+    #tricky way to load this Chef::Mixin::ShellOut utilities
+    Chef::Resource::RubyBlock.send(:include, Chef::Mixin::ShellOut)      
+    recommendations = shell_out('mysqltuner').stdout.strip.split('\n')
+
+    tuned_total = 0
+    recommendations.each do |line|
+      line_match = line.match(/\s+(?<variable>\w+)\s\(\>\=?\s(?<value>[0-9\.]+)(?<unit>\w)?/)
+      if line_match
+        if line_match[:unit]
+          if line_match[:unit] == 'K'
+            tuned_value = line_match[:value].to_i * 100
+            tuned_total += tuned_value
+          elsif line_match[:unit] == 'M'
+            tuned_value = line_match[:value].to_i * 10 
+            tuned_total += tuned_value * 1024
+          elsif line_match[:unit] == 'G'
+            tuned_value = line_match[:value].to_f.ceil 
+            tuned_total += tuned_value * 1024 * 1024
+          end
+          
+          puts "#{line_match[:variable]} = #{tuned_value}#{line_match[:unit]}"
+          node.normal[:seconion][:mysql][:tuning][line_match[:variable]] = "#{tuned_value}#{line_match[:unit]}"
+          
+        else
+          tuned_value = line_match[:value].to_i * 2
+          puts "#{line_match[:variable]} = #{tuned_value}"
+          node.normal[:seconion][:mysql][:tuning][line_match[:variable]] = "#{tuned_value}"
+        end
+      end
+    end
+    puts tuned_total
+  end
+end
+
+template '/etc/mysql/conf.d/securityonion-tuning.cnf' do
+  source 'server/mysql/securityonion-tuning.cnf.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
+
 
 execute 'restart_mysql' do
   command 'pgrep -lf mysqld >/dev/null && restart mysql'
@@ -198,10 +256,7 @@ sorted_sensors.each do |sensor|
         not_if do ::File.exists?("#{symlink}") end
       end
     end
-
-
   end
-
 end
 
 
