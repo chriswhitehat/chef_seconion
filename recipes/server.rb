@@ -146,7 +146,7 @@ ruby_block "set_mysql_tuning_variables" do
 
     tuned_total = 0
     recommendations.each_line do |line|
-         = line.match(/\s+(?<variable>\w+)\s\(\>\=?\s(?<value>[0-9\.]+)(?<unit>\w)?/)
+      line_match = line.match(/\s+(?<variable>\w+)\s\(\>\=?\s(?<value>[0-9\.]+)(?<unit>\w)?/)
       puts line_match
       if line_match
         if line_match[:unit]
