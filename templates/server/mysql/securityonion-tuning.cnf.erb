@@ -8,6 +8,5 @@
 [mysqld]
 <% node[:seconion][:mysql][:tuning].each do |variable, tune| %>
 <%= variable %> = <%= tune %>
-
 <% end %>
 <% end %>

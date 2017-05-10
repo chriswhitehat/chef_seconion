@@ -136,18 +136,18 @@ template '/etc/mysql/conf.d/securityonion-ibdata1.cnf' do
   notifies :run, 'execute[restart_mysql]', :delayed
 end
 
+tuned_total = 0
+
 # Ruby block converge hack
 ruby_block "set_mysql_tuning_variables" do
   block do
     #tricky way to load this Chef::Mixin::ShellOut utilities
     Chef::Resource::RubyBlock.send(:include, Chef::Mixin::ShellOut)      
     recommendations = shell_out('mysqltuner').stdout.strip
-    puts recommendations
+    #puts recommendations
 
-    tuned_total = 0
     recommendations.lines do |line|
       line_match = line.match(/\s+(?<variable>\w+)\s\(\>\=?\s(?<value>[0-9\.]+)(?<unit>\w)?/)
-      puts line_match
       if line_match
         if line_match[:unit]
           if line_match[:unit] == 'K'
@@ -160,19 +160,24 @@ ruby_block "set_mysql_tuning_variables" do
             tuned_value = line_match[:value].to_f.ceil 
             tuned_total += tuned_value * 1024 * 1024
           end
-          
-          puts "#{line_match[:variable]} = #{tuned_value}#{line_match[:unit]}"
+          #puts "#{line_match[:variable]} = #{tuned_value}#{line_match[:unit]}"
           node.normal[:seconion][:mysql][:tuning][line_match[:variable]] = "#{tuned_value}#{line_match[:unit]}"
           
         else
           tuned_value = line_match[:value].to_i * 2
-          puts "#{line_match[:variable]} = #{tuned_value}"
+          #puts "#{line_match[:variable]} = #{tuned_value}"
           node.normal[:seconion][:mysql][:tuning][line_match[:variable]] = "#{tuned_value}"
         end
       end
     end
-    puts tuned_total
+    #puts tuned_total
   end
+end
+
+if (tuned_total / node[:memory][:cached].match(/[0-9]+/).to_i) < .8
+  puts (tuned_total / node[:memory][:cached].match(/[0-9]+/).to_i)
+else
+  puts (tuned_total / node[:memory][:cached].match(/[0-9]+/).to_i)
 end
 
 template '/etc/mysql/conf.d/securityonion-tuning.cnf' do
