@@ -174,7 +174,7 @@ ruby_block "set_mysql_tuning_variables" do
   end
 end
 
-if (tuned_total / node[:memory][:cached].match(/[0-9]+/).to_i) < .8
+if (tuned_total / node[:memory][:cached].match(/[0-9]+/).to_i) < 0.8
   puts (tuned_total / node[:memory][:cached].match(/[0-9]+/).to_i)
 else
   puts (tuned_total / node[:memory][:cached].match(/[0-9]+/).to_i)
