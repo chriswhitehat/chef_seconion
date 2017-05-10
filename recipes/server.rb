@@ -175,18 +175,13 @@ ruby_block "set_mysql_tuning_variables" do
 end
 
 if (tuned_total / node[:memory][:cached].match(/[0-9]+/)[0].to_i) < 0.8
-  puts tuned_total / node[:memory][:cached].match(/[0-9]+/)[0].to_i
-else
-  puts tuned_total / node[:memory][:cached].match(/[0-9]+/)[0].to_i
+  template '/etc/mysql/conf.d/securityonion-tuning.cnf' do
+    source 'server/mysql/securityonion-tuning.cnf.erb'
+    owner 'root'
+    group 'root'
+    mode '0644'
+  end
 end
-
-template '/etc/mysql/conf.d/securityonion-tuning.cnf' do
-  source 'server/mysql/securityonion-tuning.cnf.erb'
-  owner 'root'
-  group 'root'
-  mode '0644'
-end
-
 
 execute 'restart_mysql' do
   command 'pgrep -lf mysqld >/dev/null && restart mysql'
