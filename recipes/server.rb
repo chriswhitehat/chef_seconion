@@ -138,7 +138,7 @@ end
 
 
 
-if Time.now.utc.localtime(node[:seconion][:physical_timezone_offset]) == 11
+if Time.now.utc.localtime(node[:seconion][:physical_timezone_offset]).hour == 11
 
   tuned_total = 0
 
