@@ -142,6 +142,7 @@ ruby_block "set_mysql_tuning_variables" do
     #tricky way to load this Chef::Mixin::ShellOut utilities
     Chef::Resource::RubyBlock.send(:include, Chef::Mixin::ShellOut)      
     recommendations = shell_out('mysqltuner').stdout.strip.split('\n')
+    puts recommendations
 
     tuned_total = 0
     recommendations.each do |line|
