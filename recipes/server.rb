@@ -157,7 +157,7 @@ ruby_block "set_mysql_tuning_variables" do
             tuned_value = line_match[:value].to_i * 10 
             tuned_total += tuned_value * 1024
           elsif line_match[:unit] == 'G'
-            tuned_value = line_match[:value].to_f.ceil 
+            tuned_value = line_match[:value].to_f.floor + 1 
             tuned_total += tuned_value * 1024 * 1024
           end
           #puts "#{line_match[:variable]} = #{tuned_value}#{line_match[:unit]}"
@@ -166,7 +166,7 @@ ruby_block "set_mysql_tuning_variables" do
         else
           tuned_value = line_match[:value].to_i * 2
           #puts "#{line_match[:variable]} = #{tuned_value}"
-          node.normal[:seconion][:mysql][:tuning][line_match[:variable]] = "#{tuned_value}"
+          #node.normal[:seconion][:mysql][:tuning][line_match[:variable]] = "#{tuned_value}"
         end
       end
     end
