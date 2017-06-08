@@ -6,3 +6,5 @@
  default[:seconion][:sensor][:bro][:extract][:mimetypes]["application/x-rar"] = "rar"
  default[:seconion][:sensor][:bro][:extract][:mimetypes]["application/vnd.openxmlformats-officedocument.wordprocessingml.document"] = "docx"
  default[:seconion][:sensor][:bro][:extract][:mimetypes]["text/rtf"] = "rtf" 
+ default[:seconion][:sensor][:bro][:extract][:mimetypes]["application/vnd.openxmlformats-officedocument.presentationml.presentation"] = "pptx"
+ default[:seconion][:sensor][:bro][:extract][:mimetypes]["application/vnd.openxmlformats-officedocument"]  = "pptx"
