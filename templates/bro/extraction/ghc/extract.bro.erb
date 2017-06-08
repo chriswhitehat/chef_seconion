@@ -22,3 +22,4 @@ event file_sniff(f: fa_file, meta: fa_metadata)
     local fname = fmt("/nsm/bro/extracted/%s-%s.%s.%s", f$source, f$id, ext, f$info$filename);
     Files::add_analyzer(f, Files::ANALYZER_EXTRACT, [$extract_filename=fname]);
     }
+

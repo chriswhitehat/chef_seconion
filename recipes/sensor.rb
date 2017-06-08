@@ -265,6 +265,7 @@ template '/opt/bro/etc/node.cfg' do
   variables(
     :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/etc/network.cfg' do
@@ -275,6 +276,7 @@ template '/opt/bro/etc/network.cfg' do
   variables(
     :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/share/bro/networks/__load__.bro' do
@@ -348,6 +350,7 @@ template '/opt/bro/share/bro/ghc_extraction/extract.bro' do
    owner 'sguil'
    group 'sguil'
    mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 if node[:seconion][:sensor][:bro][:extracted][:rotate]
@@ -883,6 +886,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     variables(
       :sniff => sniff
     )
+    notifies :run, 'execute[deploy_bro]', :delayed
   end
 end
 
