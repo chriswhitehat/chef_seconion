@@ -3,4 +3,4 @@
 # https://gist.github.com/JustinAzoff/7a1b92c976a2fa6e8601
 
 # Example usage
-#default[:seconion][:sensor][:bro][:ssl]["<name_of_CA>"] = "\x2D\x2D\x2D\x2D\x2D.....hex cert string" 
+#default[:seconion][:sensor][:bro][:cert_authorities]["<name_of_CA>"] = "\x2D\x2D\x2D\x2D\x2D.....hex cert string" 
