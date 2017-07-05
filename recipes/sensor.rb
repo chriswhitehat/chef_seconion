@@ -132,6 +132,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/etpro',
                '/opt/bro/share/bro/smtp-embedded-url-bloom',
                '/opt/bro/share/bro/networks',
+               '/opt/bro/share/bro/cert_authorities',
                '/var/log/nsm',
                '/usr/local/lib/snort_dynamicrules',
                '/usr/local/lib/snort_dynamicrules_backup',
@@ -347,6 +348,22 @@ end
 
 template '/opt/bro/share/bro/ghc_extraction/extract.bro' do
    source 'bro/extraction/ghc/extract.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+# Create files for adding certificate authorities for verifitcation
+template '/opt/bro/share/bro/cert_authorities/__load__.bro' do
+   source 'bro/cert_authorities/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
+
+template '/opt/bro/share/bro/cert_authorities/cert_authorities.bro' do
+   source 'bro/cert_authorities/cert_authorities.bro.erb'
    owner 'sguil'
    group 'sguil'
    mode '0644'
