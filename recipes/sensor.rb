@@ -132,6 +132,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/etpro',
                '/opt/bro/share/bro/smtp-embedded-url-bloom',
                '/opt/bro/share/bro/networks',
+               '/opt/bro/share/bro/cert_authorities',
                '/var/log/nsm',
                '/usr/local/lib/snort_dynamicrules',
                '/usr/local/lib/snort_dynamicrules_backup',
@@ -265,6 +266,7 @@ template '/opt/bro/etc/node.cfg' do
   variables(
     :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/etc/network.cfg' do
@@ -275,6 +277,7 @@ template '/opt/bro/etc/network.cfg' do
   variables(
     :sniffing_interfaces => node['seconion']['sensor']['sniffing_interfaces']
   )
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/share/bro/networks/__load__.bro' do
@@ -348,6 +351,23 @@ template '/opt/bro/share/bro/ghc_extraction/extract.bro' do
    owner 'sguil'
    group 'sguil'
    mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+# Create files for adding certificate authorities for verifitcation
+template '/opt/bro/share/bro/cert_authorities/__load__.bro' do
+   source 'bro/cert_authorities/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
+
+template '/opt/bro/share/bro/cert_authorities/cert_authorities.bro' do
+   source 'bro/cert_authorities/cert_authorities.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 if node[:seconion][:sensor][:bro][:extracted][:rotate]
@@ -883,6 +903,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     variables(
       :sniff => sniff
     )
+    notifies :run, 'execute[deploy_bro]', :delayed
   end
 end
 

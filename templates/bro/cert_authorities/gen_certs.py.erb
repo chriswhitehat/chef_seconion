@@ -1,0 +1,42 @@
+
+#!/usr/bin/env python
+import os
+import sys
+
+BRO_CERT_TEMPLATE = """#auto generated
+redef SSL::root_certs += {
+    ["%(subject)s"] = "%(cert)s"
+};
+"""
+
+def read_file(fn):
+    with open(fn) as f:
+        return f.read()
+
+def hexify(s):
+    return ''.join("\\x" + x.encode('hex').upper() for x in s)
+
+def get_subject(fn):
+    #don't really care about the name for now, so just use the filename as the subject
+    return os.path.basename(fn)
+    
+def cert_to_bro_string(fn):
+    cert = hexify(read_file(fn))
+    subject = get_subject(fn)
+    return BRO_CERT_TEMPLATE % dict(subject=subject, cert=cert)
+
+def convert_certs(cert_dir):
+    s = ""
+    certs = [fn for fn in os.listdir(cert_dir) if fn.endswith(".der")]
+    for cert in certs:
+        full = os.path.join(cert_dir, cert)
+        s += cert_to_bro_string(full)
+    return s
+
+if __name__ == "__main__":
+    path = sys.argv[1]
+    output = sys.argv[2]
+    out = convert_certs(path)
+    with open(output, 'w') as f:
+        f.write(out)
+        

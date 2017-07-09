@@ -137,6 +137,8 @@ default[:seconion][:sensor][:bro_scripts][:global]['ghc_extraction'] = false
 # Load ETPro IOC's into intel framekwork
 default[:seconion][:sensor][:bro_scripts][:global]['etpro'] = false
 
+# Load Certificate Authorities to improve certificate validation
+default[:seconion][:sensor][:bro_scripts][:global]['cert_authorities']  = false
 
 ############
 # Deprectated in 2.5
