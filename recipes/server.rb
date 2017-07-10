@@ -49,7 +49,8 @@ directories.each do |path|
 end
 
 
-touch_files = ["/var/log/nsm/sguild.log"]
+touch_files = ["/var/log/nsm/sguild.log",
+               "/etc/nsm/active_sensors"]
 
 touch_files.each do |path|
   file path do
@@ -270,58 +271,59 @@ end
 
 
 
-########################
-# Deactivate sensors that have been removed
-########################
+if File.exists?('/etc/nsm/active_sensors')
+  ########################
+  # Deactivate sensors that have been removed
+  ########################
 
-active_sensors = File.read('/etc/nsm/active_sensors').split("\n")
+  active_sensors = File.read('/etc/nsm/active_sensors').split("\n")
 
-###############################
-# Sensors to mark active
-###############################
-puts "current - active"
-puts current_sensors - active_sensors
+  ###############################
+  # Sensors to mark active
+  ###############################
+  puts "current - active"
+  puts current_sensors - active_sensors
 
-reactivate_sensors = current_sensors - active_sensors
+  reactivate_sensors = current_sensors - active_sensors
 
-ruby_block "reactivate" do
-  block do
-    reactivate_sensors.each do |sensor|
-      r = Chef::Resource::Execute.new("reactivate_#{sensor}", run_context)
-      r.command "mysql -u root -A -D #{node[:seconion][:server][:sguil_server_name]}_db -e 'UPDATE sensor SET active = \"Y\" WHERE net_name = \"#{sensor}\";'"
-      r.run_action :run
-      r.notifies :run, 'execute[set_active_sensors]', :delayed
+  ruby_block "reactivate" do
+    block do
+      reactivate_sensors.each do |sensor|
+        r = Chef::Resource::Execute.new("reactivate_#{sensor}", run_context)
+        r.command "mysql -u root -A -D #{node[:seconion][:server][:sguil_server_name]}_db -e 'UPDATE sensor SET active = \"Y\" WHERE net_name = \"#{sensor}\";'"
+        r.run_action :run
+        r.notifies :run, 'execute[set_active_sensors]', :delayed
+      end
     end
   end
-end
 
 
 
-###############################
-# Sensors to mark inactive
-###############################
-puts "active - current"
-puts active_sensors - current_sensors
+  ###############################
+  # Sensors to mark inactive
+  ###############################
+  puts "active - current"
+  puts active_sensors - current_sensors
 
-deactivate_sensors = active_sensors - current_sensors
+  deactivate_sensors = active_sensors - current_sensors
 
-ruby_block "deactivate" do
-  block do
-    deactivate_sensors.each do |sensor|
-      r = Chef::Resource::Execute.new("deactivate_#{sensor}", run_context)
-      r.command "mysql -u root -A -D #{node[:seconion][:server][:sguil_server_name]}_db -e 'UPDATE sensor SET active = \"N\" WHERE net_name = \"#{sensor}\";'"
-      r.run_action :run
-      r.notifies :run, 'execute[set_active_sensors]', :delayed
+  ruby_block "deactivate" do
+    block do
+      deactivate_sensors.each do |sensor|
+        r = Chef::Resource::Execute.new("deactivate_#{sensor}", run_context)
+        r.command "mysql -u root -A -D #{node[:seconion][:server][:sguil_server_name]}_db -e 'UPDATE sensor SET active = \"N\" WHERE net_name = \"#{sensor}\";'"
+        r.run_action :run
+        r.notifies :run, 'execute[set_active_sensors]', :delayed
+      end
     end
   end
+
+
+  execute 'set_active_sensors' do
+    command "/usr/bin/mysql -u root -A  -D #{node[:seconion][:server][:sguil_server_name]}_db -e 'SELECT net_name FROM sensor WHERE active=\"Y\";' | egrep -v net_name | sort | uniq > /etc/nsm/active_sensors"
+    action :nothing
+  end
 end
-
-
-execute 'set_active_sensors' do
-  command "/usr/bin/mysql -u root -A  -D #{node[:seconion][:server][:sguil_server_name]}_db -e 'SELECT net_name FROM sensor WHERE active=\"Y\";' | egrep -v net_name | sort | uniq > /etc/nsm/active_sensors"
-  action :nothing
-end
-
 
 
 template '/etc/nsm/pulledpork/pulledpork.conf' do
