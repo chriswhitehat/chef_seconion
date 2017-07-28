@@ -71,9 +71,11 @@ end
 # Calculate rolling restart splay
 ##########################
 if node[:seconion][:sensor][:sensor_group] == 'singleton'
+  node.normal[:seconion][:sensor][:singleton] = 'true'
   node.normal[:seconion][:sensor][:restart_splay] = 0
   node.normal[:seconion][:sensor][:restart_hour] = node[:seconion][:sensor][:rule_update_hour]['singleton']
 else
+  node.normal[:seconion][:sensor][:singleton] = 'false'
   search_sensor_group = "seconion_sensor_sensor_group:\"#{node[:seconion][:sensor][:sensor_group]}\""
 
   sensors = search(:node, search_sensor_group)
