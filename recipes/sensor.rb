@@ -46,26 +46,6 @@ template '/usr/sbin/rule-update' do
   group 'root'
 end
 
-##########################
-# Add nsm_sensor_ps-hard-restart
-##########################
-template '/usr/sbin/nsm_sensor_ps-hard-restart' do
-  source '/nsmnow/nsm_sensor_ps-hard-restart.erb'
-  mode '0755'
-  owner 'root'
-  group 'root'
-end
-
-##########################
-# Add rule update with hard
-# restart
-##########################
-template '/usr/sbin/rule-update-hard' do
-  source '/rule-update/rule-update-hard.erb'
-  mode '0755'
-  owner 'root'
-  group 'root'
-end
 
 ##########################
 # Calculate rolling restart splay
@@ -93,6 +73,29 @@ else
     node.normal[:seconion][:sensor][:restart_splay] = (sorted_sensors.index(node[:fqdn]) % node[:seconion][:sensor][:rule_update_phases][node[:seconion][:sensor][:sensor_group]]) * node[:seconion][:sensor][:rule_update_phase_duration][node[:seconion][:sensor][:sensor_group]]
     node.normal[:seconion][:sensor][:restart_hour] = node[:seconion][:sensor][:rule_update_hour][node[:seconion][:sensor][:sensor_group]]
   end
+end
+
+
+##########################
+# Add nsm_sensor_ps-hard-restart
+##########################
+template '/usr/sbin/nsm_sensor_ps-hard-restart' do
+  source '/nsmnow/nsm_sensor_ps-hard-restart.erb'
+  mode '0755'
+  owner 'root'
+  group 'root'
+end
+
+
+##########################
+# Add rule update with hard
+# restart
+##########################
+template '/usr/sbin/rule-update-hard' do
+  source '/rule-update/rule-update-hard.erb'
+  mode '0755'
+  owner 'root'
+  group 'root'
 end
 
 
@@ -271,8 +274,8 @@ template '/opt/bro/etc/node.cfg' do
   notifies :run, 'execute[deploy_bro]', :delayed
 end
 
-template '/opt/bro/etc/network.cfg' do
-  source 'bro/network.cfg.erb'
+template '/opt/bro/etc/networks.cfg' do
+  source 'bro/networks.cfg.erb'
   mode '0644'
   owner 'sguil'
   group 'sguil'
