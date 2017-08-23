@@ -11,14 +11,19 @@
 
 ## Ignore HTTP tracking if the links from these domains are seen/clicked
 
-redef SMTPurl::link_already_seen += {<%= @link_already_seen %> };
+redef SMTPurl::link_already_seen += {<% for @domain in node[:seconion][:sensor][:bro_scripts]['smtp-embedded-url-bloom'][:link_already_seen] -%>
+"<%= @domain -%>",
+<% end -%> };
+
 redef SMTPurl::ignore_site_links: pattern = <%= node[:seconion][:sensor][:bro_scripts]['smtp-embedded-url-bloom'][:ignore_site_links] %> ;
 
 ## Careful: Since Bro watches all the emails (including the alerts it sends, this
 ## can create an Email storm because an alert including a malicious URL can cause another alert email
 ## ignore email going to these addresses.
 
-redef SMTPurl::ignore_mails_to: set[string] = {<%= @ignore_mails_to %>};
+redef SMTPurl::ignore_mails_to: set[string] = {<% for @mailto in node[:seconion][:sensor][:bro_scripts]['smtp-embedded-url-bloom'][:ignore_mails_to] -%>
+"<%= @mailto -%>",
+<% end -%>};
 
 # Ignore emails from the following sender
 redef SMTPurl::ignore_mailfroms += <%= node[:seconion][:sensor][:bro_scripts]['smtp-embedded-url-bloom'][:ignore_mailfroms] %>;
@@ -26,7 +31,9 @@ redef SMTPurl::ignore_mailfroms += <%= node[:seconion][:sensor][:bro_scripts]['s
 ### Ignore emails originating from these subnets
 ## For IP address please use x.y.w.z/32
 
-redef SMTPurl::ignore_mail_originators: set[subnet] += { <%= @ignore_mail_originators %> } &redef;
+redef SMTPurl::ignore_mail_originators: set[subnet] += { <% for @subnet in node[:seconion][:sensor][:bro_scripts]['smtp-embedded-url-bloom'][:ignore_mail_originators] -%>
+<%= @subnet -%>,
+<% end -%> } &redef;
 
 ### ignore further processing on the following file types embedded in the url - too much volume not useful dataset
 redef SMTPurl::ignore_file_types: pattern = <%= node[:seconion][:sensor][:bro_scripts]['smtp-embedded-url-bloom'][:ignore_file_types] %> ;
@@ -40,3 +47,5 @@ redef SMTPurl::suspicious_text_in_url = <%= node[:seconion][:sensor][:bro_script
 
 ## Alert on the text in the body of the message: generates
 redef SMTPurl::suspicious_text_in_body = <%= node[:seconion][:sensor][:bro_scripts]['smtp-embedded-url-bloom'][:suspicious_text_in_body] %> &redef ;
+
+

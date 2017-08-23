@@ -329,8 +329,8 @@ template '/opt/bro/share/bro/smtp-embedded-url-bloom/__load__.bro' do
    mode '0644'
 end
 
-template '/opt/bro/share/bro/smtp-embedded-url-bloom/smtp-embedded-url-bloom-ghc.bro' do
-   source 'bro/smtp-embedded-url-bloom/smtp-embedded-url-bloom-ghc.bro.erb'
+template '/opt/bro/share/bro/smtp-embedded-url-bloom/smtp-embedded-url-bloom.bro' do
+   source 'bro/smtp-embedded-url-bloom/smtp-embedded-url-bloom.bro.erb'
    owner 'sguil'
    group 'sguil'
    mode '0644'
