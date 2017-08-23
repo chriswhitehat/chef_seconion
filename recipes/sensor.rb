@@ -133,7 +133,7 @@ end
 
 
 directories = ['/nsm/sensor_data',
-               '/opt/bro/share/bro/ghc_extraction',
+               '/opt/bro/share/bro/extractions',
                '/opt/bro/share/bro/etpro',
                '/opt/bro/share/bro/smtp-embedded-url-bloom',
                '/opt/bro/share/bro/networks',
@@ -297,7 +297,7 @@ end
 
 ############
 # Configure Bro Continued
-# Create GHC Specific rule files for File Extraction
+# Create Specific rule files for File Extraction
 ############
 
 # Create files for ET Intelligence in Bro
@@ -343,16 +343,15 @@ template '/opt/bro/share/bro/smtp-embedded-url-bloom/smtp-embedded-url-cluster.b
    mode '0644'
 end
 
-# Create files for GHC File Extraction
-template '/opt/bro/share/bro/ghc_extraction/__load__.bro' do
-   source 'bro/extraction/ghc/__load__.bro.erb'
+template '/opt/bro/share/bro/extractions/__load__.bro' do
+   source 'bro/extractions/__load__.bro.erb'
    owner 'sguil'
    group 'sguil'
    mode '0644'
 end
 
-template '/opt/bro/share/bro/ghc_extraction/extract.bro' do
-   source 'bro/extraction/ghc/extract.bro.erb'
+template '/opt/bro/share/bro/extractions/extractions.bro' do
+   source 'bro/extractions/extractions.bro.erb'
    owner 'sguil'
    group 'sguil'
    mode '0644'
