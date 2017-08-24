@@ -9,8 +9,8 @@
 ## Certificate Authorities
 #########################
 
-<% if node[:seconion][:sensor][:bro][:cert_authorities] %>
-<% node[:seconion][:sensor][:bro][:cert_authorities].each do |ca_name, ca_cert| %>
+<% if node[:seconion][:sensor][:bro_scripts][:cert_authorities] %>
+<% node[:seconion][:sensor][:bro_scripts][:cert_authorities].each do |ca_name, ca_cert| %>
 redef SSL::root_certs += {
     ["<%= ca_name %>"] = "<%= ca_cert %>"
 };

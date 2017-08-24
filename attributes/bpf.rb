@@ -56,6 +56,13 @@
 #default[:seconion][:sensor][:bpf][:regional]['host 10.0.0.1 && host 10.0.0.2'] = true
 
 ##########################
+# Sensor Group
+##########################
+
+# Example
+# default[:seconion][:sensor][:bpf]['sensor_group_name']['host 10.0.0.1 && host 10.0.0.2'] = true
+
+##########################
 # Host
 ##########################
 

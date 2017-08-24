@@ -687,6 +687,56 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end
 
 
+  if node[:seconion][:sensor][:bpf]
+    if node[:seconion][:sensor][:bpf][:global]
+      global = node[:seconion][:sensor][:bpf][:global]
+    else
+      global = {}
+    end
+    if node[:seconion][:sensor][:bpf][:regional]
+      regional = node[:seconion][:sensor][:bpf][:regional]
+    else
+      regional = {}
+    end
+    if node[:seconion][:sensor][:bpf][node[:seconion][:sensor][:sensor_group]]
+      sensor_group = node[:seconion][:sensor][:bpf][node[:seconion][:sensor][:sensor_group]]
+    else
+      sensor_group = {}
+    end
+    if node[:seconion][:sensor][:bpf][node[:fqdn]]
+      host = node[:seconion][:sensor][:bpf][node[:fqdn]]
+    else
+      host = {}
+    end
+    if node[:seconion][:sensor][:bpf][sniff[:sensorname]]
+      sensor = node[:seconion][:sensor][:bpf][sniff[:sensorname]]
+    else
+      sensor = {}
+    end
+  else
+    global = {}
+    regional = {}
+    sensor_group = {}
+    host = {}
+    sensor = {}
+  end
+
+  template "/etc/nsm/#{sniff[:sensorname]}/bpf.conf" do
+    source "snort/bpf.conf.erb"
+    owner 'sguil'
+    group 'sguil'
+    mode '0644'
+    variables({
+      :sniff => sniff,
+      :global_sigs => global,
+      :regional_sigs => regional,
+      :sensor_group_sigs => sensor_group,
+      :host_sigs => host,
+      :sensor_sigs => sensor
+    })
+  end
+
+
   if node[:seconion][:sensor][:threshold]
     if node[:seconion][:sensor][:threshold][:global]
       global = node[:seconion][:sensor][:threshold][:global]
