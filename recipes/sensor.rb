@@ -722,7 +722,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end
 
   template "/etc/nsm/#{sniff[:sensorname]}/bpf.conf" do
-    source "snort/bpf.conf.erb"
+    source "sensor/bpf.conf.erb"
     owner 'sguil'
     group 'sguil'
     mode '0644'
