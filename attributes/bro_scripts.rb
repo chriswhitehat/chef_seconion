@@ -141,6 +141,8 @@ default[:seconion][:sensor][:bro_scripts][:global]['smtp-embedded-url-bloom'] = 
 # Extract high value file types
 default[:seconion][:sensor][:bro_scripts][:global]['extractions'] = false
 
+# Add ssl handshake ja3 hash fingerprint to ssl log
+default[:seconion][:sensor][:bro_scripts][:global]['ja3'] = false
 
 ############
 # Deprectated in 2.5

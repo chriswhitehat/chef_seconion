@@ -138,6 +138,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/smtp-embedded-url-bloom',
                '/opt/bro/share/bro/networks',
                '/opt/bro/share/bro/cert_authorities',
+               '/opt/bro/share/bro/ja3/',
                '/var/log/nsm',
                '/usr/local/lib/snort_dynamicrules',
                '/usr/local/lib/snort_dynamicrules_backup',
@@ -373,6 +374,32 @@ template '/opt/bro/share/bro/cert_authorities/cert_authorities.bro' do
    mode '0644'
    notifies :run, 'execute[deploy_bro]', :delayed
 end
+
+
+# ja3 ssl client hash/fingerprint
+template '/opt/bro/share/bro/ja3/__load__.bro' do
+   source 'bro/ja3/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
+
+template '/opt/bro/share/bro/ja3/ja3.bro' do
+   source 'bro/ja3/ja3.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+template '/opt/bro/share/bro/ja3/intel_ja3.bro' do
+   source 'bro/ja3/intel_ja3.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
 
 if node[:seconion][:sensor][:bro][:extracted][:rotate]
   template '/etc/cron.d/bro-rotate-extracted' do
