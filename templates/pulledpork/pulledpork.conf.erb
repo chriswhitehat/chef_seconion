@@ -32,7 +32,7 @@ rule_url=https://www.snort.org/reg-rules/|snortrules-snapshot.tar.gz|<%= node[:s
 # NEW Community ruleset:
 # NEW For IP Blacklisting! Note the format is urltofile|IPBLACKLIST|<oinkcode>
 # This format MUST be followed to let pulledpork know that this is a blacklist
-#rule_url=http://labs.snort.org/feeds/ip-filter.blf|IPBLACKLIST|open
+#rule_url=http://talosintelligence.com/feeds/ip-filter.blf|IPBLACKLIST|open
 # URL for rule documentation! (slow to process)
 <% if node[:seconion][:sensor][:vrtopen_rules_enabled] %>
 rule_url=https://www.snort.org/reg-rules/|opensource.gz|<%= node[:seconion][:vrt_oinkcode] %>
