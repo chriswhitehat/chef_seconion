@@ -144,6 +144,10 @@ default[:seconion][:sensor][:bro_scripts][:global]['extractions'] = false
 # Add ssl handshake ja3 hash fingerprint to ssl log
 default[:seconion][:sensor][:bro_scripts][:global]['ja3'] = false
 
+# Add producer consumer ratio PCR to the conn log
+default[:seconion][:sensor][:bro_scripts][:global]['pcr'] = false
+
+
 ############
 # Deprectated in 2.5
 ############
