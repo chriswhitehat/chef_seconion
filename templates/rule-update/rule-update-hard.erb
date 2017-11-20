@@ -47,3 +47,8 @@ fi
 
 # Restart pcap to fix down interface 100% cpu.
 /usr/sbin/nsm_sensor_ps-restart --only-pcap >> /var/log/nsm/nsm_cron.log
+
+# Give it an hour and a half and restart barnyard2 
+/bin/sleep 5400
+
+/usr/sbin/nsm_sensor_ps-restart --only-barnyard2 >> /var/log/nsm/nsm_cron.log
