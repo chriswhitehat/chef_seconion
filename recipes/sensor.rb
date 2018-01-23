@@ -33,6 +33,7 @@ end
 execute 'nsm_sensor_ps-stop' do
   command "nsm_sensor_ps-stop"
   action :nothing
+  ignore_failure true
 end
 
 
