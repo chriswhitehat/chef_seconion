@@ -1166,6 +1166,13 @@ template '/etc/cron.d/rule-stats-purge' do
   mode '0644'
 end
 
+template '/etc/cron.d/rule-stats-chmod' do
+  source 'sensor/cron_rule-stats-chmod.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end
+
 
 ##########################
 # SO Health
