@@ -252,7 +252,7 @@ if node[:seconion][:sensor][:ossec_enabled]
     group 'ossec'
     mode '0644'
     notifies :restart, 'service[ossec-hids-server]', :delayed
-    notifies :restart, 'service[restart_ossec_agent]', :delayed
+    notifies :restart, 'execute[restart_ossec_agent]', :delayed
   end
   
 
