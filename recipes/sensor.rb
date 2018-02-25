@@ -228,7 +228,7 @@ end
 
 
 ###########
-# OSSEC Disable
+# OSSEC 
 ###########
 if node[:seconion][:sensor][:ossec_enabled]
   execute 'enable_ossec' do
@@ -236,6 +236,26 @@ if node[:seconion][:sensor][:ossec_enabled]
     action :run
     not_if do ::File.exists?('/etc/rc0.d/K20ossec-hids-server') end
   end
+
+  file "/var/ossec/etc/localtime" do
+    owner 'root'
+    group 'ossec'
+    mode 0755
+    content lazy{ ::File.open("/etc/localtime").read }
+    action :create
+    notifies :restart, 'service[ossec-hids-server]', :delayed
+  end
+
+  template '/etc/nsm/ossec/ossec_agent.conf' do
+    source 'sensor/ossec_agent.conf.erb'
+    owner 'root'
+    group 'ossec'
+    mode '0644'
+    notifies :restart, 'service[ossec-hids-server]', :delayed
+    notifies :restart, 'service[restart_ossec_agent]', :delayed
+  end
+  
+
 else
   execute 'disable_ossec' do
     command 'service ossec-hids-server stop; update-rc.d -f ossec-hids-server remove'
@@ -243,6 +263,18 @@ else
     only_if do ::File.exists?('/etc/rc0.d/K20ossec-hids-server') end
   end
 end
+
+service 'ossec-hids-server' do
+  supports :restart => true
+  action :nothing
+end
+
+execute 'restart_ossec_agent' do
+  command '/usr/sbin/nsm_sensor_ps-restart --only-ossec-agent'
+  action :nothing
+end
+
+
 
 ###########
 #
