@@ -234,7 +234,7 @@ if node[:seconion][:sensor][:ossec_enabled]
   execute 'enable_ossec' do
     command 'service ossec-hids-server start; update-rc.d -f ossec-hids-server defaults; service ossec-hids-server start'
     action :run
-    not_if do ::File.exists?('/etc/rc0.d/K20ossec-hids-server') end
+    not_if do ::File.symlink?('/etc/rc0.d/K20ossec-hids-server') end
   end
 
   file "/var/ossec/etc/localtime" do
