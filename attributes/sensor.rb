@@ -47,6 +47,10 @@ default[:seconion][:sensor][:mgmt][:domain] = 'example.com'
 # OSSEC
 #########################
 default[:seconion][:sensor][:ossec_enabled] = false
+default[:seconion][:sensor][:ossec_agent_user] = 'sguil'
+default[:seconion][:sensor][:ossec_agent_level] = '5'
+default[:seconion][:sensor][:ossec_local_hids_rule_tuning] = 'no'
+default[:seconion][:sensor][:ossec_agent_enabled] = 'no'
 
 #########################
 # Network IDS
