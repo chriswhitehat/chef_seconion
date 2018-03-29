@@ -45,7 +45,7 @@ default[:seconion][:server][:sguil_server_name] = 'securityonion'
 # This is the username/password that we'll create
 # for Sguil/Squert/ELSA.
 default[:seconion][:server][:sguil_client_username] = 'onionuser'
-default[:seconion][:server][:sguil_client_password] = 'asdfasdf'
+default[:seconion][:server][:sguil_client_password] = 'D99XiExsxyh8Xwp!'
 
 
 # Sguild Logging

@@ -147,6 +147,9 @@ default[:seconion][:sensor][:bro_scripts][:global]['ja3'] = false
 # Add producer consumer ratio PCR to the conn log
 default[:seconion][:sensor][:bro_scripts][:global]['pcr'] = false
 
+# Change default bro config for Scan script
+default[:seconion][:sensor][:bro_scripts][:global]['scan_conf'] = false
+
 
 ############
 # Deprectated in 2.5
