@@ -136,6 +136,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/extractions',
                '/opt/bro/share/bro/etpro',
                '/opt/bro/share/bro/smtp-embedded-url-bloom',
+               '/opt/bro/share/bro/scan_conf',
                '/opt/bro/share/bro/networks',
                '/opt/bro/share/bro/cert_authorities',
                '/opt/bro/share/bro/ja3/',
@@ -376,6 +377,12 @@ template '/opt/bro/share/bro/cert_authorities/cert_authorities.bro' do
    notifies :run, 'execute[deploy_bro]', :delayed
 end
 
+template '/opt/bro/share/bro/scan_conf/__load__.bro' do
+   source 'bro/scan_conf/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
 
 # ja3 ssl client hash/fingerprint
 template '/opt/bro/share/bro/ja3/__load__.bro' do
