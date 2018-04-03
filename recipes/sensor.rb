@@ -37,6 +37,21 @@ end
 
 
 ##########################
+# Set sensor order
+##########################
+search_server = "recipes:seconion\\:\\:sensor AND seconion_server_servername:\"#{node[:seconion][:server][:servername]}\""
+sensors = search(:node, search_server)
+
+sorted_sensors = []
+
+sensors.sort_by!{ |n| n[:fqdn] }.each do |sensor|
+  sorted_sensors << sensor[:fqdn]
+end
+
+node.normal[:seconion][:sensor][:order] = sorted_sensors.index(node[:fqdn])
+
+
+##########################
 # Replace existing rule-update
 ##########################
 template '/usr/sbin/rule-update' do
