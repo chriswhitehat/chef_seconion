@@ -10,4 +10,4 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 01 <%= node[:seconion][:sensor][:restart_hour] %> * * *   root   /bin/sleep <%= node[:seconion][:sensor][:restart_splay] %>; /usr/sbin/rule-update-hard > /dev/null 2>&1
 
-<%= (node[:seconion][:sensor][:order] % 60).to_s.rjust(2, "0") %> 14 * * *  root  /usr/sbin/nsm_sensor_ps-restart --only-barnyard2 --only-snort-agent > /dev/null 2>&1
+<%= (node[:seconion][:sensor][:order] % 60).to_s.rjust(2, "0") %> 12 * * *  root  /usr/sbin/nsm_sensor_ps-stop --only-barnyard2 --only-snort-agent > /dev/null 2>&1; /bin/sleep 60; /usr/sbin/nsm_sensor_ps-start --only-barnyard2 --only-snort-agent > /dev/null 2>&1
