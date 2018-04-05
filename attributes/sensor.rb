@@ -70,6 +70,8 @@ default[:seconion][:sensor][:pf_ring_slots] = 4096
 #####################
 # interface to drop into promiscuious mode
 default[:seconion][:sensor][:sniff][:interface] = 'eth1'
+# interface NUMA node
+default[:seconion][:sensor][:sniff][:interface][:numa_node] = 0
 # mtu for promiscuious nic
 default[:seconion][:sensor][:sniff][:mtu] = 1530
 # name of sensor in sguil and directory structure
@@ -87,6 +89,12 @@ default[:seconion][:sensor][:sniff][:ids_engine_enabled] = true
 default[:seconion][:sensor][:sniff][:ids_engine] = 'snort'
 # load balance instances for ids engine
 default[:seconion][:sensor][:sniff][:ids_lb_procs] = 1
+# enable IDS Numa and CPU affinity
+default[:seconion][:sensor][:sniff][:ids_numa_tune] = false
+# IDS NUMA membind
+default[:seconion][:sensor][:sniff][:ids_numa_membind] = true
+# IDS NUMA pyhsical cpus (range of cpus to tie each lp_proc 1-to-1) E.x. 5 lb procs ids_numa_cpus = '3,4,5,6,7'
+default[:seconion][:sensor][:sniff][:ids_numa_cpus] = '3'
 # enable squil agent to send ids alerts to server (applies to snort and suricata)
 default[:seconion][:sensor][:sniff][:snort_agent_enabled] = true
 # choose which search method to use, ac-split (cpu/memory neutral), ac (favor cpu, heavy memory usage)
@@ -105,6 +113,12 @@ default[:seconion][:sensor][:sniff][:bro_lb_procs] = 1
 default[:seconion][:sensor][:sniff][:bro_extract_files] = false
 # bpf for bro
 default[:seconion][:sensor][:sniff][:bro_bpf] = ''
+# enable Bro Numa and CPU affinity
+default[:seconion][:sensor][:sniff][:bro_numa_tune] = false
+# Bro NUMA membind
+default[:seconion][:sensor][:sniff][:bro_numa_membind] = true
+# Bro NUMA pyhsical cpus (range of cpus to tie each lp_proc 1-to-1) E.x. 5 lb procs ids_numa_cpus = '8,9,10,11'
+default[:seconion][:sensor][:sniff][:bro_numa_cpus] = '4'
 # enable netsniff-ng full packet capture
 default[:seconion][:sensor][:sniff][:pcap_enabled] = true
 # enable sguil agent to pull pcaps from the sguil client
@@ -117,6 +131,12 @@ default[:seconion][:sensor][:sniff][:pcap_ring_size] = 128
 default[:seconion][:sensor][:sniff][:pcap_options] = '--mmap'
 # bpf for pcaps
 default[:seconion][:sensor][:sniff][:pcap_bpf] = ''
+# enable pcap Numa and CPU affinity
+default[:seconion][:sensor][:sniff][:pcap_numa_tune] = false
+# pcap NUMA membind
+default[:seconion][:sensor][:sniff][:pcap_numa_membind] = true
+# pcap NUMA pyhsical cpu single cpu
+default[:seconion][:sensor][:sniff][:pcap_numa_cpus] = '2'
 
 # This is a convenience variable, copy and paste into sensor recipes.
 =begin
