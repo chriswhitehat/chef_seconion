@@ -90,7 +90,7 @@ default[:seconion][:sensor][:sniff][:ids_engine] = 'snort'
 # load balance instances for ids engine
 default[:seconion][:sensor][:sniff][:ids_lb_procs] = 1
 # enable IDS Numa and CPU affinity
-default[:seconion][:sensor][:sniff][:ids_numa_tune] = true
+default[:seconion][:sensor][:sniff][:ids_numa_tune] = false
 # NUMA CPU affinity mode (numa|increment|range)
 default[:seconion][:sensor][:sniff][:ids_numa_cpu_mode] = "increment"
 # IDS NUMA pyhsical cpu start 
@@ -120,7 +120,7 @@ default[:seconion][:sensor][:sniff][:bro_extract_files] = false
 # bpf for bro
 default[:seconion][:sensor][:sniff][:bro_bpf] = ''
 # enable BRO Numa and CPU affinity
-default[:seconion][:sensor][:sniff][:bro_numa_tune] = true
+default[:seconion][:sensor][:sniff][:bro_numa_tune] = false
 # BRO NUMA pyhsical cpu start 
 #    zero based beginning of range to pin lb procs
 default[:seconion][:sensor][:sniff][:bro_numa_cpu_start] = 3
