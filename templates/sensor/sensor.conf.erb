@@ -110,14 +110,6 @@ IDS_NUMA_CPU_MODE="<%= @sniff[:ids_numa_cpu_mode] %>"
 IDS_NUMA_CPU_START=<%= @sniff[:ids_numa_cpu_start] %>
 IDS_NUMA_CPU_STEP=<%= @sniff[:ids_numa_cpu_step] %>
 
-<% if @sniff[:bro_numa_tune] %>
-BRO_NUMA_TUNE="yes"
-<% else %>
-BRO_NUMA_TUNE="no"
-<% end %>
-
-BRO_NUMA_CPU_START=<%= @sniff[:bro_numa_cpu_start] %>
-
 <% if @sniff[:pcap_numa_tune] %>
 PCAP_NUMA_TUNE="yes"
 <% else %>

@@ -71,7 +71,7 @@ default[:seconion][:sensor][:pf_ring_slots] = 4096
 # interface to drop into promiscuious mode
 default[:seconion][:sensor][:sniff][:interface] = 'eth1'
 # interface NUMA node
-default[:seconion][:sensor][:sniff][:interface][:numa_node] = 0
+default[:seconion][:sensor][:sniff][:numa_node] = 0
 # mtu for promiscuious nic
 default[:seconion][:sensor][:sniff][:mtu] = 1530
 # name of sensor in sguil and directory structure
