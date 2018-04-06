@@ -465,16 +465,16 @@ do
 
 		if [ "$PCAP_NUMA_TUNE" == "yes" ]; then
 			if [ "$PCAP_NUMA_CPU_MODE" == "numa"]; then
-				CPU_BIND_MODE = "--cpunodebind=$SENSOR_INTERFACE_NUMA_NODE"
+				CPU_BIND_MODE = "--cpunodebind=$SENSOR_NUMA_NODE"
 			elif [ "$PCAP_NUMA_CPU_MODE" == "range"]; then
 				CPU_BIND_MODE = "--physcpubind=$PCAP_NUMA_CPU_START"
 			else [ "$PCAP_NUMA_CPU_MODE" == "process"]; then
 			 	CPU_BIND_MODE = "--physcpubind=$PCAP_NUMA_CPU_START"
 			 	PCAP_NUMA_CPU_START += PCAP_NUMA_CPU_STEP
 			else
-				CPU_BIND_MODE = "--cpunodebind=$SENSOR_INTERFACE_NUMA_NODE"
+				CPU_BIND_MODE = "--cpunodebind=$SENSOR_NUMA_NODE"
 			fi
-			process_start "numactl" "$CPU_BIND_MODE --membind=$SENSOR_INTERFACE_NUMA_NODE -- netsniff-ng -i $SENSOR_INTERFACE_SHORT -o $SENSOR_LOG_DIR/dailylogs/$TODAY/ --user `id -u $SENSOR_USER` --group `id -g $SENSOR_GROUP` -s --prefix snort.log. --verbose --ring-size $PCAP_RING_SIZE --interval $PCAP_SIZE $PCAP_OPTIONS $BPF_OPTION" "$PROCESS_PID_DIR/$SENSOR/netsniff-ng.pid" "$PROCESS_LOG_DIR/$SENSOR/netsniff-ng.log" "netsniff-ng (full packet data)"
+			process_start "numactl" "$CPU_BIND_MODE --membind=$SENSOR_NUMA_NODE -- netsniff-ng -i $SENSOR_INTERFACE_SHORT -o $SENSOR_LOG_DIR/dailylogs/$TODAY/ --user `id -u $SENSOR_USER` --group `id -g $SENSOR_GROUP` -s --prefix snort.log. --verbose --ring-size $PCAP_RING_SIZE --interval $PCAP_SIZE $PCAP_OPTIONS $BPF_OPTION" "$PROCESS_PID_DIR/$SENSOR/netsniff-ng.pid" "$PROCESS_LOG_DIR/$SENSOR/netsniff-ng.log" "netsniff-ng (full packet data)"
 		else
 			process_start "netsniff-ng" "-i $SENSOR_INTERFACE_SHORT -o $SENSOR_LOG_DIR/dailylogs/$TODAY/ --user `id -u $SENSOR_USER` --group `id -g $SENSOR_GROUP` -s --prefix snort.log. --verbose --ring-size $PCAP_RING_SIZE --interval $PCAP_SIZE $PCAP_OPTIONS $BPF_OPTION" "$PROCESS_PID_DIR/$SENSOR/netsniff-ng.pid" "$PROCESS_LOG_DIR/$SENSOR/netsniff-ng.log" "netsniff-ng (full packet data)"
 		fi
@@ -567,16 +567,16 @@ do
 			chown $SENSOR_USER:$SENSOR_GROUP $UNI_DIR
 			if [ "$IDS_NUMA_TUNE" == "yes" ]; then
 				if [ "$IDS_NUMA_CPU_MODE" == "numa"]; then
-					CPU_BIND_MODE = "--cpunodebind=$SENSOR_INTERFACE_NUMA_NODE"
+					CPU_BIND_MODE = "--cpunodebind=$SENSOR_NUMA_NODE"
 				elif [ "$IDS_NUMA_CPU_MODE" == "range"]; then
 					CPU_BIND_MODE = "--physcpubind=$IDS_NUMA_CPU_START"
 				else [ "$IDS_NUMA_CPU_MODE" == "process"]; then
 				 	CPU_BIND_MODE = "--physcpubind=$IDS_NUMA_CPU_START"
 				 	IDS_NUMA_CPU_START += IDS_NUMA_CPU_STEP
 				else
-					CPU_BIND_MODE = "--cpunodebind=$SENSOR_INTERFACE_NUMA_NODE"
+					CPU_BIND_MODE = "--cpunodebind=$SENSOR_NUMA_NODE"
 				fi
-				[ "$IDS_ENGINE_ENABLED" == "yes" ] && [ -z "$SKIP_SNORT_ALERT" ] && process_start "numactl" "$CPU_BIND_MODE --membind=$SENSOR_INTERFACE_NUMA_NODE -- snort -c $SNORT_CONFIG -u $SENSOR_USER -g $SENSOR_GROUP -i $SENSOR_INTERFACE_SHORT $BPF_OPTION -l $UNI_DIR --perfmon-file $PERFMON $SNORT_OPTIONS --snaplen $MTU_FIN" "$PID" "$LOG" "snort-$i (alert data)"
+				[ "$IDS_ENGINE_ENABLED" == "yes" ] && [ -z "$SKIP_SNORT_ALERT" ] && process_start "numactl" "$CPU_BIND_MODE --membind=$SENSOR_NUMA_NODE -- snort -c $SNORT_CONFIG -u $SENSOR_USER -g $SENSOR_GROUP -i $SENSOR_INTERFACE_SHORT $BPF_OPTION -l $UNI_DIR --perfmon-file $PERFMON $SNORT_OPTIONS --snaplen $MTU_FIN" "$PID" "$LOG" "snort-$i (alert data)"
 			else
 				[ "$IDS_ENGINE_ENABLED" == "yes" ] && [ -z "$SKIP_SNORT_ALERT" ] && process_start "snort" "-c $SNORT_CONFIG -u $SENSOR_USER -g $SENSOR_GROUP -i $SENSOR_INTERFACE_SHORT $BPF_OPTION -l $UNI_DIR --perfmon-file $PERFMON $SNORT_OPTIONS --snaplen $MTU_FIN" "$PID" "$LOG" "snort-$i (alert data)"
 			fi
