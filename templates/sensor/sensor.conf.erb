@@ -6,6 +6,7 @@
 SENSOR_NAME="<%= @sniff[:sensorname] %>"
 
 SENSOR_INTERFACE="<%= @sniff[:interface] %>"
+SENSOR_INTERFACE_NUMA_NODE="<%= @sniff[:seconion][:sensor][:sniff][:interface][:numa_node] %>"
 SENSOR_INTERFACE_AUTO="N"
 SENSOR_NET_GROUP="<%= @sniff[:sensorname] %>"
 
@@ -98,3 +99,31 @@ HTTP_AGENT_ENABLED="yes"
 <% else %>
 HTTP_AGENT_ENABLED="no"
 <% end %>
+
+<% if @sniff[:ids_numa_tune] %>
+IDS_NUMA_TUNE="yes"
+<% else %>
+IDS_NUMA_TUNE="no"
+<% end %>
+
+IDS_NUMA_CPU_MODE="<%= @sniff[:ids_numa_cpu_mode] %>"
+IDS_NUMA_CPU_START=<%= @sniff[:ids_numa_cpu_start] %>
+IDS_NUMA_CPU_STEP=<%= @sniff[:ids_numa_cpu_step] %>
+
+<% if @sniff[:bro_numa_tune] %>
+BRO_NUMA_TUNE="yes"
+<% else %>
+BRO_NUMA_TUNE="no"
+<% end %>
+
+BRO_NUMA_CPU_START=<%= @sniff[:bro_numa_cpu_start] %>
+
+<% if @sniff[:pcap_numa_tune] %>
+PCAP_NUMA_TUNE="yes"
+<% else %>
+PCAP_NUMA_TUNE="no"
+<% end %>
+
+PCAP_NUMA_CPU_MODE="<%= @sniff[:pcap_numa_cpu_mode] %>"
+PCAP_NUMA_CPU_START=<%= @sniff[:pcap_numa_cpu_start] %>
+PCAP_NUMA_CPU_STEP=<%= @sniff[:pcap_numa_cpu_step] %>

@@ -61,6 +61,16 @@ template '/usr/sbin/rule-update' do
   group 'root'
 end
 
+##########################
+# Replace existing nsm_sensor_ps-start
+##########################
+template '/usr/sbin/nsm_sensor_ps-start' do
+  source 'nsmnow/nsm_sensor_ps-start.erb'
+  owner 'root'
+  group 'root'
+  mode '0755'
+end
+
 
 ##########################
 # Calculate rolling restart splay

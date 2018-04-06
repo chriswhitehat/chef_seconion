@@ -90,11 +90,17 @@ default[:seconion][:sensor][:sniff][:ids_engine] = 'snort'
 # load balance instances for ids engine
 default[:seconion][:sensor][:sniff][:ids_lb_procs] = 1
 # enable IDS Numa and CPU affinity
-default[:seconion][:sensor][:sniff][:ids_numa_tune] = false
-# IDS NUMA membind
-default[:seconion][:sensor][:sniff][:ids_numa_membind] = true
-# IDS NUMA pyhsical cpus (range of cpus to tie each lp_proc 1-to-1) E.x. 5 lb procs ids_numa_cpus = '3,4,5,6,7'
-default[:seconion][:sensor][:sniff][:ids_numa_cpus] = '3'
+default[:seconion][:sensor][:sniff][:ids_numa_tune] = true
+# NUMA CPU affinity mode (numa|increment|range)
+default[:seconion][:sensor][:sniff][:ids_numa_cpu_mode] = "increment"
+# IDS NUMA pyhsical cpu start 
+#    zero based beginning of range to ping lb procs
+#    ignored if mode is numa 
+default[:seconion][:sensor][:sniff][:ids_numa_cpu_start] = '4'
+# IDS NUMA pyhsical cpu step 
+#    negative to go in reverse (20,19,...)
+#    ignored if mode is numa 
+default[:seconion][:sensor][:sniff][:ids_numa_cpu_step] = '-1'
 # enable squil agent to send ids alerts to server (applies to snort and suricata)
 default[:seconion][:sensor][:sniff][:snort_agent_enabled] = true
 # choose which search method to use, ac-split (cpu/memory neutral), ac (favor cpu, heavy memory usage)
@@ -113,12 +119,11 @@ default[:seconion][:sensor][:sniff][:bro_lb_procs] = 1
 default[:seconion][:sensor][:sniff][:bro_extract_files] = false
 # bpf for bro
 default[:seconion][:sensor][:sniff][:bro_bpf] = ''
-# enable Bro Numa and CPU affinity
-default[:seconion][:sensor][:sniff][:bro_numa_tune] = false
-# Bro NUMA membind
-default[:seconion][:sensor][:sniff][:bro_numa_membind] = true
-# Bro NUMA pyhsical cpus (range of cpus to tie each lp_proc 1-to-1) E.x. 5 lb procs ids_numa_cpus = '8,9,10,11'
-default[:seconion][:sensor][:sniff][:bro_numa_cpus] = '4'
+# enable BRO Numa and CPU affinity
+default[:seconion][:sensor][:sniff][:bro_numa_tune] = true
+# BRO NUMA pyhsical cpu start 
+#    zero based beginning of range to pin lb procs
+default[:seconion][:sensor][:sniff][:bro_numa_cpu_start] = '3'
 # enable netsniff-ng full packet capture
 default[:seconion][:sensor][:sniff][:pcap_enabled] = true
 # enable sguil agent to pull pcaps from the sguil client
