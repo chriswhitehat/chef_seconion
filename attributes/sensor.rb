@@ -123,7 +123,7 @@ default[:seconion][:sensor][:sniff][:bro_bpf] = ''
 default[:seconion][:sensor][:sniff][:bro_numa_tune] = true
 # BRO NUMA pyhsical cpu start 
 #    zero based beginning of range to pin lb procs
-default[:seconion][:sensor][:sniff][:bro_numa_cpu_start] = '3'
+default[:seconion][:sensor][:sniff][:bro_numa_cpu_start] = 3
 # enable netsniff-ng full packet capture
 default[:seconion][:sensor][:sniff][:pcap_enabled] = true
 # enable sguil agent to pull pcaps from the sguil client
