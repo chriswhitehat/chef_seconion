@@ -107,7 +107,7 @@ IDS_NUMA_TUNE="no"
 <% end %>
 
 IDS_NUMA_CPU_MODE="<%= @sniff[:ids_numa_cpu_mode] %>"
-IDS_NUMA_CPU_START=<%= @sniff[:ids_numa_cpu_start] %>
+IDS_NUMA_CPU=<%= @sniff[:ids_numa_cpu] %>
 IDS_NUMA_CPU_STEP=<%= @sniff[:ids_numa_cpu_step] %>
 
 <% if @sniff[:pcap_numa_tune] %>
@@ -117,5 +117,4 @@ PCAP_NUMA_TUNE="no"
 <% end %>
 
 PCAP_NUMA_CPU_MODE="<%= @sniff[:pcap_numa_cpu_mode] %>"
-PCAP_NUMA_CPU_START=<%= @sniff[:pcap_numa_cpu_start] %>
-PCAP_NUMA_CPU_STEP=<%= @sniff[:pcap_numa_cpu_step] %>
+PCAP_NUMA_CPU_START=<%= @sniff[:pcap_numa_cpu] %>

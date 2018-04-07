@@ -96,11 +96,11 @@ default[:seconion][:sensor][:sniff][:ids_numa_cpu_mode] = "increment"
 # IDS NUMA pyhsical cpu start 
 #    zero based beginning of range to ping lb procs
 #    ignored if mode is numa 
-default[:seconion][:sensor][:sniff][:ids_numa_cpu_start] = '4'
+default[:seconion][:sensor][:sniff][:ids_numa_cpu] = 0
 # IDS NUMA pyhsical cpu step 
 #    negative to go in reverse (20,19,...)
-#    ignored if mode is numa 
-default[:seconion][:sensor][:sniff][:ids_numa_cpu_step] = '-1'
+#    ignored if mode is numa or range
+default[:seconion][:sensor][:sniff][:ids_numa_cpu_step] = 1
 # enable squil agent to send ids alerts to server (applies to snort and suricata)
 default[:seconion][:sensor][:sniff][:snort_agent_enabled] = true
 # choose which search method to use, ac-split (cpu/memory neutral), ac (favor cpu, heavy memory usage)
@@ -123,7 +123,7 @@ default[:seconion][:sensor][:sniff][:bro_bpf] = ''
 default[:seconion][:sensor][:sniff][:bro_numa_tune] = false
 # BRO NUMA pyhsical cpu start 
 #    zero based beginning of range to pin lb procs
-default[:seconion][:sensor][:sniff][:bro_numa_cpu_start] = 3
+default[:seconion][:sensor][:sniff][:bro_numa_cpu] = 0
 # enable netsniff-ng full packet capture
 default[:seconion][:sensor][:sniff][:pcap_enabled] = true
 # enable sguil agent to pull pcaps from the sguil client
@@ -138,10 +138,8 @@ default[:seconion][:sensor][:sniff][:pcap_options] = '--mmap'
 default[:seconion][:sensor][:sniff][:pcap_bpf] = ''
 # enable pcap Numa and CPU affinity
 default[:seconion][:sensor][:sniff][:pcap_numa_tune] = false
-# pcap NUMA membind
-default[:seconion][:sensor][:sniff][:pcap_numa_membind] = true
 # pcap NUMA pyhsical cpu single cpu
-default[:seconion][:sensor][:sniff][:pcap_numa_cpus] = '2'
+default[:seconion][:sensor][:sniff][:pcap_numa_cpu] = 2
 
 # This is a convenience variable, copy and paste into sensor recipes.
 =begin
