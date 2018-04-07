@@ -32,7 +32,7 @@ interface=<%= @sniff[:interface] %>
 lb_method=pf_ring
 lb_procs=<%= @sniff[:bro_lb_procs] %>
 <% if @sniff[:bro_numa_tune] %>
-pin_cpus=<%= (@sniff[:bro_numa_cpu]..@sniff[:bro_numa_cpu]+@sniff[:bro_lb_procs]+1).to_a.join(",") %>
+pin_cpus=<%= (@sniff[:bro_numa_cpu]..@sniff[:bro_numa_cpu]+@sniff[:bro_lb_procs]-1).to_a.join(",") %>
 <% end %>
 aux_scripts=networks/<%= @sniff[:sensorname] %>
 
