@@ -468,7 +468,7 @@ do
 				CPU_BIND_MODE = "--cpunodebind=$SENSOR_NUMA_NODE"
 			elif [ "$PCAP_NUMA_CPU_MODE" == "range"]; then
 				CPU_BIND_MODE = "--physcpubind=$PCAP_NUMA_CPU_START"
-			else [ "$PCAP_NUMA_CPU_MODE" == "process"]; then
+			elif [ "$PCAP_NUMA_CPU_MODE" == "process"]; then
 			 	CPU_BIND_MODE = "--physcpubind=$PCAP_NUMA_CPU_START"
 			 	PCAP_NUMA_CPU_START += PCAP_NUMA_CPU_STEP
 			else
@@ -570,7 +570,7 @@ do
 					CPU_BIND_MODE = "--cpunodebind=$SENSOR_NUMA_NODE"
 				elif [ "$IDS_NUMA_CPU_MODE" == "range"]; then
 					CPU_BIND_MODE = "--physcpubind=$IDS_NUMA_CPU_START"
-				else [ "$IDS_NUMA_CPU_MODE" == "process"]; then
+				elif [ "$IDS_NUMA_CPU_MODE" == "process"]; then
 				 	CPU_BIND_MODE = "--physcpubind=$IDS_NUMA_CPU_START"
 				 	IDS_NUMA_CPU_START += IDS_NUMA_CPU_STEP
 				else
