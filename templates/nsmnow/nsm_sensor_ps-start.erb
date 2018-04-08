@@ -563,10 +563,11 @@ do
 					CPU_BIND_MODE="--physcpubind=$IDS_NUMA_CPU"
 				elif [ "$IDS_NUMA_CPU_MODE" == "increment" ]; then
 				 	CPU_BIND_MODE="--physcpubind=$IDS_NUMA_CPU"
-				 	IDS_NUMA_CPU += IDS_NUMA_CPU_STEP
+				 	IDS_NUMA_CPU=IDS_NUMA_CPU+IDS_NUMA_CPU_STEP
 				else
 					CPU_BIND_MODE="--cpunodebind=$SENSOR_NUMA_NODE"
 				fi
+				echo "numactl --- $CPU_BIND_MODE --membind=$SENSOR_NUMA_NODE -- snort -c $SNORT_CONFIG -u $SENSOR_USER -g $SENSOR_GROUP -i $SENSOR_INTERFACE_SHORT $BPF_OPTION -l $UNI_DIR --perfmon-file $PERFMON $SNORT_OPTIONS --snaplen $MTU_FIN --- $PID --- $LOG --- snort-$i (alert data)"
 				[ "$IDS_ENGINE_ENABLED" == "yes" ] && [ -z "$SKIP_SNORT_ALERT" ] && process_start "numactl" "$CPU_BIND_MODE --membind=$SENSOR_NUMA_NODE -- snort -c $SNORT_CONFIG -u $SENSOR_USER -g $SENSOR_GROUP -i $SENSOR_INTERFACE_SHORT $BPF_OPTION -l $UNI_DIR --perfmon-file $PERFMON $SNORT_OPTIONS --snaplen $MTU_FIN" "$PID" "$LOG" "snort-$i (alert data)"
 			else
 				[ "$IDS_ENGINE_ENABLED" == "yes" ] && [ -z "$SKIP_SNORT_ALERT" ] && process_start "snort" "-c $SNORT_CONFIG -u $SENSOR_USER -g $SENSOR_GROUP -i $SENSOR_INTERFACE_SHORT $BPF_OPTION -l $UNI_DIR --perfmon-file $PERFMON $SNORT_OPTIONS --snaplen $MTU_FIN" "$PID" "$LOG" "snort-$i (alert data)"
