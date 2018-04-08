@@ -464,18 +464,8 @@ do
 		[ `ls "$LOG_FILE".* |wc -l` -gt 10 ] && ls "$LOG_FILE".* |head -1 |xargs rm -f
 
 		if [ "$PCAP_NUMA_TUNE" == "yes" ]; then
-			if [ "$PCAP_NUMA_CPU_MODE" == "numa"]; then
-				CPU_BIND_MODE = "--cpunodebind=$SENSOR_NUMA_NODE"
-			elif [ "$PCAP_NUMA_CPU_MODE" == "range"]; then
-				CPU_BIND_MODE = "--physcpubind=$PCAP_NUMA_CPU"
-			elif [ "$PCAP_NUMA_CPU_MODE" == "increment"]; then
-			 	CPU_BIND_MODE = "--physcpubind=$PCAP_NUMA_CPU"
-			 	PCAP_NUMA_CPU += PCAP_NUMA_CPU_STEP
-			else
-				CPU_BIND_MODE = "--cpunodebind=$SENSOR_NUMA_NODE"
-			fi
-			echo "numactl --- $CPU_BIND_MODE --membind=$SENSOR_NUMA_NODE -- netsniff-ng -i $SENSOR_INTERFACE_SHORT -o $SENSOR_LOG_DIR/dailylogs/$TODAY/ --user `id -u $SENSOR_USER` --group `id -g $SENSOR_GROUP` -s --prefix snort.log. --verbose --ring-size $PCAP_RING_SIZE --interval $PCAP_SIZE $PCAP_OPTIONS $BPF_OPTION --- $PROCESS_PID_DIR/$SENSOR/netsniff-ng.pid --- $PROCESS_LOG_DIR/$SENSOR/netsniff-ng.log --- netsniff-ng (full packet data)"
-			process_start "numactl" "$CPU_BIND_MODE --membind=$SENSOR_NUMA_NODE -- netsniff-ng -i $SENSOR_INTERFACE_SHORT -o $SENSOR_LOG_DIR/dailylogs/$TODAY/ --user `id -u $SENSOR_USER` --group `id -g $SENSOR_GROUP` -s --prefix snort.log. --verbose --ring-size $PCAP_RING_SIZE --interval $PCAP_SIZE $PCAP_OPTIONS $BPF_OPTION" "$PROCESS_PID_DIR/$SENSOR/netsniff-ng.pid" "$PROCESS_LOG_DIR/$SENSOR/netsniff-ng.log" "netsniff-ng (full packet data)"
+			echo "numactl --- --physcpubind=$PCAP_NUMA_CPU --membind=$SENSOR_NUMA_NODE -- netsniff-ng -i $SENSOR_INTERFACE_SHORT -o $SENSOR_LOG_DIR/dailylogs/$TODAY/ --user `id -u $SENSOR_USER` --group `id -g $SENSOR_GROUP` -s --prefix snort.log. --verbose --ring-size $PCAP_RING_SIZE --interval $PCAP_SIZE $PCAP_OPTIONS $BPF_OPTION --- $PROCESS_PID_DIR/$SENSOR/netsniff-ng.pid --- $PROCESS_LOG_DIR/$SENSOR/netsniff-ng.log --- netsniff-ng (full packet data)"
+			process_start "numactl" "--physcpubind=$PCAP_NUMA_CPU --membind=$SENSOR_NUMA_NODE -- netsniff-ng -i $SENSOR_INTERFACE_SHORT -o $SENSOR_LOG_DIR/dailylogs/$TODAY/ --user `id -u $SENSOR_USER` --group `id -g $SENSOR_GROUP` -s --prefix snort.log. --verbose --ring-size $PCAP_RING_SIZE --interval $PCAP_SIZE $PCAP_OPTIONS $BPF_OPTION" "$PROCESS_PID_DIR/$SENSOR/netsniff-ng.pid" "$PROCESS_LOG_DIR/$SENSOR/netsniff-ng.log" "netsniff-ng (full packet data)"
 		else
 			process_start "netsniff-ng" "-i $SENSOR_INTERFACE_SHORT -o $SENSOR_LOG_DIR/dailylogs/$TODAY/ --user `id -u $SENSOR_USER` --group `id -g $SENSOR_GROUP` -s --prefix snort.log. --verbose --ring-size $PCAP_RING_SIZE --interval $PCAP_SIZE $PCAP_OPTIONS $BPF_OPTION" "$PROCESS_PID_DIR/$SENSOR/netsniff-ng.pid" "$PROCESS_LOG_DIR/$SENSOR/netsniff-ng.log" "netsniff-ng (full packet data)"
 		fi
