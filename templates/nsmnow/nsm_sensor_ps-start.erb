@@ -563,7 +563,7 @@ do
 					CPU_BIND_MODE="--physcpubind=$IDS_NUMA_CPU"
 				elif [ "$IDS_NUMA_CPU_MODE" == "increment" ]; then
 				 	CPU_BIND_MODE="--physcpubind=$IDS_NUMA_CPU"
-				 	IDS_NUMA_CPU=IDS_NUMA_CPU+IDS_NUMA_CPU_STEP
+				 	IDS_NUMA_CPU=$((IDS_NUMA_CPU+IDS_NUMA_CPU_STEP))
 				else
 					CPU_BIND_MODE="--cpunodebind=$SENSOR_NUMA_NODE"
 				fi
