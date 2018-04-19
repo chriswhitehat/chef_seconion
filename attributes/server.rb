@@ -82,6 +82,12 @@ default[:seconion][:server][:ids_rules] = 'ETVRT'
 
 
 #########################
+# Mysql
+#########################
+default[:seconion][:server][:mysql][:open_files_limit] = 90000
+
+
+#########################
 # Maintenance
 #########################
 

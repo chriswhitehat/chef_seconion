@@ -5,4 +5,4 @@
 #
 
 [mysqld]
-open_files_limit = 90000
+open_files_limit = <%= node[:seconion][:server][:mysql][:open_files_limit] %>
