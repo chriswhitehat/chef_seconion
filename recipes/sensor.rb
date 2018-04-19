@@ -119,6 +119,18 @@ end
 
 
 ##########################
+# Add nsm_sensor_ps-hard-restart
+##########################
+template '/usr/sbin/nsm_sensor_ps-watch-snort_agent' do
+  source '/nsmnow/nsm_sensor_ps-watch-snort_agent.erb'
+  mode '0755'
+  owner 'root'
+  group 'root'
+end
+
+
+
+##########################
 # Add rule update with hard
 # restart
 ##########################
