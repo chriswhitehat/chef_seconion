@@ -249,7 +249,7 @@ then
 	exit 0
 elif [ -n "$SHOW_VERSION_ONLY" ]
 then
-	print_version
+	print_nsmnow_version
 	exit 0
 fi
 
@@ -491,6 +491,7 @@ do
 				sed -i "s|^set WATCH_DIR.*$|set WATCH_DIR /nsm/sensor_data/$SENSOR|g" $SNORT_AGENT_CONFIG
 			fi
 			[ "$SNORT_AGENT_ENABLED" == "yes" ] && [ -z "$SKIP_SNORT_AGENT" ] && $ACTION "/usr/bin/snort_agent.tcl" "-c $SNORT_AGENT_CONFIG" "$SNORT_AGENT_PID" "$SNORT_AGENT_LOG" "snort_agent-$i (sguil)" "$SENSOR_USER"
+			sleep .5s
 		done
 	fi
 
