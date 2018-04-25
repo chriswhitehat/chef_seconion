@@ -128,6 +128,13 @@ template '/usr/sbin/nsm_sensor_ps-watch-snort_agent' do
   group 'root'
 end
 
+template '/etc/cron.d/watch-snort-agent' do
+  source '/nsmnow/cron_watch-snort-agent.erb'
+  mode '0644'
+  owner 'root'
+  group 'root'
+end
+
 
 
 ##########################
