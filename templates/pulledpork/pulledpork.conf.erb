@@ -155,7 +155,7 @@ config_path=/etc/nsm/<%= @sniff[:sensorname] %>/snort.conf
 # FreeBSD-7-3, FreeBSD-8-1
 # OpenBSD-4-8
 # Slackware-13-1
-distro=Ubuntu-12-04
+distro=<% node[:lsb][:id] %>-<%= node[:lsb][:release] %>
 
 #######  This next section is optional, but probably pretty useful to you.
 #######  Please read thoroughly!
