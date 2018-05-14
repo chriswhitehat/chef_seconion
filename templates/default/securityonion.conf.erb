@@ -63,24 +63,24 @@ BRO_ENABLED=<%= node[:seconion][:sensor][:bro_enabled] %>
 BRO_USER=<%= node[:seconion][:sensor][:bro_user] %>
 BRO_GROUP=<%= node[:seconion][:sensor][:bro_group] %>
 
+# OSSEC_AGENT_USER specifies the user account used to start the OSSEC agent for Sguil.
+OSSEC_AGENT_USER=<%= node[:seconion][:sensor][:ossec_agent_user] %>
+# OSSEC_AGENT_LEVEL specifies the level at which OSSEC alerts are sent to sguild.
+OSSEC_AGENT_LEVEL=<%= node[:seconion][:sensor][:ossec_agent_level] %>
+
+# LOCAL_HIDS_RULE_TUNING
+# If set to no (default), sensor will copy OSSEC rules from master server as-is (no changes).
+# If set to yes, sensor will keep its own copy of the OSSEC rules.
+LOCAL_HIDS_RULE_TUNING=<%= node[:seconion][:sensor][:ossec_local_hids_rule_tuning] %>
+
+# The OSSEC agent sends OSSEC HIDS alerts into the Sguil database.
+# Do you want to run the OSSEC Agent?  yes/no
+OSSEC_AGENT_ENABLED=<%= node[:seconion][:sensor][:ossec_agent_enabled] %>
 
 ##############################
 # Chef: Unsupported features
 ##############################
 
-# OSSEC_AGENT_USER specifies the user account used to start the OSSEC agent for Sguil.
-OSSEC_AGENT_USER=sguil
-# OSSEC_AGENT_LEVEL specifies the level at which OSSEC alerts are sent to sguild.
-OSSEC_AGENT_LEVEL=5
-
-# LOCAL_HIDS_RULE_TUNING
-# If set to no (default), sensor will copy OSSEC rules from master server as-is (no changes).
-# If set to yes, sensor will keep its own copy of the OSSEC rules.
-LOCAL_HIDS_RULE_TUNING=no
-
-# The OSSEC agent sends OSSEC HIDS alerts into the Sguil database.
-# Do you want to run the OSSEC Agent?  yes/no
-OSSEC_AGENT_ENABLED=no
 
 # Do you want to run the Snorby worker?  yes/no
 SNORBY_ENABLED=no
