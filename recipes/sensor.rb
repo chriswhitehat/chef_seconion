@@ -509,6 +509,41 @@ template '/opt/bro/share/bro/pcr/producer_consumer_ratio.bro' do
 end
 
 
+# http2
+remote_file '/tmp/nghttp2-1.32.0.tar.gz' do
+  owner 'root'
+  group 'root'
+  mode '0644'
+  source 'https://github.com/nghttp2/nghttp2/releases/download/v1.32.0/nghttp2-1.32.0.tar.gz'
+end
+
+ not_if do ::File.exists?('/usr/share/GeoIP/GeoLiteCity.dat') end  
+  notifies :run, 'execute[uncompress_nghttp2]'
+end
+
+execute 'uncompress_nghttp2' do
+  command 'tar -xzvf /tmp/nghttp2-1.32.0.tar.gz'
+  action :nothing
+end
+
+
+# template '/opt/bro/share/bro/pcr/__load__.bro' do
+#    source 'bro/pcr/__load__.bro.erb'
+#    owner 'sguil'
+#    group 'sguil'
+#    mode '0644'
+# end
+
+# template '/opt/bro/share/bro/pcr/producer_consumer_ratio.bro' do
+#    source 'bro/pcr/producer_consumer_ratio.bro.erb'
+#    owner 'sguil'
+#    group 'sguil'
+#    mode '0644'
+#    notifies :run, 'execute[deploy_bro]', :delayed
+# end
+
+
+
 if node[:seconion][:sensor][:bro][:extracted][:rotate]
   template '/etc/cron.d/bro-rotate-extracted' do
     source 'bro/cron-bro-rotate-extracted.erb'
