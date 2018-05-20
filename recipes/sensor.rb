@@ -510,21 +510,92 @@ end
 
 
 # http2
-remote_file '/tmp/nghttp2-1.32.0.tar.gz' do
-  owner 'root'
-  group 'root'
-  mode '0644'
-  source 'https://github.com/nghttp2/nghttp2/releases/download/v1.32.0/nghttp2-1.32.0.tar.gz'
-end
+#remote_file '/tmp/nghttp2-1.32.0.tar.gz' do
+#  owner 'root'
+#  group 'root'
+#  mode '0644'
+#  source 'https://github.com/nghttp2/nghttp2/releases/download/v1.32.0/nghttp2-1.32.0.tar.gz'
+#  not_if do ::File.exists?("/usr/local/lib/libnghttp2.a") end
+#  notifies :run, 'execute[uncompress_nghttp2]', :immediately
+#end
 
- not_if do ::File.exists?('/usr/share/GeoIP/GeoLiteCity.dat') end  
-  notifies :run, 'execute[uncompress_nghttp2]'
-end
+#execute 'uncompress_nghttp2' do
+#  command 'tar -xzf /tmp/nghttp2-1.32.0.tar.gz -C /tmp/'
+#  not_if do ::File.exists?("/usr/local/lib/libnghttp2.a") end
+#  notifies :run, 'execute[install_nghttp2]', :immediately
+#  action :nothing
+#end
 
-execute 'uncompress_nghttp2' do
-  command 'tar -xzvf /tmp/nghttp2-1.32.0.tar.gz'
-  action :nothing
-end
+#execute 'install_nghttp2' do
+#  command 'cd /tmp/nghttp2-1.32.0; ./configure; make; make install'
+#  not_if do ::File.exists?("/usr/local/lib/libnghttp2.a") end
+#  action :nothing
+#end
+
+#package ['build-essentials']
+
+#remote_file '/tmp/v1.0.4.tar.gz' do
+#  owner 'root'
+#  group 'root'
+#  mode '0644'
+#  source 'https://github.com/google/brotli/archive/v1.0.4.tar.gz'
+#  not_if do ::File.exists?("/usr/local/bin/brotli") end
+#  notifies :run, 'execute[uncompress_brotli]', :immediately
+#end
+
+#execute 'uncompress_brotli' do
+#  command 'tar -xzf /tmp/v1.0.4.tar.gz -C /tmp/'
+#  not_if do ::File.exists?("/usr/local/bin/brotli") end
+#  notifies :run, 'execute[install_brotli]', :immediately
+#  action :nothing
+#end
+
+#execute 'install_brotli' do
+#  command 'cd /tmp/brotli-1.0.4; mkdir build && cd build; ../configure-cmake; make; make test; make install'
+#  not_if do ::File.exists?("/usr/local/bin/brotli") end
+#  action :nothing
+#end
+
+
+#remote_file '/tmp/0.3.0.tar.gz' do
+#  owner 'root'
+#  group 'root'
+#  mode '0644'
+#  source 'https://github.com/MITRECND/bro-http2/archive/0.3.0.tar.gz'
+#  not_if do ::File.exists?("/usr/local/bin/brotli") end
+#  notifies :run, 'execute[uncompress_bro-http2]', :immediately
+#end
+
+#remote_file '/tmp/v2.5.3.tar.gz' do
+#  owner 'root'
+#  group 'root'
+#  mode '0644'
+#  source 'https://github.com/bro/bro/archive/v2.5.3.tar.gz'
+#  not_if do ::File.exists?("/usr/local/bin/brotli") end
+#  notifies :run, 'execute[uncompress_bro]', :immediately
+#end
+
+#execute 'uncompress_bro' do
+#  command 'tar -xzf /tmp/v2.5.3.tar.gz -C /tmp/'
+#  not_if do ::File.exists?("/usr/local/bin/brotli") end
+#  action :nothing
+#end
+
+#execute 'uncompress_bro-http2' do
+#  command 'tar -xzf /tmp/0.3.0.tar.gz -C /tmp/'
+#  not_if do ::File.exists?("/usr/local/bin/brotli") end
+#  notifies :run, 'execute[install_bro-http2]', :immediately
+#  action :nothing
+#end
+
+#execute 'install_bro-http2' do
+#  command 'cd /tmp/bro-http2-0.3.0; ./configure --bro-dist=/tmp/bro-2.5.3; make; make test; make install'
+#  not_if do ::File.exists?("/usr/local/bin/brotli") end
+#  action :nothing
+#end
+
+
+
 
 
 # template '/opt/bro/share/bro/pcr/__load__.bro' do
