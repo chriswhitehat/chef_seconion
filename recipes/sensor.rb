@@ -49,8 +49,10 @@ sensors.sort_by!{ |n| n[:fqdn] }.each do |sensor|
   sorted_sensors << sensor[:fqdn]
 end
 
-node.normal[:seconion][:sensor][:order] = sorted_sensors.index(node[:fqdn]) + 1
-
+if sorted_sensors
+  node.normal[:seconion][:sensor][:order] = sorted_sensors.index(node[:fqdn]) + 1
+else
+  node.normal[:seconion][:sensor][:order] = 1
 
 ##########################
 # Replace existing rule-update
