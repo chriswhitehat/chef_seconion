@@ -1083,35 +1083,40 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end
 
 
-  template "/etc/nsm/#{sniff[:sensorname]}/bpf-bro.conf" do
-    source "sensor/bpf-bro.conf.erb"
-    owner 'sguil'
-    group 'sguil'
-    mode '0644'
-    variables({
-      :sniff => sniff,
-    })
+['bpf-bro', 'bpf-ids', 'bpf-pcap'].each do | bpf_file |
+  link "/etc/nsm/#{sniff[:sensorname]}/#{bpf_file}.conf" do
+    to "/etc/nsm/#{sniff[:sensorname]}/bpf.conf"
   end
+end
+  # template "/etc/nsm/#{sniff[:sensorname]}/bpf-bro.conf" do
+  #   source "sensor/bpf-bro.conf.erb"
+  #   owner 'sguil'
+  #   group 'sguil'
+  #   mode '0644'
+  #   variables({
+  #     :sniff => sniff,
+  #   })
+  # end
 
-  template "/etc/nsm/#{sniff[:sensorname]}/bpf-ids.conf" do
-    source "sensor/bpf-ids.conf.erb"
-    owner 'sguil'
-    group 'sguil'
-    mode '0644'
-    variables({
-      :sniff => sniff,
-    })
-  end
+  # template "/etc/nsm/#{sniff[:sensorname]}/bpf-ids.conf" do
+  #   source "sensor/bpf-ids.conf.erb"
+  #   owner 'sguil'
+  #   group 'sguil'
+  #   mode '0644'
+  #   variables({
+  #     :sniff => sniff,
+  #   })
+  # end
 
-  template "/etc/nsm/#{sniff[:sensorname]}/bpf-pcap.conf" do
-    source "sensor/bpf-pcap.conf.erb"
-    owner 'sguil'
-    group 'sguil'
-    mode '0644'
-    variables({
-      :sniff => sniff,
-    })
-  end
+  # template "/etc/nsm/#{sniff[:sensorname]}/bpf-pcap.conf" do
+  #   source "sensor/bpf-pcap.conf.erb"
+  #   owner 'sguil'
+  #   group 'sguil'
+  #   mode '0644'
+  #   variables({
+  #     :sniff => sniff,
+  #   })
+  # end
 
   template "/etc/nsm/pulledpork/#{sniff[:sensorname]}/pulledpork.conf" do
       source "pulledpork/pulledpork.conf.erb"
