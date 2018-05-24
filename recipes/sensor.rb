@@ -978,7 +978,7 @@ end
     group 'sguil'
     mode '0644'
     variables({
-      :bpf => bpf.keys.join(' && ')
+      :bpf => bpf.join(' && ')
     })
   end
 
