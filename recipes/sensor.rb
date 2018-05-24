@@ -962,18 +962,23 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     sensor = {}
   end
 
+bpf = []
+
+[global, regional, sensor_group, host, sensor].each do | bpfs |
+  bpfs.each do |sig, enabled| 
+    if enabled
+      bpf << sig
+    end
+  end
+end
+
   template "/etc/nsm/#{sniff[:sensorname]}/bpf.conf" do
     source "sensor/bpf.conf.erb"
     owner 'sguil'
     group 'sguil'
     mode '0644'
     variables({
-      :sniff => sniff,
-      :global_sigs => global,
-      :regional_sigs => regional,
-      :sensor_group_sigs => sensor_group,
-      :host_sigs => host,
-      :sensor_sigs => sensor
+      :bpf => bpf.keys.join(' && ')
     })
   end
 
