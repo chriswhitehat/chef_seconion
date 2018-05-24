@@ -42,51 +42,5 @@
 # icmp-redirect       icmp-paramprob      icmp-maskreq
 # icmp-echo           icmp-tstamp         icmp-maskreply
 
-##########################
-# Global
-##########################
 
-<% @global_sigs.each do |sig, enabled| %>
-    <% if enabled %>
-<%= "#{sig}" %>
-    <% else %>
-<%= "\##{sig}" %>
-    <% end %>
-<% end %>
-
-##########################
-# Regional
-##########################
-
-<% @regional_sigs.each do |sig, enabled| %>
-    <% if enabled %>
-<%= "#{sig}" %>
-    <% else %>
-<%= "\##{sig}" %>
-    <% end %>
-<% end %>
-
-##########################
-# Host
-##########################
-
-<% @host_sigs.each do |sig, enabled| %>
-    <% if enabled %>
-<%= "#{sig}" %>
-    <% else %>
-<%= "\##{sig}" %>
-    <% end %>
-<% end %>
-
-
-##########################
-# Sensor 
-##########################
-
-<% @sensor_sigs.each do |sig, enabled| %>
-    <% if enabled %>
-<%= "#{sig}" %>
-    <% else %>
-<%= "\##{sig}" %>
-    <% end %>
-<% end %>
+<% @bpf %>
