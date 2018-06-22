@@ -195,6 +195,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/cert_authorities',
                '/opt/bro/share/bro/ja3/',
                '/opt/bro/share/bro/pcr/',
+               '/opt/bro/share/peers/peers/'
                '/var/log/nsm',
                '/usr/local/lib/snort_dynamicrules',
                '/usr/local/lib/snort_dynamicrules_backup',
@@ -511,6 +512,21 @@ template '/opt/bro/share/bro/pcr/producer_consumer_ratio.bro' do
    notifies :run, 'execute[deploy_bro]', :delayed
 end
 
+# peers: Peer Descriptions
+template '/opt/bro/share/bro/peers/__load__.bro' do
+   source 'bro/peers/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
+
+template '/opt/bro/share/bro/peers/peers.bro' do
+   source 'bro/peers/peers.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
 
 # http2
 #remote_file '/tmp/nghttp2-1.32.0.tar.gz' do

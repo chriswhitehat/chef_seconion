@@ -53,7 +53,7 @@ vars:
 ## Step 2: select the rules to enable or disable
 ##
 
-default-rule-path: /etc/nsm/rules/
+default-rule-path: /etc/nsm/rules/<%= @sniff[:sensorname] %>
 rule-files:
 # - local.rules
  - downloaded.rules
@@ -70,7 +70,7 @@ threshold-file: /etc/nsm/<%= @sniff[:sensorname] %>/threshold.conf
 # The default logging directory.  Any log or output file will be
 # placed here if its not specified with a full path name. This can be
 # overridden with the -l command line parameter.
-default-log-dir: /var/log/nsm/
+default-log-dir: /var/log/nsm/<%= @sniff[:sensorname] %>
 
 # global stats configuration
 stats:

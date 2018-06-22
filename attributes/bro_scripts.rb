@@ -150,6 +150,9 @@ default[:seconion][:sensor][:bro_scripts][:global]['pcr'] = false
 # Change default bro config for Scan script
 default[:seconion][:sensor][:bro_scripts][:global]['scan_conf'] = false
 
+# Add the peer description to every bro log
+default[:seconion][:sensor][:bro_scripts][:global]['peers'] = false
+
 
 ############
 # Deprectated in 2.5
