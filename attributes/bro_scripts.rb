@@ -4,6 +4,17 @@
 #
 
 ##########################
+# Disable Base Streams
+##########################
+# Notes: -Expects the Stream name to disable
+#        -setting to false will disable, all other values will ignore the attribute
+
+
+# Syslog Stream (not disabled by default)
+default[:seconion][:sensor][:bro_base_streams][:global]['Syslog::LOG'] = true
+
+
+##########################
 # Load Bro Sigs
 ##########################
 

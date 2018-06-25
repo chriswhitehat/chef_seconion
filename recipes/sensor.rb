@@ -643,6 +643,57 @@ if node[:seconion][:sensor][:bro][:extracted][:rotate]
   end
 end
 
+# Base Streams
+template '/opt/bro/share/bro/base_streams/__load__.bro' do
+   source 'bro/base_streams/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
+
+if node[:seconion][:sensor][:bro_base_streams]
+  if node[:seconion][:sensor][:bro_base_streams][:global]
+    global_streams = node[:seconion][:sensor][:bro_base_streams][:global]
+  else
+    global_streams = {}
+  end
+  if node[:seconion][:sensor][:bro_base_streams][:regional]
+    regional_streams = node[:seconion][:sensor][:bro_base_streams][:regional]
+  else
+    regional_streams = {}
+  end
+  if node[:seconion][:sensor][:bro_base_streams][node[:seconion][:sensor][:sensor_group]]
+    sensor_group_streams = node[:seconion][:sensor][:bro_base_streams][node[:seconion][:sensor][:sensor_group]]
+  else
+    sensor_group_streams = {}
+  end
+  if node[:seconion][:sensor][:bro_base_streams][node[:fqdn]]
+    host_streams = node[:seconion][:sensor][:bro_base_streams][node[:fqdn]]
+  else
+    host_streams = {}
+  end
+else
+  global_streams = {}
+  regional_streams = {}
+  sensor_group_streams = {}
+  host_streams = {}
+end
+
+template '/opt/bro/share/bro/base_streams/base_streams.bro' do
+  source 'bro/base_streams/base_streams.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  variables({
+    :global_streams => global_streams,
+    :regional_streams => regional_streams,
+    :sensor_group_streams => sensor_group_streams,
+    :host_streams => host_streams
+  })
+  notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+
 if node[:seconion][:sensor][:bro_sigs]
   if node[:seconion][:sensor][:bro_sigs][:global]
     global_sigs = node[:seconion][:sensor][:bro_sigs][:global]
