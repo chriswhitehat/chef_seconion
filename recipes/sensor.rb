@@ -188,6 +188,7 @@ end
 
 directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/extractions',
+               '/opt/bro/share/bro/base_streams',
                '/opt/bro/share/bro/etpro',
                '/opt/bro/share/bro/smtp-embedded-url-bloom',
                '/opt/bro/share/bro/scan_conf',
