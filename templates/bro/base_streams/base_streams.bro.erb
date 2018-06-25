@@ -17,9 +17,9 @@ event bro_init()
 
 	<% @global_streams.each do |stream, enabled| %>
 		<% if enabled %>
-	<%= "Log::disable_stream(#{stream})" %>
-		<% else %>
 	<%= "\#\#Log::disable_stream(#{stream})" %>
+		<% else %>
+	<%= "Log::disable_stream(#{stream})" %>
 		<% end %>
 	<% end %>
 
@@ -29,9 +29,9 @@ event bro_init()
 
 	<% @regional_streams.each do |stream, enabled| %>
 		<% if enabled %>
-	<%= "Log::disable_stream(#{stream})" %>
-		<% else %>
 	<%= "\#\#Log::disable_stream(#{stream})" %>
+		<% else %>
+	<%= "Log::disable_stream(#{stream})" %>
 		<% end %>
 	<% end %>
 
@@ -42,9 +42,9 @@ event bro_init()
 
 	<% @sensor_group_streams.each do |stream, enabled| %>
 		<% if enabled %>
-	<%= "Log::disable_stream(#{stream})" %>
-		<% else %>
 	<%= "\#\#Log::disable_stream(#{stream})" %>
+		<% else %>
+	<%= "Log::disable_stream(#{stream})" %>
 		<% end %>
 	<% end %>
 
@@ -54,9 +54,9 @@ event bro_init()
 
 	<% @host_streams.each do |stream, enabled| %>
 		<% if enabled %>
-	<%= "Log::disable_stream(#{stream})" %>
-		<% else %>
 	<%= "\#\#Log::disable_stream(#{stream})" %>
+		<% else %>
+	<%= "Log::disable_stream(#{stream})" %>
 		<% end %>
 	<% end %>
 
