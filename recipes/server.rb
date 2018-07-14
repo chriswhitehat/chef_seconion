@@ -23,7 +23,7 @@ if node[:seconion][:server][:mgmt][:configure]
 
 end
 
-package ['securityonion-server', 'syslog-ng-core', 'mysqltuner']
+package ['securityonion-server', 'syslog-ng-core', 'mysqltuner', 'wireshark-common']
 
 #############################
 # Deploy Notes
