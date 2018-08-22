@@ -26,7 +26,6 @@ end
 
 apt_repository 'SecurityOnion' do
   uri 'ppa:securityonion/stable'
-  not_if do ::File.exists?('/etc/apt/sources.list.d/SecurityOnion.list') end
 end
 
 
