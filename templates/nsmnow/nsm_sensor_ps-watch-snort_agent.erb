@@ -40,4 +40,4 @@ for log in glob.glob('/var/log/nsm/*/snort_agent*.log'):
 
 
 if nsm_start:
-	os.system("service nsm start")
+	os.system("nsm --all --start")

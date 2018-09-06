@@ -76,11 +76,30 @@ directory "/home/#{node[:seconion][:ssh_username]}/.ssh/" do
   action :create
 end
 
-
-service 'nsm' do
-  supports :status => true, :restart => true, :start => true, :stop => true
+execute 'nsm_start' do
+  command 'nsm --all --start'
   action :nothing
 end
+
+execute 'nsm_stop' do
+  command 'nsm --all --stop'
+  action :nothing
+end
+
+execute 'nsm_restart' do
+  command 'nsm --all --restart'
+  action :nothing
+end
+
+execute 'nsm_status' do
+  command 'nsm --all --status'
+  action :nothing
+end
+
+# service 'nsm' do
+#   supports :status => true, :restart => true, :start => true, :stop => true
+#   action :nothing
+# end
 
 ##########################
 # Web Services
@@ -194,16 +213,12 @@ end
 execute 'restart_mysql' do
   command 'pgrep -lf mysqld >/dev/null && restart mysql'
   action :nothing
-  notifies :restart, 'service[nsm]', :delayed
+  notifies :run, 'execute[nsm_restart]', :delayed
 end
 
 
 
 
-execute 'restart_sguil' do
-  command 'service nsm restart'
-  action :nothing
-end
 
 execute 'nsm_server_add' do
   command "/usr/sbin/nsm_server_add --server-name=\"#{node[:seconion][:server][:sguil_server_name]}\" --server-sensor-name=NULL --server-sensor-port=7736 --server-client-port=7734 --server-client-user=\"#{node[:seconion][:server][:sguil_client_username]}\" --server-client-pass=\"#{node[:seconion][:server][:sguil_client_password]}\" --server-auto=yes --force-yes"
@@ -350,7 +365,7 @@ end
 execute 'run_rule-update' do
   command "rule-update"
   action :nothing
-  notifies :restart, 'service[nsm]', :delayed
+  notifies :run, 'execute[nsm_restart]', :delayed
 end
 
 
@@ -423,7 +438,7 @@ end
 #############################
 
 execute "autocat_import" do
-  command "service nsm stop; mysql -v -uroot #{node[:seconion][:server][:sguil_server_name]}_db < /tmp/autocat.sql.backup"
+  command "nsm --all --stop; mysql -v -uroot #{node[:seconion][:server][:sguil_server_name]}_db < /tmp/autocat.sql.backup"
   only_if do ::File.exists?("/tmp/autocat.sql.backup") end
   notifies :delete, 'file[seconion_autocat]', :immediately
 end
@@ -431,7 +446,7 @@ end
 file 'seconion_autocat' do
   path '/tmp/autocat.sql.backup'
   action :nothing
-  notifies :restart, 'service[nsm]', :immediately
+  notifies :run, 'execute[nsm_restart]', :immediately
 end
 
 

@@ -1308,12 +1308,32 @@ end
 execute 'run_rule-update' do
   command "rule-update"
   action :nothing
-  notifies :restart, 'service[nsm]', :delayed
+  notifies :run, 'execute[nsm_restart]', :delayed
 end
 
-service 'nsm' do
+execute 'nsm_start' do
+  command 'nsm --all --start'
   action :nothing
 end
+
+execute 'nsm_stop' do
+  command 'nsm --all --stop'
+  action :nothing
+end
+
+execute 'nsm_restart' do
+  command 'nsm --all --restart'
+  action :nothing
+end
+
+execute 'nsm_status' do
+  command 'nsm --all --status'
+  action :nothing
+end
+
+# service 'nsm' do
+#   action :nothing
+# end
 
 
 
