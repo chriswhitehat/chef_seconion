@@ -355,11 +355,6 @@ end
 # Configure Bro
 ############
 
-link '/usr/bin/python' do
-  to '/usr/bin/python3'
-  link_type :symbolic
-end
-
 template '/opt/bro/etc/node.cfg' do
   source 'bro/node.cfg.erb'
   mode '0644'

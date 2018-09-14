@@ -39,6 +39,11 @@ reboot 'hwe_upgraded' do
 	action :nothing
 end	
 
+package 'linux_headers' do
+  package_name "linux-headers-#{node[:kernel][:release]}"
+  action :install
+end
+
 
 link '/usr/bin/python' do
   to '/usr/bin/python3'
