@@ -4,6 +4,17 @@
 #
 
 ##########################
+# Disable Base Streams
+##########################
+# Notes: -Expects the Stream name to disable
+#        -setting to false will disable, all other values will ignore the attribute
+
+
+# Syslog Stream (not disabled by default)
+default[:seconion][:sensor][:bro_base_streams][:global]['Syslog::LOG'] = true
+
+
+##########################
 # Load Bro Sigs
 ##########################
 
@@ -118,6 +129,9 @@ default[:seconion][:sensor][:bro_scripts][:global]['securityonion'] = true
 # File Extraction
 default[:seconion][:sensor][:bro_scripts][:global]['file-extraction'] = false
 
+# Add the base streams disable script
+default[:seconion][:sensor][:bro_scripts][:global]['base_streams'] = true
+
 # Intel from Mandiant APT1 Report
 default[:seconion][:sensor][:bro_scripts][:global]['apt1'] = false
 
@@ -149,6 +163,10 @@ default[:seconion][:sensor][:bro_scripts][:global]['pcr'] = false
 
 # Change default bro config for Scan script
 default[:seconion][:sensor][:bro_scripts][:global]['scan_conf'] = false
+
+# Add the peer description to every bro log
+default[:seconion][:sensor][:bro_scripts][:global]['peers'] = false
+
 
 
 ############
