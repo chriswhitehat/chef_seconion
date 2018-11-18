@@ -223,7 +223,7 @@ if chef_runtime.day < 8 and chef_runtime.wday == 1 and chef_runtime.hour == 12
 end
 
 execute 'restart_mysql' do
-  command 'pgrep -lf mysqld >/dev/null && restart mysql'
+  command 'pgrep -lf mysqld >/dev/null && service mysql restart'
   action :nothing
   notifies :restart, 'service[nsm]', :delayed
 end
