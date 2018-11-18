@@ -121,6 +121,37 @@ end
 ############################
 # MySQL tuning
 ############################
+
+directory '/etc/systemd/system/mysql.service.d' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
+end
+
+
+template '/etc/systemd/system/mysql.service.d/override.conf' do
+  source 'server/mysql/override.conf.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  notifies :run, 'execute[systemctl_reload]', :immediately
+end
+
+execute 'systemctl_reload' do
+  command 'systemctl daemon-reload'
+  action :nothing
+end
+
+template '/etc/security/limits.d/99-openfiles.conf' do
+  source 'server/99-openfiles.conf.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  notifies :run, 'execute[restart_mysql]', :delayed
+end
+
+
 template '/etc/mysql/conf.d/securityonion-sguild.cnf' do
   source 'server/mysql/securityonion-sguild.cnf.erb'
   mode '0640'
