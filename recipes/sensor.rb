@@ -287,11 +287,11 @@ end
 # OSSEC 
 ###########
 if node[:seconion][:sensor][:ossec_enabled]
-  execute 'enable_ossec' do
-    command 'service ossec-hids-server start; update-rc.d -f ossec-hids-server defaults; service ossec-hids-server start'
-    action :run
-    not_if do ::File.symlink?('/etc/rc0.d/K20ossec-hids-server') end
-  end
+  # execute 'enable_ossec' do
+  #   command 'service ossec-hids-server start; update-rc.d -f ossec-hids-server defaults; service ossec-hids-server start'
+  #   action :run
+  #   not_if do ::File.symlink?('/etc/rc0.d/K20ossec-hids-server') end
+  # end
 
   file "/var/ossec/etc/localtime" do
     owner 'root'
@@ -313,11 +313,11 @@ if node[:seconion][:sensor][:ossec_enabled]
   
 
 else
-  execute 'disable_ossec' do
-    command 'service ossec-hids-server stop; update-rc.d -f ossec-hids-server remove'
-    action :run
-    only_if do ::File.exists?('/etc/rc0.d/K20ossec-hids-server') end
-  end
+  # execute 'disable_ossec' do
+  #   command 'service ossec-hids-server stop; update-rc.d -f ossec-hids-server remove'
+  #   action :run
+  #   only_if do ::File.exists?('/etc/rc0.d/K20ossec-hids-server') end
+  # end
 end
 
 service 'ossec-hids-server' do
