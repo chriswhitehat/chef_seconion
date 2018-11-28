@@ -16,7 +16,7 @@ template '/etc/timezone' do
 end
 
 execute 'set-timezone' do
-  command 'dpkg-reconfigure --frontend noninteractive tzdata'
+  command "dpkg-reconfigure --frontend noninteractive tzdata; timedatectl set-timezone #{node[:seconion][:timezone]}"
   action :nothing
 end
 
