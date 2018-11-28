@@ -46,8 +46,9 @@ package 'linux_headers' do
 end
 
 
-link '/usr/bin/python' do
-  to '/usr/bin/python3'
-  link_type :symbolic
-end
+# Bad idea, core O/S needs python2.7
+# link '/usr/bin/python' do
+#   to '/usr/bin/python3'
+#   link_type :symbolic
+# end
 
