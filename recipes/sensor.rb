@@ -45,8 +45,10 @@ sensors = search(:node, search_server)
 
 sorted_sensors = []
 
-sensors.sort_by!{ |n| n[:fqdn] }.each do |sensor|
-  sorted_sensors << sensor[:fqdn]
+if sensors
+  sensors.sort_by!{ |n| n[:fqdn] }.each do |sensor|
+    sorted_sensors << sensor[:fqdn]
+  end
 end
 
 if sorted_sensors and sorted_sensors.index(node[:fqdn])
