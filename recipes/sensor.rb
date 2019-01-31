@@ -489,6 +489,14 @@ template '/opt/bro/share/bro/ja3/ja3.bro' do
    notifies :run, 'execute[deploy_bro]', :delayed
 end
 
+template '/opt/bro/share/bro/ja3/ja3s.bro' do
+   source 'bro/ja3/ja3s.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
 template '/opt/bro/share/bro/ja3/intel_ja3.bro' do
    source 'bro/ja3/intel_ja3.bro.erb'
    owner 'sguil'
