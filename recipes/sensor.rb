@@ -195,7 +195,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/networks',
                '/opt/bro/share/bro/cert_authorities',
                '/opt/bro/share/bro/ja3/',
-               '/opt/bro/share/bro/hassh/'
+               '/opt/bro/share/bro/hassh/',
                '/opt/bro/share/bro/pcr/',
                '/opt/bro/share/bro/peers/',
                '/var/log/nsm',
