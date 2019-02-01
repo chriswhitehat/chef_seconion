@@ -195,6 +195,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/networks',
                '/opt/bro/share/bro/cert_authorities',
                '/opt/bro/share/bro/ja3/',
+               '/opt/bro/share/bro/hassh/'
                '/opt/bro/share/bro/pcr/',
                '/opt/bro/share/bro/peers/',
                '/var/log/nsm',
@@ -505,6 +506,22 @@ template '/opt/bro/share/bro/ja3/intel_ja3.bro' do
    notifies :run, 'execute[deploy_bro]', :delayed
 end
 
+# JA3 SSH hash/fingerprint
+# ja3 ssl client hash/fingerprint
+template '/opt/bro/share/bro/hassh/__load__.bro' do
+   source 'bro/hassh/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
+
+template '/opt/bro/share/bro/hassh/hassh.bro' do
+   source 'bro/hassh/hassh.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
 
 # pcr: Producer Consumer Ratio
 template '/opt/bro/share/bro/pcr/__load__.bro' do
