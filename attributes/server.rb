@@ -86,6 +86,11 @@ default[:seconion][:server][:ids_rules] = 'ETVRT'
 #########################
 default[:seconion][:server][:mysql][:open_files_limit] = 90000
 
+#########################
+# kibana
+#########################
+default[:seconion][:server][:elasticsearch][:requestTimeout] = 90000
+
 
 #########################
 # Maintenance

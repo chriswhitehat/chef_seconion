@@ -1,6 +1,6 @@
 
 
-# Automate SOUP updates on sensors?
+# Automate SOUP updates?
 default[:seconion][:soup][:enabled] = true
 default[:seconion][:soup][:log_path] = '/var/log/nsm/soup.log'
 # This is the weekday of the month in cron 1-7, Mon-Sun

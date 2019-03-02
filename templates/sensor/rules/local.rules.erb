@@ -8,7 +8,7 @@
 # Global
 ##########################
 
-<% @global_sigs.each do |msg, sig| %>
+<% @sigs[:global_sigs].each do |msg, sig| %>
 	<% if sig %>
 <%= "\# #{msg}" %>
 <%= "#{sig}" %>
@@ -20,7 +20,7 @@
 # Regional
 ##########################
 
-<% @regional_sigs.each do |msg, sig| %>
+<% @sigs[:regional_sigs].each do |msg, sig| %>
 	<% if sig %>
 <%= "\# #{msg}" %>
 <%= "#{sig}" %>
@@ -34,7 +34,7 @@
 # <%= node[:seconion][:sensor][:sensor_group] %>
 ##########################
 
-<% @sensor_group_sigs.each do |msg, sig| %>
+<% @sigs[:sensor_group_sigs].each do |msg, sig| %>
 	<% if sig %>
 <%= "\# #{msg}" %>
 <%= "#{sig}" %>
@@ -46,7 +46,7 @@
 # Host
 ##########################
 
-<% @host_sigs.each do |msg, sig| %>
+<% @sigs[:host_sigs].each do |msg, sig| %>
 	<% if sig %>
 <%= "\# #{msg}" %>
 <%= "#{sig}" %>
@@ -59,7 +59,7 @@
 # Sensor 
 ##########################
 
-<% @sensor_sigs.each do |msg, sig| %>
+<% @sigs[:sensor_sigs].each do |msg, sig| %>
 	<% if sig %>
 <%= "\# #{msg}" %>
 <%= "#{sig}" %>

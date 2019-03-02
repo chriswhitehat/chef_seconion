@@ -251,7 +251,7 @@ end
 execute 'restart_mysql' do
   command 'pgrep -lf mysqld >/dev/null && service mysql restart'
   action :nothing
-  notifies :run, 'execute[nsm_restart]', :delayed
+  notifies :run, 'execute[so-restart]', :delayed
 end
 
 
@@ -403,7 +403,7 @@ end
 execute 'run_rule-update' do
   command "rule-update"
   action :nothing
-  notifies :run, 'execute[nsm_restart]', :delayed
+  notifies :run, 'execute[so-restart]', :delayed
 end
 
 
@@ -484,7 +484,7 @@ end
 file 'seconion_autocat' do
   path '/tmp/autocat.sql.backup'
   action :nothing
-  notifies :run, 'execute[nsm_restart]', :immediately
+  notifies :run, 'execute[so-restart]', :immediately
 end
 
 

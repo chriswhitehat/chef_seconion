@@ -50,7 +50,7 @@
 # Global
 ##########################
 
-<% @global_sigs.each do |sig, enabled| %>
+<% @sigs[:global_sigs].each do |sig, enabled| %>
 	<% if enabled %>
 <%= "#{sig}" %>
 	<% else %>
@@ -62,7 +62,7 @@
 # Regional
 ##########################
 
-<% @regional_sigs.each do |sig, enabled| %>
+<% @sigs[:regional_sigs].each do |sig, enabled| %>
 	<% if enabled %>
 <%= "#{sig}" %>
 	<% else %>
@@ -75,7 +75,7 @@
 # <%= node[:seconion][:sensor][:sensor_group] %>
 ##########################
 
-<% @sensor_group_sigs.each do |sig, enabled| %>
+<% @sigs[:sensor_group_sigs].each do |sig, enabled| %>
 	<% if enabled %>
 <%= "#{sig}" %>
 	<% else %>
@@ -87,7 +87,7 @@
 # Host
 ##########################
 
-<% @host_sigs.each do |sig, enabled| %>
+<% @sigs[:host_sigs].each do |sig, enabled| %>
 	<% if enabled %>
 <%= "#{sig}" %>
 	<% else %>
@@ -95,12 +95,11 @@
 	<% end %>
 <% end %>
 
-
 ##########################
 # Sensor 
 ##########################
 
-<% @sensor_sigs.each do |sig, enabled| %>
+<% @sigs[:sensor_sigs].each do |sig, enabled| %>
 	<% if enabled %>
 <%= "#{sig}" %>
 	<% else %>

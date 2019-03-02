@@ -190,6 +190,57 @@ default[:seconion][:sensor][:etgpl_rules_enabled] = false
 default[:seconion][:sensor][:local_nids_rule_tuning] = 'yes'
 
 
+# Log size limit (GB) for Elasticsearch logs
+LOG_SIZE_LIMIT="<%= node[:seconion][:log_size_limit] %>"
+
+# Docker options
+DOCKERNET="<%= node[:seconion][:dockernet] %>"
+DOCKER_BRIDGE="<%= node[:seconion][:docker_bridge] %>"
+
+# Elasticsearch options
+ELASTICSEARCH_ENABLED="<%= node[:seconion][:elasticsearch_enabled] %>"
+ELASTICSEARCH_HOST="<%= node[:seconion][:elasticsearch_host] %>"
+ELASTICSEARCH_PORT="<%= node[:seconion][:elasticsearch_port] %>"
+ELASTICSEARCH_PUBLISH_IP="<%= node[:seconion][:elasticsearch_publish_ip] %>"
+ELASTICSEARCH_OPTIONS="<%= node[:seconion][:elasticsearch_options] %>"
+
+# Logstash options
+LOGSTASH_ENABLED="<%= node[:seconion][:logstash_enabled] %>"
+LOGSTASH_HOST="<%= node[:seconion][:logstash_host] %>"
+LOGSTASH_PORT="<%= node[:seconion][:logstash_port] %>"
+LOGSTASH_PUBLISH_IP="<%= node[:seconion][:logstash_publish_ip] %>"
+LOGSTASH_INPUT_REDIS="<%= node[:seconion][:logstash_input_redis] %>"
+LOGSTASH_OUTPUT_REDIS="<%= node[:seconion][:logstash_output_redis] %>"
+LOGSTASH_OPTIONS="<%= node[:seconion][:logstash_options] %>"
+
+# Kibana options
+KIBANA_ENABLED="<%= node[:seconion][:kibana_enabled] %>"
+KIBANA_DARK_THEME="<%= node[:seconion][:kibana_dark_theme] %>"
+KIBANA_INDEX="<%= node[:seconion][:kibana_index] %>"
+KIBANA_VERSION="<%= node[:seconion][:kibana_version] %>"
+KIBANA_DEFAULTAPPID="<%= node[:seconion][:kibana_defaultappid] %>"
+KIBANA_OPTIONS="<%= node[:seconion][:kibana_options] %>"
+
+# ElastAlert options
+ELASTALERT_ENABLED="<%= node[:seconion][:elastalert_enabled] %>"
+ELASTALERT_INDEX="<%= node[:seconion][:elastalert_index] %>"
+ELASTALERT_OPTIONS="<%= node[:seconion][:elastalert_options] %>"
+
+# Curator options
+CURATOR_ENABLED="<%= node[:seconion][:curator_enabled] %>"
+CURATOR_CLOSE_DAYS="<%= node[:seconion][:curator_close_days] %>"
+CURATOR_OPTIONS="<%= node[:seconion][:curator_options] %>"
+
+# Freq_server default options
+FREQ_SERVER_ENABLED="<%= node[:seconion][:freq_server_enabled] %>"
+FREQ_SERVER_OPTIONS="<%= node[:seconion][:freq_server_options] %>"
+
+# Domain_stats options
+DOMAIN_STATS_ENABLED="<%= node[:seconion][:domain_stats_enabled] %>"
+DOMAIN_STATS_OPTIONS="<%= node[:seconion][:domain_stats_options] %>"
+
+
+
 
 ##########################
 # Misc
