@@ -4,11 +4,6 @@
 #
 
 
-include_recipe 'seconion::commands'
-
-include_recipe 'seconion::administrative'
-
-
 directories = [ '/nsm/',
                 '/etc/nsm/',
                 '/var/log/nsm' ]
@@ -30,3 +25,10 @@ directory '/root/.ssh' do
   mode '0700'
   action :create
 end
+
+include_recipe 'seconion::commands'
+
+include_recipe 'seconion::administrative'
+
+
+

@@ -100,7 +100,7 @@ default[:seconion][:default][:logstash_options] = ''
 # Kibana options
 default[:seconion][:default][:kibana_enabled] = 'yes'
 default[:seconion][:default][:kibana_dark_theme] = 'yes'
-default[:seconion][:default][:kibana_index] = .'kibana'
+default[:seconion][:default][:kibana_index] = 'kibana'
 default[:seconion][:default][:kibana_version] = '6.5.4'
 default[:seconion][:default][:kibana_defaultappid] = 'dashboard/94b52620-342a-11e7-9d52-4f090484f59e'
 default[:seconion][:default][:kibana_options] = ''

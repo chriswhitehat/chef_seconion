@@ -6,8 +6,12 @@
 
 include_recipe 'seconion::default'
 
-
 package ['securityonion-sensor', 'syslog-ng-core', 'numactl', 'wireshark-common']
+
+
+if node[:seconion][:sensor][:ids_engine_enabled]
+  include_recipe 'seconion::sensor_ids'
+  
 
 
 
