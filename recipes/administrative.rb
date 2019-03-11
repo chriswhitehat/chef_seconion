@@ -13,6 +13,17 @@ timezone 'UTC'
 
 
 ##########################
+# Interface
+##########################
+ifconfig node[:seconion][:mgmt][:ipv4] do
+  bootproto 'static'
+  device node[:seconion][:mgmt][:interface]
+  mask node[:seconion][:mgmt][:netmask]
+  gateway node[:seconion][:mgmt][:gateway]
+  only_if node[:seconion][:mgmt][:configure]
+end
+
+##########################
 # LTS/HWE Kernel and headers
 ##########################
 package "linux-generic-hwe-#{node[:platform_version]}" do
@@ -25,20 +36,47 @@ package 'linux_headers' do
   action :install
 end
 
-##########################
-# Security Onion Deps
-##########################
+package 'software-properties-common'
 
-# Standard sguil user
-user 'sguil' do
-  system true
+
+directory '/root/.ssh' do
+  owner 'root'
+  group 'root'
+  mode '0700'
+  action :create
 end
 
-package 'software-properties-common'
+
+##########################
+# Security Onion Repo
+##########################
 
 apt_repository 'SecurityOnion' do
   uri 'ppa:securityonion/stable'
   not_if do ::File.exists?('/etc/apt/sources.list.d/SecurityOnion.list') end
+end
+
+
+##########################
+# Basic nsm directories
+##########################
+
+user 'sguil' do
+  system true
+end
+
+directories = [ '/nsm/',
+                '/etc/nsm/',
+                '/var/log/nsm' ]
+
+
+directories.each do |path|
+  directory path do
+    owner 'sguil'
+    group 'sguil'
+    mode '0755'
+    action :create
+  end
 end
 
 
@@ -53,18 +91,42 @@ template '/etc/nsm/chef_notes' do
 end
 
 
-#############################
-# Backup Autocat
-#############################
+########################
+# Setup SOUP Automation
+########################
 
-sleep_time = Digest::MD5.hexdigest(node['fqdn'] || 'unknown-hostname').to_s.hex % 300
+if node[:seconion][:soup][:enabled]
+    soup_hour = node[:seconion][:soup][:hour]
+    soup_day = "*"
+    soup_month = "*"
+    soup_weekday = node[:seconion][:soup][:last_day_of_month]
+    soup_command = 'root [ $(date +"\%m") -ne $(date -d 7days +"\%m") ] && /usr/sbin/soup -y -l ' + node[:seconion][:soup][:log_path]
 
-template '/etc/cron.d/autocat-backup-pull' do
-  source 'autocat/autocat-backup-pull.erb'
-  owner 'root'
-  group 'root'
-  mode '0644'
-  variables(
-    :sleep_time => sleep_time
-  )
+  if node[:seconion][:sensor][:sniffing_interfaces]
+    node_type = 'sensor'
+    soup_min = node[:seconion][:soup][:sensor_delay]
+  else
+    node_type = 'server'
+    soup_min = "00"
+  end
+  
+  if node[:seconion][node_type][:soup][:cron_overwrite]
+    soup_min = node[:seconion][node_type][:soup][:cron][:minute]
+    soup_hour = node[:seconion][node_type][:soup][:cron][:hour]
+    soup_day = node[:seconion][node_type][:soup][:cron][:day_of_month]
+    soup_month = node[:seconion][node_type][:soup][:cron][:month_of_year]
+    soup_weekday = node[:seconion][node_type][:soup][:cron][:day_of_week]
+    soup_command = "root /usr/sbin/soup -y -l #{node[:seconion][:soup][:log_path]}"
+  end
+
+  cron_d 'seconion-soup' do
+    minute soup_min
+    hour soup_hour
+    day soup_day
+    month soup_month
+    weekday soup_weekday
+    command soup_command
+    shell '/bin/sh'
+    path '/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin'
+  end
 end
