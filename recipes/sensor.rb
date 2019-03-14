@@ -1130,6 +1130,55 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     })
   end
 
+  if node[:seconion][:sensor][:snort_override]
+    if node[:seconion][:sensor][:snort_override][:global]
+      global = node[:seconion][:sensor][:snort_override][:global]
+    else
+      global = {}
+    end
+    if node[:seconion][:sensor][:snort_override][:regional]
+      regional = node[:seconion][:sensor][:snort_override][:regional]
+    else
+      regional = {}
+    end
+    if node[:seconion][:sensor][:snort_override][node[:seconion][:sensor][:sensor_group]]
+      sensor_group = node[:seconion][:sensor][:snort_override][node[:seconion][:sensor][:sensor_group]]
+    else
+      sensor_group = {}
+    end
+    if node[:seconion][:sensor][:snort_override][node[:fqdn]]
+      host = node[:seconion][:sensor][:snort_override][node[:fqdn]]
+    else
+      host = {}
+    end
+    if node[:seconion][:sensor][:snort_override][sniff[:sensorname]]
+      sensor = node[:seconion][:sensor][:snort_override][sniff[:sensorname]]
+    else
+      sensor = {}
+    end
+  else
+    global = {}
+    regional = {}
+    sensor_group = {}
+    host = {}
+    sensor = {}
+  end
+
+  template "/etc/nsm/#{sniff[:sensorname]}/snort_override.conf" do
+    source "snort/snort_override.conf.erb"
+    owner 'sguil'
+    group 'sguil'
+    mode '0644'
+    variables({
+      :sniff => sniff,
+      :global_vars => global,
+      :regional_vars => regional,
+      :sensor_group_vars => sensor_group,
+      :host_vars => host,
+      :sensor_vars => sensor
+    })
+  end
+
   if node[:seconion][:sensor][:local_rules]
     if node[:seconion][:sensor][:local_rules][:global]
       global = node[:seconion][:sensor][:local_rules][:global]
