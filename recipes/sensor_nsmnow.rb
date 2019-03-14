@@ -1,4 +1,21 @@
 
+#############################
+# Backup Autocat
+#############################
+
+sleep_time = Digest::MD5.hexdigest(node['fqdn'] || 'unknown-hostname').to_s.hex % 300
+
+template '/etc/cron.d/autocat-backup-pull' do
+  source 'autocat/autocat-backup-pull.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  variables(
+    :sleep_time => sleep_time
+  )
+end
+
+
 ##########################
 # Replace existing rule-update
 ##########################
