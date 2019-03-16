@@ -117,3 +117,6 @@ PCAP_NUMA_TUNE="no"
 <% end %>
 
 PCAP_NUMA_CPU=<%= @sniff[:pcap_numa_cpu] %>
+
+# SURICATA_CAPTURE: pfring (legacy) or af-packet
+SURICATA_CAPTURE="<%= @sniff[:suricata_capture] %>"

@@ -113,6 +113,8 @@ default[:seconion][:sensor][:sniff][:snort_search_method] = 'ac'
 default[:seconion][:sensor][:sniff][:snort_unified2_size] = 128
 # bpf for snort/suricata
 default[:seconion][:sensor][:sniff][:ids_bpf] = ''
+# Suricata capture method, legacy pfing or af-packet
+default[:seconion][:sensor][:sniff][:suricata_capture] = 'pfring'
 # barnyard2 sends snort/suricata alerts to the snort agent and other destinations
 default[:seconion][:sensor][:sniff][:barnyard2_enabled] = true
 # enable the Bro IDS
@@ -159,6 +161,7 @@ template = {
   'snort_agent_enabled' => node[:seconion][:sensor][:sniff][:snort_agent_enabled],
   'snort_unified2_size' => node[:seconion][:sensor][:sniff][:snort_unified2_size],
   'ids_bpf' => node[:seconion][:sensor][:sniff][:ids_bpf],
+'suricata_capture' => node[:seconion][:sensor][:sniff][:suricata_capture],
   'barnyard2_enabled' => node[:seconion][:sensor][:sniff][:barnyard2_enabled],
   'bro_enabled' => node[:seconion][:sensor][:sniff][:bro_enabled],
   'bro_lb_procs' => node[:seconion][:sensor][:sniff][:bro_lb_procs],

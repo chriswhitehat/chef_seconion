@@ -405,21 +405,24 @@ do
 	HTTP_AGENT_ENABLED="yes"
 	PCAP_SIZE="150MiB"
 	PCAP_RING_SIZE="64MiB"
+	SURICATA_CAPTURE="pfring"
 
 	# add parameters to $SENSOR_CONF if they don't already exist
-	grep PCAP_ENABLED $SENSOR_CONF >/dev/null 		|| echo "PCAP_ENABLED=\"yes\""		>> $SENSOR_CONF
-	grep PCAP_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "PCAP_AGENT_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep SNORT_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "SNORT_AGENT_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep IDS_ENGINE_ENABLED $SENSOR_CONF >/dev/null	|| echo "IDS_ENGINE_ENABLED=\"yes\""	>> $SENSOR_CONF
-	grep BARNYARD2_ENABLED $SENSOR_CONF >/dev/null		|| echo "BARNYARD2_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep PRADS_ENABLED $SENSOR_CONF >/dev/null 		|| echo "PRADS_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep SANCP_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "SANCP_AGENT_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep PADS_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "PADS_AGENT_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep ARGUS_ENABLED $SENSOR_CONF >/dev/null 		|| echo "ARGUS_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep HTTP_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "HTTP_AGENT_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep PCAP_SIZE $SENSOR_CONF >/dev/null			|| echo "PCAP_SIZE=\"150MiB\""		>> $SENSOR_CONF
-	grep PCAP_RING_SIZE $SENSOR_CONF >/dev/null		|| echo "PCAP_RING_SIZE=\"64MiB\""	>> $SENSOR_CONF
-
+    grep PCAP_ENABLED $SENSOR_CONF >/dev/null 		|| echo "PCAP_ENABLED=\"yes\""					>> $SENSOR_CONF
+    grep PCAP_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "PCAP_AGENT_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep SNORT_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "SNORT_AGENT_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep IDS_ENGINE_ENABLED $SENSOR_CONF >/dev/null		|| echo "IDS_ENGINE_ENABLED=\"yes\""				>> $SENSOR_CONF
+    grep BARNYARD2_ENABLED $SENSOR_CONF >/dev/null		|| echo "BARNYARD2_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep PRADS_ENABLED $SENSOR_CONF >/dev/null 		|| echo "PRADS_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep SANCP_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "SANCP_AGENT_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep PADS_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "PADS_AGENT_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep ARGUS_ENABLED $SENSOR_CONF >/dev/null 		|| echo "ARGUS_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep HTTP_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "HTTP_AGENT_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep PCAP_SIZE $SENSOR_CONF >/dev/null			|| echo "PCAP_SIZE=\"150MiB\""					>> $SENSOR_CONF
+    grep PCAP_RING_SIZE $SENSOR_CONF >/dev/null		|| echo "PCAP_RING_SIZE=\"64MiB\""				>> $SENSOR_CONF
+    grep "# SURICATA_CAPTURE" $SENSOR_CONF >/dev/null	|| echo "# SURICATA_CAPTURE: pfring (legacy) or af-packet"	>> $SENSOR_CONF
+    grep "SURICATA_CAPTURE=" $SENSOR_CONF >/dev/null	|| echo "SURICATA_CAPTURE=\"pfring\""				>> $SENSOR_CONF
+	
 	# NSM scripts originally defaulted to running Snort with "-m 112" which results in 606 permissions
 	# on the unified2 output file.  Remove the "-m 112" so that Snort will set permissions to
 	# 600 correctly.
@@ -540,11 +543,18 @@ do
 	if [ "$ENGINE" == "suricata" ]; then
 		# copy IDS_LB_PROCS from sensor.conf
 		IDS_LB_PROCS=`grep IDS_LB_PROCS /etc/nsm/$SENSOR/sensor.conf | cut -d\= -f2`
-		sed -i "s|    threads: .*|    threads: $IDS_LB_PROCS|g" /etc/nsm/$SENSOR/suricata.yaml
+		# PF_RING
+		sed -i "s|    threads: .*[0-9]|    threads: $IDS_LB_PROCS|g" /etc/nsm/$SENSOR/suricata.yaml
+		# AF_PACKET
+		sed -i "s|    #threads: auto|    threads: $IDS_LB_PROCS|g" /etc/nsm/$SENSOR/suricata.yaml
 		# wipe stats.log
-		rm -f /nsm/sensor_data/$SENSOR/stats.log
+    	/usr/bin/truncate -s 0 /nsm/sensor_data/$SENSOR/stats.log
+    	# if stats.log didn't exist, then truncate would've created it with incorrect permissions
+    	# NSM: when (re)starting Suricata, make sure stats.log has proper ownership #1477
+    	# https://github.com/Security-Onion-Solutions/security-onion/issues/1477
+    	chown $SENSOR_USER:$SENSOR_GROUP /nsm/sensor_data/$SENSOR/stats.log
 		# start Suricata
-   		[ "$IDS_ENGINE_ENABLED" == "yes" ] && [ -z "$SKIP_SNORT_ALERT" ] && process_start "suricata" "--user $SENSOR_USER --group $SENSOR_GROUP -c /etc/nsm/$SENSOR/suricata.yaml --pfring=$SENSOR_INTERFACE_SHORT $BPF_OPTION -l $SENSOR_LOG_DIR " "$PROCESS_PID_DIR/$SENSOR/suricata.pid" "$PROCESS_LOG_DIR/$SENSOR/suricata.log" "suricata (alert data)"
+   		[ "$IDS_ENGINE_ENABLED" == "yes" ] && [ -z "$SKIP_SNORT_ALERT" ] && process_start "suricata" "--user $SENSOR_USER --group $SENSOR_GROUP -c /etc/nsm/$SENSOR/suricata.yaml --$SURICATA_CAPTURE=$SENSOR_INTERFACE_SHORT $BPF_OPTION -l $SENSOR_LOG_DIR " "$PROCESS_PID_DIR/$SENSOR/suricata.pid" "$PROCESS_LOG_DIR/$SENSOR/suricata.log" "suricata (alert data)"
 	else	
 		# Grab MTU for interface(s) and add 24 to snaplen for VLAN-tagging, etc
 		MTU=`cat /sys/class/net/$SENSOR_INTERFACE_SHORT/mtu`
@@ -621,24 +631,24 @@ do
 		done
 	fi
 
-        # start prads
-        # If the user supplies a BPF, use theirs; otherwise, exclude IPv6
-        if [ -s /etc/nsm/$SENSOR/bpf-prads.conf ]; then
-                BPF=`grep -v "^#" /etc/nsm/$SENSOR/bpf-prads.conf`
-        else
-                # By default, we need to exclude IPv6 traffic from prads since Sguil doesn't grok it (yet)
-                BPF="ip or (vlan and ip)"
-        fi
+    # start prads
+    # If the user supplies a BPF, use theirs; otherwise, exclude IPv6
+    if [ -s /etc/nsm/$SENSOR/bpf-prads.conf ]; then
+        BPF=`grep -v "^#" /etc/nsm/$SENSOR/bpf-prads.conf`
+    else
+        # By default, we need to exclude IPv6 traffic from prads since Sguil doesn't grok it (yet)
+        BPF="ip or (vlan and ip)"
+    fi
 	#[ "$PRADS_ENABLED" == "yes" ] && [ -z "$SKIP_PRADS" ] && process_start "prads" "-i $SENSOR_INTERFACE_SHORT -c /etc/nsm/$SENSOR/prads.conf -u $SENSOR_USER -g $SENSOR_GROUP -L /nsm/sensor_data/$SENSOR/sancp/ -f /nsm/sensor_data/$SENSOR/pads.fifo $PADS_OPTIONS -b \"$BPF\"" "$PROCESS_PID_DIR/$SENSOR/prads.pid" "$PROCESS_LOG_DIR/$SENSOR/prads.log" "prads (sessions/assets)"
-        [ "$PRADS_ENABLED" == "yes" ] && [ -z "$SKIP_PRADS" ] && [ "$PADS_AGENT_ENABLED" == "yes" ] && [ "$SANCP_AGENT_ENABLED" == "yes" ] && process_start "prads" "-i $SENSOR_INTERFACE_SHORT -c /etc/nsm/$SENSOR/prads.conf -u $SENSOR_USER -g $SENSOR_GROUP -L /nsm/sensor_data/$SENSOR/sancp/ -f /nsm/sensor_data/$SENSOR/pads.fifo $PADS_OPTIONS -b \"$BPF\"" "$PROCESS_PID_DIR/$SENSOR/prads.pid" "$PROCESS_LOG_DIR/$SENSOR/prads.log" "prads (sessions/assets)"
-        [ "$PRADS_ENABLED" == "yes" ] && [ -z "$SKIP_PRADS" ] && [ "$PADS_AGENT_ENABLED" == "no" ]  && [ "$SANCP_AGENT_ENABLED" == "yes" ] && process_start "prads" "-i $SENSOR_INTERFACE_SHORT -c /etc/nsm/$SENSOR/prads.conf -u $SENSOR_USER -g $SENSOR_GROUP -L /nsm/sensor_data/$SENSOR/sancp/ -b \"$BPF\"" "$PROCESS_PID_DIR/$SENSOR/prads.pid" "$PROCESS_LOG_DIR/$SENSOR/prads.log" "prads (sessions/assets)"
-        [ "$PRADS_ENABLED" == "yes" ] && [ -z "$SKIP_PRADS" ] && [ "$PADS_AGENT_ENABLED" == "yes" ] && [ "$SANCP_AGENT_ENABLED" == "no" ]  && process_start "prads" "-i $SENSOR_INTERFACE_SHORT -c /etc/nsm/$SENSOR/prads.conf -u $SENSOR_USER -g $SENSOR_GROUP -f /nsm/sensor_data/$SENSOR/pads.fifo $PADS_OPTIONS -b \"$BPF\"" "$PROCESS_PID_DIR/$SENSOR/prads.pid" "$PROCESS_LOG_DIR/$SENSOR/prads.log" "prads (sessions/assets)"
-        [ "$PRADS_ENABLED" == "yes" ] && [ -z "$SKIP_PRADS" ] && [ "$PADS_AGENT_ENABLED" == "no" ]  && [ "$SANCP_AGENT_ENABLED" == "no" ]  && echo_error_msg 1 "Warning: PRADS is enabled but will not start because both SANCP AGENT and PADS AGENT are disabled!"
+    [ "$PRADS_ENABLED" == "yes" ] && [ -z "$SKIP_PRADS" ] && [ "$PADS_AGENT_ENABLED" == "yes" ] && [ "$SANCP_AGENT_ENABLED" == "yes" ] && process_start "prads" "-i $SENSOR_INTERFACE_SHORT -c /etc/nsm/$SENSOR/prads.conf -u $SENSOR_USER -g $SENSOR_GROUP -L /nsm/sensor_data/$SENSOR/sancp/ -f /nsm/sensor_data/$SENSOR/pads.fifo $PADS_OPTIONS -b \"$BPF\"" "$PROCESS_PID_DIR/$SENSOR/prads.pid" "$PROCESS_LOG_DIR/$SENSOR/prads.log" "prads (sessions/assets)"
+    [ "$PRADS_ENABLED" == "yes" ] && [ -z "$SKIP_PRADS" ] && [ "$PADS_AGENT_ENABLED" == "no" ]  && [ "$SANCP_AGENT_ENABLED" == "yes" ] && process_start "prads" "-i $SENSOR_INTERFACE_SHORT -c /etc/nsm/$SENSOR/prads.conf -u $SENSOR_USER -g $SENSOR_GROUP -L /nsm/sensor_data/$SENSOR/sancp/ -b \"$BPF\"" "$PROCESS_PID_DIR/$SENSOR/prads.pid" "$PROCESS_LOG_DIR/$SENSOR/prads.log" "prads (sessions/assets)"
+    [ "$PRADS_ENABLED" == "yes" ] && [ -z "$SKIP_PRADS" ] && [ "$PADS_AGENT_ENABLED" == "yes" ] && [ "$SANCP_AGENT_ENABLED" == "no" ]  && process_start "prads" "-i $SENSOR_INTERFACE_SHORT -c /etc/nsm/$SENSOR/prads.conf -u $SENSOR_USER -g $SENSOR_GROUP -f /nsm/sensor_data/$SENSOR/pads.fifo $PADS_OPTIONS -b \"$BPF\"" "$PROCESS_PID_DIR/$SENSOR/prads.pid" "$PROCESS_LOG_DIR/$SENSOR/prads.log" "prads (sessions/assets)"
+    [ "$PRADS_ENABLED" == "yes" ] && [ -z "$SKIP_PRADS" ] && [ "$PADS_AGENT_ENABLED" == "no" ]  && [ "$SANCP_AGENT_ENABLED" == "no" ]  && echo_error_msg 1 "Warning: PRADS is enabled but will not start because both SANCP AGENT and PADS AGENT are disabled!"
 
 	# start pads_agent
-        if [ "$PADS_AGENT_ENABLED" == "yes" ] && [ -z "$SKIP_PADS_AGENT" ]; then
-		chown $SENSOR_USER:$SENSOR_GROUP $SENSOR_LOG_DIR/pads.fifo
-		process_start "/usr/bin/pads_agent.tcl" "-c $PADS_AGENT_CONFIG" "$PROCESS_PID_DIR/$SENSOR/pads_agent.pid" "$PROCESS_LOG_DIR/$SENSOR/pads_agent.log" "pads_agent (sguil)" "$SENSOR_USER"
+    if [ "$PADS_AGENT_ENABLED" == "yes" ] && [ -z "$SKIP_PADS_AGENT" ]; then
+	chown $SENSOR_USER:$SENSOR_GROUP $SENSOR_LOG_DIR/pads.fifo
+	process_start "/usr/bin/pads_agent.tcl" "-c $PADS_AGENT_CONFIG" "$PROCESS_PID_DIR/$SENSOR/pads_agent.pid" "$PROCESS_LOG_DIR/$SENSOR/pads_agent.log" "pads_agent (sguil)" "$SENSOR_USER"
 	fi
 
 	# start sancp_agent

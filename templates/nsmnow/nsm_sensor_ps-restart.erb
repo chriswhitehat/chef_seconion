@@ -410,33 +410,37 @@ do
 	HTTP_AGENT_ENABLED="yes"
 	PCAP_SIZE="150MiB"
 	PCAP_RING_SIZE="64MiB"
+	SURICATA_CAPTURE="pfring"
 
 	# add parameters to $SENSOR_CONF if they don't already exist
-	grep PCAP_ENABLED $SENSOR_CONF >/dev/null 		|| echo "PCAP_ENABLED=\"yes\""		>> $SENSOR_CONF
-	grep PCAP_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "PCAP_AGENT_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep SNORT_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "SNORT_AGENT_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep IDS_ENGINE_ENABLED $SENSOR_CONF >/dev/null	|| echo "IDS_ENGINE_ENABLED=\"yes\""	>> $SENSOR_CONF
-	grep BARNYARD2_ENABLED $SENSOR_CONF >/dev/null		|| echo "BARNYARD2_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep PRADS_ENABLED $SENSOR_CONF >/dev/null 		|| echo "PRADS_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep SANCP_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "SANCP_AGENT_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep PADS_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "PADS_AGENT_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep ARGUS_ENABLED $SENSOR_CONF >/dev/null 		|| echo "ARGUS_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep HTTP_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "HTTP_AGENT_ENABLED=\"yes\"" 	>> $SENSOR_CONF
-	grep PCAP_SIZE $SENSOR_CONF >/dev/null			|| echo "PCAP_SIZE=\"150MiB\""		>> $SENSOR_CONF
-	grep PCAP_RING_SIZE $SENSOR_CONF >/dev/null		|| echo "PCAP_RING_SIZE=\"64MiB\""	>> $SENSOR_CONF				
-        # NSM scripts originally defaulted to running Snort with "-m 112" which results in 606 permissions
-        # on the unified2 output file.  Remove the "-m 112" so that Snort will set permissions to
-        # 600 correctly.
-        sed -i 's|^SNORT_OPTIONS="-m 112|SNORT_OPTIONS="|g' $SENSOR_CONF
+    grep PCAP_ENABLED $SENSOR_CONF >/dev/null 		|| echo "PCAP_ENABLED=\"yes\""					>> $SENSOR_CONF
+    grep PCAP_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "PCAP_AGENT_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep SNORT_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "SNORT_AGENT_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep IDS_ENGINE_ENABLED $SENSOR_CONF >/dev/null		|| echo "IDS_ENGINE_ENABLED=\"yes\""				>> $SENSOR_CONF
+    grep BARNYARD2_ENABLED $SENSOR_CONF >/dev/null		|| echo "BARNYARD2_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep PRADS_ENABLED $SENSOR_CONF >/dev/null 		|| echo "PRADS_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep SANCP_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "SANCP_AGENT_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep PADS_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "PADS_AGENT_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep ARGUS_ENABLED $SENSOR_CONF >/dev/null 		|| echo "ARGUS_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep HTTP_AGENT_ENABLED $SENSOR_CONF >/dev/null 	|| echo "HTTP_AGENT_ENABLED=\"yes\"" 				>> $SENSOR_CONF
+    grep PCAP_SIZE $SENSOR_CONF >/dev/null			|| echo "PCAP_SIZE=\"150MiB\""					>> $SENSOR_CONF
+    grep PCAP_RING_SIZE $SENSOR_CONF >/dev/null		|| echo "PCAP_RING_SIZE=\"64MiB\""				>> $SENSOR_CONF
+    grep "# SURICATA_CAPTURE" $SENSOR_CONF >/dev/null	|| echo "# SURICATA_CAPTURE: pfring (legacy) or af-packet"	>> $SENSOR_CONF
+    grep "SURICATA_CAPTURE=" $SENSOR_CONF >/dev/null	|| echo "SURICATA_CAPTURE=\"pfring\""				>> $SENSOR_CONF
+    	
+    # NSM scripts originally defaulted to running Snort with "-m 112" which results in 606 permissions
+    # on the unified2 output file.  Remove the "-m 112" so that Snort will set permissions to
+    # 600 correctly.
+    sed -i 's|^SNORT_OPTIONS="-m 112|SNORT_OPTIONS="|g' $SENSOR_CONF
 
 	# load in sensor specific details
 	. $SENSOR_CONF
 
-        # create sensor log directory if it doesn't exist
-        mkdir -p $PROCESS_LOG_DIR/$SENSOR
+    # create sensor log directory if it doesn't exist
+    mkdir -p $PROCESS_LOG_DIR/$SENSOR
 
-        # fix permissions
-        chown -R $SENSOR_USER:$SENSOR_GROUP $PROCESS_LOG_DIR/$SENSOR
+    # fix permissions
+    chown -R $SENSOR_USER:$SENSOR_GROUP $PROCESS_LOG_DIR/$SENSOR
 
 	# ensure interfaces are up if autoconfigure enabled
 	[ "$SENSOR_INTERFACE_AUTO" == "Y" ] && interface_up $SENSOR_INTERFACE
@@ -528,14 +532,21 @@ do
 	BPF_IDS=/etc/nsm/$SENSOR/bpf-ids.conf
 	[ -s $BPF_IDS ] && BPF_OPTION="-F $BPF_IDS"
 	# Suricata or Snort?
-        if [ "$ENGINE" == "suricata" ]; then
+    if [ "$ENGINE" == "suricata" ]; then
 		# copy IDS_LB_PROCS from sensor.conf
 		IDS_LB_PROCS=`grep IDS_LB_PROCS /etc/nsm/$SENSOR/sensor.conf | cut -d\= -f2`
-                sed -i "s|    threads: .*|    threads: $IDS_LB_PROCS|g" /etc/nsm/$SENSOR/suricata.yaml
+		# PF_RING
+    	sed -i "s|    threads: .*[0-9]|    threads: $IDS_LB_PROCS|g" /etc/nsm/$SENSOR/suricata.yaml
+    	# AF_PACKET
+    	sed -i "s|    #threads: auto|    threads: $IDS_LB_PROCS|g" /etc/nsm/$SENSOR/suricata.yaml
 		# wipe stats.log if doing a full restart of Suricata, but not if we're just doing the watchdog check for stale processes
-                [ "$ACTION" == "process_restart" ] && rm -f /nsm/sensor_data/$SENSOR/stats.log
+		[ "$ACTION" == "process_restart" ] && /usr/bin/truncate -s 0 /nsm/sensor_data/$SENSOR/stats.log
+		# if stats.log didn't exist, then truncate would've created it with incorrect permissions
+		# NSM: when (re)starting Suricata, make sure stats.log has proper ownership #1477
+		# https://github.com/Security-Onion-Solutions/security-onion/issues/1477
+		chown $SENSOR_USER:$SENSOR_GROUP /nsm/sensor_data/$SENSOR/stats.log
 		# start Suricata
-                [ "$IDS_ENGINE_ENABLED" == "yes" ] && [ -z "$SKIP_SNORT_ALERT" ] && $ACTION "suricata" "--user $SENSOR_USER --group $SENSOR_GROUP -c /etc/nsm/$SENSOR/suricata.yaml --pfring=$SENSOR_INTERFACE_SHORT $BPF_OPTION -l $SENSOR_LOG_DIR " "$PROCESS_PID_DIR/$SENSOR/suricata.pid" "$PROCESS_LOG_DIR/$SENSOR/suricata.log" "suricata (alert data)"
+        [ "$IDS_ENGINE_ENABLED" == "yes" ] && [ -z "$SKIP_SNORT_ALERT" ] && $ACTION "suricata" "--user $SENSOR_USER --group $SENSOR_GROUP -c /etc/nsm/$SENSOR/suricata.yaml --$SURICATA_CAPTURE=$SENSOR_INTERFACE_SHORT $BPF_OPTION -l $SENSOR_LOG_DIR " "$PROCESS_PID_DIR/$SENSOR/suricata.pid" "$PROCESS_LOG_DIR/$SENSOR/suricata.log" "suricata (alert data)"
 	else
 		# Grab MTU for interface(s) and add 24 to snaplen for VLAN-tagging, etc
 		MTU=`cat /sys/class/net/$SENSOR_INTERFACE_SHORT/mtu`
