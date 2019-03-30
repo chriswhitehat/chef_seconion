@@ -18,7 +18,7 @@ directories = ["/home/#{node[:seconion][:ssh_username]}",
                "/home/#{node[:seconion][:ssh_username]}/.ssh/" ]
 
 directories.each do |path| 
-  directory do
+  directory path do
     owner node[:seconion][:ssh_username]
     group node[:seconion][:ssh_username]
     mode '0755'
