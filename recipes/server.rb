@@ -166,17 +166,6 @@ if File.exists?('/etc/nsm/active_sensors')
 end
 
 
-template '/etc/nsm/pulledpork/pulledpork.conf' do
-  source 'server/pulledpork.conf.erb'
-  mode '0644'
-  owner 'sguil'
-  group 'sguil'
-  variables(
-    :rule_urls => rule_urls
-  )
-  notifies :run, 'execute[run_rule-update]', :delayed
-end
-
 template "/home/#{node[:seconion][:ssh_username]}/.ssh/authorized_keys" do
   source 'server/authorized_keys.erb'
   mode '0640'
