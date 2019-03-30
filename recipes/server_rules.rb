@@ -46,3 +46,14 @@ sorted_sensors.each do |sensor|
   end
 end
 
+
+template '/etc/nsm/pulledpork/pulledpork.conf' do
+  source 'server/pulledpork.conf.erb'
+  mode '0644'
+  owner 'sguil'
+  group 'sguil'
+  variables(
+    :rule_urls => rule_urls
+  )
+  notifies :run, 'execute[run_rule-update]', :delayed
+end
