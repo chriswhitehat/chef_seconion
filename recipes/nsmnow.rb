@@ -143,3 +143,4 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       action :create
     end
   end
+end
