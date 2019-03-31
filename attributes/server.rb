@@ -14,7 +14,7 @@
 # Which network interface should be the management interface?
 # The management interface has an IP address and is NOT used for sniffing.
 # We recommend that you always make this eth0 if possible for consistency.
-default[:seconion][:server][:mgmt][:configure] = true
+default[:seconion][:server][:mgmt][:configure] = false
 default[:seconion][:server][:mgmt][:interface] = 'eth0'
 default[:seconion][:server][:mgmt][:ipv4] = '127.0.0.1'
 default[:seconion][:server][:mgmt][:netmask] = '255.255.255.0'
