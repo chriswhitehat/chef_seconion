@@ -22,14 +22,15 @@ end
 # Collect sensor pub keys
 sensor_ssh_keys = ''
 
-node[:seconion][:server][:sorted_sensors].each do |sensor|
+if node[:seconion][:server][:sorted_sensors]
+  node[:seconion][:server][:sorted_sensors].each do |sensor|
 
-  if sensor[:seconion][:so_ssh_pub]
-    sensor_ssh_keys << sensor[:seconion][:so_ssh_pub]  
+    if sensor[:seconion][:so_ssh_pub]
+      sensor_ssh_keys << sensor[:seconion][:so_ssh_pub]  
+    end
+
   end
-
 end
-
 
 template "/home/#{node[:seconion][:ssh_username]}/.ssh/authorized_keys" do
   source 'server/authorized_keys.erb'
