@@ -1,22 +1,12 @@
+#
+# Cookbook Name:: seconion
+# Recipe:: server_rules
+#
+
 # Collect sensor rule urls
 rule_urls = ''
 
-# Collect sensor pub keys
-sensor_ssh_keys = ''
-
-# Collect sensornames
-current_sensors = []
-
-search_server = "recipes:seconion\\:\\:sensor AND seconion_server_servername:\"#{node[:seconion][:server][:servername]}\""
-sensors = search(:node, search_server)
-
-sorted_sensors = sensors.sort_by!{ |n| n[:fqdn] }
-#sorted_sensors = sensors
-
-sorted_sensors.each do |sensor|
-  if sensor[:seconion][:so_ssh_pub]
-    sensor_ssh_keys << sensor[:seconion][:so_ssh_pub]  
-  end
+node[:seconion][:server][:sorted_sensors].each do |sensor|
 
   if sensor[:seconion][:sensor][:rule_urls]
     sensor[:seconion][:sensor][:rule_urls].each do |rule_url|
@@ -25,8 +15,6 @@ sorted_sensors.each do |sensor|
   end
 
   sensor[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
-
-    current_sensors << sniff[:sensorname]
 
     symlink = "/nsm/server_data/#{node[:seconion][:server][:sguil_server_name]}/rules/#{sniff[:sensorname]}" 
     execute "base_symlink_rules_#{sniff[:sensorname]}" do

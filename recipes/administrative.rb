@@ -67,6 +67,7 @@ end
 
 directories = [ '/nsm/',
                 '/etc/nsm/',
+                '/etc/nsm/backup',
                 '/var/log/nsm' ]
 
 
