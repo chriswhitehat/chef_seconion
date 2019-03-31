@@ -7,11 +7,13 @@
 # Collect sensornames
 current_sensors = []
 
-node[:seconion][:server][:sorted_sensors].each do |sensor|
+if node[:seconion][:server][:sorted_sensors]
+  node[:seconion][:server][:sorted_sensors].each do |sensor|
 
-  sensor[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
+    sensor[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
-    current_sensors << sniff[:sensorname]
+      current_sensors << sniff[:sensorname]
+    end
   end
 end
 
