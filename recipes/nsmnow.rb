@@ -3,7 +3,7 @@
 # Replace existing rule-update
 ##########################
 template '/usr/sbin/rule-update' do
-  source '/rule-update/rule-update.erb'
+  source 'nsmnow/rule-update.erb'
   mode '0755'
   owner 'root'
   group 'root'
@@ -30,7 +30,7 @@ end
 # Add nsm_sensor_ps-hard-restart
 ##########################
 template '/usr/sbin/nsm_sensor_ps-hard-restart' do
-  source '/nsmnow/nsm_sensor_ps-hard-restart.erb'
+  source 'nsmnow/nsm_sensor_ps-hard-restart.erb'
   mode '0755'
   owner 'root'
   group 'root'
@@ -41,19 +41,11 @@ end
 # Add nsm_sensor_ps-hard-restart
 ##########################
 template '/usr/sbin/nsm_sensor_ps-watch-snort_agent' do
-  source '/nsmnow/nsm_sensor_ps-watch-snort_agent.erb'
+  source 'nsmnow/nsm_sensor_ps-watch-snort_agent.erb'
   mode '0755'
   owner 'root'
   group 'root'
 end
-
-template '/etc/cron.d/watch-snort-agent' do
-  source '/nsmnow/cron_watch-snort-agent.erb'
-  mode '0644'
-  owner 'root'
-  group 'root'
-end
-
 
 
 ##########################
@@ -61,19 +53,8 @@ end
 # restart
 ##########################
 template '/usr/sbin/rule-update-hard' do
-  source '/rule-update/rule-update-hard.erb'
+  source 'nsmnow/rule-update-hard.erb'
   mode '0755'
-  owner 'root'
-  group 'root'
-end
-
-
-##########################
-# Replace rule-update cron
-##########################
-template '/etc/cron.d/rule-update' do
-  source '/rule-update/cron_rule-update.erb'
-  mode '0644'
   owner 'root'
   group 'root'
 end
@@ -94,7 +75,7 @@ end
 # Add nsm_sensor_ps-rolling-restart
 ##########################
 template '/usr/sbin/nsm_sensor_ps-rolling-restart' do
-  source '/nsmnow/nsm_sensor_ps-rolling-restart.erb'
+  source 'nsmnow/nsm_sensor_ps-rolling-restart.erb'
   mode '0755'
   owner 'root'
   group 'root'
@@ -123,24 +104,27 @@ end
 
 sensortab = ""
 
-node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
+if node[:seconion][:sensor][:sniffing_interfaces]
 
-  sensortab += "#{sniff[:sensorname]}\t1\t#{barnyard_port}\t#{sniff[:interface]}\n"
+  node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
 
-  # List of directories to create
-  directories = ["/var/log/nsm/#{sniff[:sensorname]}",
-                  "/etc/nsm/pulledpork/#{sniff[:sensorname]}",
-                  "/etc/nsm/rules/#{sniff[:sensorname]}",
-                  "/etc/nsm/rules/#{sniff[:sensorname]}/backup",
-                  "/usr/local/lib/snort_dynamicrules/#{sniff[:sensorname]}",
-                  "/usr/local/lib/snort_dynamicrules_backup/#{sniff[:sensorname]}"]
+    sensortab += "#{sniff[:sensorname]}\t1\t#{barnyard_port}\t#{sniff[:interface]}\n"
 
-  directories.each do |path|
-    directory path do
-      owner 'sguil'
-      group 'sguil'
-      mode '0755'
-      action :create
+    # List of directories to create
+    directories = ["/var/log/nsm/#{sniff[:sensorname]}",
+                    "/etc/nsm/pulledpork/#{sniff[:sensorname]}",
+                    "/etc/nsm/rules/#{sniff[:sensorname]}",
+                    "/etc/nsm/rules/#{sniff[:sensorname]}/backup",
+                    "/usr/local/lib/snort_dynamicrules/#{sniff[:sensorname]}",
+                    "/usr/local/lib/snort_dynamicrules_backup/#{sniff[:sensorname]}"]
+
+    directories.each do |path|
+      directory path do
+        owner 'sguil'
+        group 'sguil'
+        mode '0755'
+        action :create
+      end
     end
   end
 end
