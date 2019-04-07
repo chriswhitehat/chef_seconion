@@ -14,13 +14,13 @@
 # Which network interface should be the management interface?
 # The management interface has an IP address and is NOT used for sniffing.
 # We recommend that you always make this eth0 if possible for consistency.
-default[:seconion][:server][:mgmt][:configure] = false
-default[:seconion][:server][:mgmt][:interface] = 'eth0'
-default[:seconion][:server][:mgmt][:ipv4] = '127.0.0.1'
-default[:seconion][:server][:mgmt][:netmask] = '255.255.255.0'
-default[:seconion][:server][:mgmt][:gateway] = '127.0.0.1'
-default[:seconion][:server][:mgmt][:nameserver] = '127.0.0.1'
-default[:seconion][:server][:mgmt][:domain] = 'example.com'
+default[:seconion][:mgmt][:configure] = false
+default[:seconion][:mgmt][:interface] = 'eth0'
+default[:seconion][:mgmt][:ipv4] = '127.0.0.1'
+default[:seconion][:mgmt][:netmask] = '255.255.255.0'
+default[:seconion][:mgmt][:gateway] = '127.0.0.1'
+default[:seconion][:mgmt][:nameserver] = '127.0.0.1'
+default[:seconion][:mgmt][:domain] = 'example.com'
 
 
 # This should be the name/IP of the separate Sguil server:
