@@ -15,12 +15,13 @@ timezone 'UTC'
 ##########################
 # Interface
 ##########################
-ifconfig node[:seconion][:mgmt][:ipv4] do
-  bootproto 'static'
-  device node[:seconion][:mgmt][:interface]
-  mask node[:seconion][:mgmt][:netmask]
-  gateway node[:seconion][:mgmt][:gateway]
-  only_if node[:seconion][:mgmt][:configure]
+if node[:seconion][:mgmt][:configure]
+  ifconfig node[:seconion][:mgmt][:ipv4] do
+    bootproto 'static'
+    device node[:seconion][:mgmt][:interface]
+    mask node[:seconion][:mgmt][:netmask]
+    gateway node[:seconion][:mgmt][:gateway]
+  end
 end
 
 ##########################
