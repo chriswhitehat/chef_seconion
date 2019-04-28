@@ -9,6 +9,6 @@ SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 # Generage Bro Netstats for seconion health monitoring
-*/5 * * * * root /opt/bro/bin/broctl netstats >> /var/log/nsm/bro_stats.log
+*/5 * * * * root /usr/bin/python2 /opt/bro/bin/broctl netstats >> /var/log/nsm/bro_stats.log
 
 
