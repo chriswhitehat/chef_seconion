@@ -8,7 +8,7 @@ require 'digest/md5'
 include_recipe 'seconion::default'
 
 
-package ['securityonion-sensor', 'syslog-ng-core', 'numactl', 'wireshark-common']
+package ['securityonion-sensor', 'syslog-ng-core', 'numactl', 'wireshark-common', 'python-ipaddress']
 
 
 #############################
