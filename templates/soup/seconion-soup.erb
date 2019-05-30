@@ -7,6 +7,9 @@
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
+# On boot start NSM
+@reboot   root   /usr/sbin/so-start > /dev/null 2>&1
+
 <% if @server %>
 00 <%= node[:seconion][:soup][:hour] %> * * <%= node[:seconion][:soup][:last_day_of_month] %> root [ $(date +"\%m") -ne $(date -d 7days +"\%m") ] && /usr/sbin/soup -y -l <%= node[:seconion][:soup][:log_path] %>
 <% else %>
