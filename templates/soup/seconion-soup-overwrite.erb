@@ -7,6 +7,9 @@
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
+# On reboot ensure NSM is started
+@reboot	root /usr/sbin/so-start > /dev/null 2>&1
+
 <% if @server %>
 <%= node[:seconion][:server][:soup][:cron][:minute] %> <%= node[:seconion][:server][:soup][:cron][:hour] %> <%= node[:seconion][:server][:soup][:cron][:day_of_month] %> <%= node[:seconion][:server][:soup][:cron][:month_of_year] %> <%= node[:seconion][:server][:soup][:cron][:day_of_week] %> root /usr/sbin/soup -y -l <%= node[:seconion][:soup][:log_path] %>
 <% else %>
