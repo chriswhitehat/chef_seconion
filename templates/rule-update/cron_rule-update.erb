@@ -8,5 +8,7 @@
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-01 <%= node[:seconion][:sensor][:restart_hour] %> * * *   root   /bin/sleep <%= node[:seconion][:sensor][:restart_splay] %>; /usr/sbin/rule-update-hard > /dev/null 2>&1
+# On boot run rule update and start NSM
+@reboot   root   /usr/sbin/rule-update-hard > /dev/null 2>&1
 
+01 <%= node[:seconion][:sensor][:restart_hour] %> * * *   root   /bin/sleep <%= node[:seconion][:sensor][:restart_splay] %>; /usr/sbin/rule-update-hard > /dev/null 2>&1
