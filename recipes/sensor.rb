@@ -199,6 +199,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/ja3/',
                '/opt/bro/share/bro/pcr/',
                '/opt/bro/share/bro/peers/',
+               '/opt/bro/share/bro/bzar/',
                '/var/log/nsm',
                '/usr/local/lib/snort_dynamicrules',
                '/usr/local/lib/snort_dynamicrules_backup',
@@ -506,6 +507,64 @@ template '/opt/bro/share/bro/ja3/intel_ja3.bro' do
    mode '0644'
    notifies :run, 'execute[deploy_bro]', :delayed
 end
+
+
+template '/opt/bro/share/bro/bzar/__load__.bro' do
+  source '/bro/bzar/__load__.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
+template '/opt/bro/share/bro/bzar/bzar_dce-rpc.bro' do
+  source '/bro/bzar/bzar_dce-rpc.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
+template '/opt/bro/share/bro/bzar/bzar_dce-rpc_consts.bro' do
+  source '/bro/bzar/bzar_dce-rpc_consts.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
+template '/opt/bro/share/bro/bzar/bzar_files.bro' do
+  source '/bro/bzar/bzar_files.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
+template '/opt/bro/share/bro/bzar/bzar_smb.bro' do
+  source '/bro/bzar/bzar_smb.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
+template '/opt/bro/share/bro/bzar/dpd.sig' do
+  source '/bro/bzar/dpd.sig.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
+template '/opt/bro/share/bro/bzar/main.bro' do
+  source '/bro/bzar/main.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
 
 
 # pcr: Producer Consumer Ratio
