@@ -121,11 +121,28 @@ if [ ! -f $SSH_CONF ]; then
     SNORT_VERSION_MAJOR="$(snort --version 2>&1 >/dev/null | egrep -o "Version (.\..\..)" | cut -d " " -f 2)"
     SNORT_VERSION_SHORT="$(snort --version 2>&1 >/dev/null | egrep -o "Version (\S+)" | cut -d " " -f 2 | tr -d ".")"
     
+    #######################
+    # HACK, be careful of the snort versions, manually appending a 0 to the snort version due to snort version truncation, I blame Cisco.
+    #######################
+
+    <% if node[:seconion][:pulledpork_proxy] %>
+    <% if node[:seconion][:sensor][:vrt_rules_enabled] %>
+    wget -q "https://www.snort.org/reg-rules/snortrules-snapshot-${SNORT_VERSION_SHORT}0.tar.gz/<%=node[:seconion][:vrt_oinkcode]%>" -O /tmp/snortrules-snapshot-${SNORT_VERSION_SHORT}0.tar.gz
+    <% end %>
+    <% if node[:seconion][:sensor][:vrt_rules_enabled] %>
+    wget -q "https://rules.emergingthreatspro.com/<%=node[:seconion][:etpro_oinkcode]%>/snort-$SNORT_VERSION_MAJOR/etpro.rules.tar.gz" -O /tmp/etpro.rules.tar.gz
+    <% end %>
+    <% end %>
+
     # Go get rules from Internet.
     echo "Running PulledPork."
+    <% if node[:seconion][:pulledpork_proxy] %>
+    /usr/bin/pulledpork.pl -P $PP_OPTIONS -n -c /etc/nsm/pulledpork/pulledpork.conf |
+            grep -v "normalizations disabled because not inline" |grep -v "^$"
+    <% else %>
     /usr/bin/pulledpork.pl -P $PP_OPTIONS -c /etc/nsm/pulledpork/pulledpork.conf |
             grep -v "normalizations disabled because not inline" |grep -v "^$"
-
+    <% end %>
 else
     # This box is a sensor.  Go get rules from master.
 
