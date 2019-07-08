@@ -45,12 +45,14 @@ sensors = search(:node, search_server)
 
 sorted_sensors = []
 
-sensors.sort_by!{ |n| n[:fqdn] }.each do |sensor|
-  sorted_sensors << sensor[:fqdn]
+if sensors
+  sensors.sort_by!{ |n| n[:hostname] }.each do |sensor|
+    sorted_sensors << sensor[:hostname]
+  end
 end
 
-if sorted_sensors and sorted_sensors.index(node[:fqdn])
-  node.normal[:seconion][:sensor][:order] = sorted_sensors.index(node[:fqdn]) + 1
+if sorted_sensors and sorted_sensors.index(node[:hostname])
+  node.normal[:seconion][:sensor][:order] = sorted_sensors.index(node[:hostname]) + 1
 else
   node.normal[:seconion][:sensor][:order] = 1
 end
@@ -198,6 +200,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/hassh/',
                '/opt/bro/share/bro/pcr/',
                '/opt/bro/share/bro/peers/',
+               '/opt/bro/share/bro/bzar/',
                '/var/log/nsm',
                '/usr/local/lib/snort_dynamicrules',
                '/usr/local/lib/snort_dynamicrules_backup',
@@ -522,6 +525,64 @@ template '/opt/bro/share/bro/hassh/hassh.bro' do
    mode '0644'
    notifies :run, 'execute[deploy_bro]', :delayed
 end
+
+template '/opt/bro/share/bro/bzar/__load__.bro' do
+  source '/bro/bzar/__load__.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
+template '/opt/bro/share/bro/bzar/bzar_dce-rpc.bro' do
+  source '/bro/bzar/bzar_dce-rpc.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
+template '/opt/bro/share/bro/bzar/bzar_dce-rpc_consts.bro' do
+  source '/bro/bzar/bzar_dce-rpc_consts.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
+template '/opt/bro/share/bro/bzar/bzar_files.bro' do
+  source '/bro/bzar/bzar_files.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
+template '/opt/bro/share/bro/bzar/bzar_smb.bro' do
+  source '/bro/bzar/bzar_smb.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
+template '/opt/bro/share/bro/bzar/dpd.sig' do
+  source '/bro/bzar/dpd.sig.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
+template '/opt/bro/share/bro/bzar/main.bro' do
+  source '/bro/bzar/main.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
+
 
 # pcr: Producer Consumer Ratio
 template '/opt/bro/share/bro/pcr/__load__.bro' do
@@ -897,6 +958,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   execute "check-for-downloaded.rules_#{sniff[:sensorname]}" do
     command "ls /etc/nsm/rules/#{sniff[:sensorname]}"
     not_if do ::File.exists?("/etc/nsm/rules/#{sniff[:sensorname]}/downloaded.rules") end
+    only_if do sniff[:ids_engine_enabled] end
     notifies :run, "execute[run_rule-update]", :delayed
   end
 

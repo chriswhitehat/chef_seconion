@@ -121,7 +121,8 @@ default[:seconion][:sensor][:bro_scripts][:global]['policy/protocols/conn/mac-lo
 
 # Uncomment the following line to enable the SMB analyzer.  The analyzer
 # is currently considered a preview and therefore not loaded by default.
-default[:seconion][:sensor][:bro_scripts][:global]['policy/protocols/smb'] = true
+# moved from policy to base, no longer preview.
+#default[:seconion][:sensor][:bro_scripts][:global]['policy/protocols/smb'] = true
 
 # Security Onion default scripts
 default[:seconion][:sensor][:bro_scripts][:global]['securityonion'] = true
@@ -140,7 +141,7 @@ default[:seconion][:sensor][:bro_scripts][:global]['apt1'] = false
 default[:seconion][:sensor][:bro_scripts][:global]['intel'] = true
 
 # ShellShock - detects successful exploitation of Bash vulnerability CVE-2014-6271
-default[:seconion][:sensor][:bro_scripts][:global]['shellshock'] = true
+default[:seconion][:sensor][:bro_scripts][:global]['shellshock'] = false
 
 
 # Load ETPro IOC's into intel framekwork
@@ -169,6 +170,9 @@ default[:seconion][:sensor][:bro_scripts][:global]['scan_conf'] = false
 
 # Add the peer description to every bro log
 default[:seconion][:sensor][:bro_scripts][:global]['peers'] = false
+
+# Add the bzar data to various bro logs
+default[:seconion][:sensor][:bro_scripts][:global]['bzar'] = false
 
 
 

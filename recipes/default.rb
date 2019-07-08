@@ -16,7 +16,7 @@ template '/etc/timezone' do
 end
 
 execute 'set-timezone' do
-  command 'dpkg-reconfigure --frontend noninteractive tzdata'
+  command "dpkg-reconfigure --frontend noninteractive tzdata; timedatectl set-timezone #{node[:seconion][:timezone]}"
   action :nothing
 end
 
@@ -26,7 +26,6 @@ end
 
 apt_repository 'SecurityOnion' do
   uri 'ppa:securityonion/stable'
-  not_if do ::File.exists?('/etc/apt/sources.list.d/SecurityOnion.list') end
 end
 
 
