@@ -125,8 +125,10 @@ if [ ! -f $SSH_CONF ]; then
     #######################
     # HACK, be careful of the snort versions, manually appending a 0 to the snort version due to snort version truncation, I blame Cisco.
     #######################
+
+    echo "Getting rule archives via wget."
     <% if node[:seconion][:sensor][:vrt_rules_enabled] %>
-    wget -q "https://www.snort.org/reg-rules/snortrules-snapshot-$SNORT_VERSION_SHORT\0.tar.gz/<%=node[:seconion][:vrt_oinkcode]%>" -O /tmp/snortrules-snapshot-$SNORT_VERSION_SHORT\0.tar.gz
+    wget -q "https://www.snort.org/reg-rules/snortrules-snapshot-${SNORT_VERSION_SHORT}0.tar.gz/<%=node[:seconion][:vrt_oinkcode]%>" -O /tmp/snortrules-snapshot-${SNORT_VERSION_SHORT}0.tar.gz
     <% end %>
     <% if node[:seconion][:sensor][:vrt_rules_enabled] %>
     wget -q "https://rules.emergingthreatspro.com/<%=node[:seconion][:etpro_oinkcode]%>/snort-$SNORT_VERSION_MAJOR/etpro.rules.tar.gz" -O /tmp/etpro.rules.tar.gz
