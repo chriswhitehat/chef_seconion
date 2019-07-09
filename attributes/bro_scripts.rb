@@ -160,7 +160,7 @@ default[:seconion][:sensor][:bro_scripts][:global]['extractions'] = false
 default[:seconion][:sensor][:bro_scripts][:global]['ja3'] = false
 
 # Add ssh handshake ja3 hash fingerprint to ssh log
-default[:seconion][:sensor][:bro_scripts][:global]['hassh'] = true
+default[:seconion][:sensor][:bro_scripts][:global]['hassh'] = false
 
 # Add producer consumer ratio PCR to the conn log
 default[:seconion][:sensor][:bro_scripts][:global]['pcr'] = false
