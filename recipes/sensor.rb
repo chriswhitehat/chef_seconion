@@ -945,6 +945,15 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
     end
   end
 
+
+  logrotate_app 'lr_sid_changes' do
+    path      "/var/log/nsm/#{sniff[:sensorname]}/sid_changes.log"
+    frequency 'daily'
+    rotate    10
+    create    '644 root root'
+  end
+
+
   # Run sensor add command creating directories and other state
   execute "nsm_sensor_add_#{sniff[:sensorname]}" do
     command "/usr/sbin/nsm_sensor_add --sensor-name=\"#{sniff[:sensorname]}\" --sensor-interface=\"#{sniff[:interface]}\" --sensor-interface-auto=no "\
@@ -1618,4 +1627,17 @@ template '/etc/cron.d/bro-stats' do
   group 'root'
   mode '0644'
 end
+
+logrotate_apps = ['netsniff-sync', 'nsm_cron', 'pulledpork', 'bro-stats', 'sensor-newday-argus', 'sensor-newday-http-agent', 'sensor-newday-pcap', 'so-bro-cron', 'soup', 'ossec_agent']
+
+logrotate_apps.each do | app |
+  logrotate_app "lr_#{app}" do
+    path      "/var/log/nsm/#{app}.log"
+    frequency 'daily'
+    rotate    60
+    create    '644 root root'
+  end
+end
+
+
 
