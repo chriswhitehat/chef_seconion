@@ -946,7 +946,7 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
   end
 
 
-  logrotate_app "lr_#{sniff[:sensorname]}_sid_changes" do
+  logrotate_app "#{sniff[:sensorname]}-sid-changes" do
     path      "/var/log/nsm/#{sniff[:sensorname]}/sid_changes.log"
     frequency 'daily'
     rotate    10
