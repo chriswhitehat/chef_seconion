@@ -1628,16 +1628,25 @@ template '/etc/cron.d/bro-stats' do
   mode '0644'
 end
 
-logrotate_apps = ['netsniff-sync', 'nsm_cron', 'pulledpork', 'bro-stats', 'sensor-newday-argus', 'sensor-newday-http-agent', 'sensor-newday-pcap', 'so-bro-cron', 'soup', 'ossec_agent']
 
-logrotate_apps.each do | app |
-  logrotate_app "lr_#{app}" do
-    path      "/var/log/nsm/#{app}.log"
-    frequency 'daily'
-    rotate    60
-    create    '644 root root'
-  end
+nsm_logrotate_paths = ['/var/log/nsm/netsniff-sync.log', 
+  '/var/log/nsm/nsm_cron.log',
+ '/var/log/nsm/pulledpork.log',
+ '/var/log/nsm/bro_stats.log',
+ '/var/log/nsm/sensor-newday-argus.log',
+ '/var/log/nsm/sensor-newday-http-agent.log',
+ '/var/log/nsm/sensor-newday-pcap.log',
+ '/var/log/nsm/so-bro-cron.log',
+ '/var/log/nsm/soup.log',
+ '/var/log/nsm/ossec_agent.log']
+
+logrotate_app "nsm-var-log-rotations" do
+  path      nsm_logrotate_paths
+  frequency 'daily'
+  rotate    60
+  create    '644 root root'
 end
+
 
 
 
