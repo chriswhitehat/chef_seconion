@@ -174,6 +174,8 @@ default[:seconion][:sensor][:bro_scripts][:global]['peers'] = false
 # Add the bzar data to various bro logs
 default[:seconion][:sensor][:bro_scripts][:global]['bzar'] = false
 
+# Add the ability to filter out noisey files log events by mime-type (SSL file)
+default[:seconion][:sensor][:bro_scripts][:global]['files_filter'] = false
 
 
 ############

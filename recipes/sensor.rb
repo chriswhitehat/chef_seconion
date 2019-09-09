@@ -191,6 +191,7 @@ end
 directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/extractions',
                '/opt/bro/share/bro/base_streams',
+               '/opt/bro/share/bro/files_filter'
                '/opt/bro/share/bro/etpro',
                '/opt/bro/share/bro/smtp-embedded-url-bloom',
                '/opt/bro/share/bro/scan_conf',
@@ -448,6 +449,22 @@ end
 
 template '/opt/bro/share/bro/extractions/extractions.bro' do
    source 'bro/extractions/extractions.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+# Add files filter to remove noisy files events
+template '/opt/bro/share/bro/files_filter/__load__.bro' do
+   source 'bro/files_filter/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
+
+template '/opt/bro/share/bro/files_filter/files_filter.bro' do
+   source 'bro/files_filter/files_filter.bro.erb'
    owner 'sguil'
    group 'sguil'
    mode '0644'
