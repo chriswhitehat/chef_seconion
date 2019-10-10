@@ -198,6 +198,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/networks',
                '/opt/bro/share/bro/cert_authorities',
                '/opt/bro/share/bro/ja3/',
+               '/opt/bro/share/bro/bitcoin',
                '/opt/bro/share/bro/hassh/',
                '/opt/bro/share/bro/pcr/',
                '/opt/bro/share/bro/peers/',
@@ -520,6 +521,30 @@ end
 
 template '/opt/bro/share/bro/ja3/intel_ja3.bro' do
    source 'bro/ja3/intel_ja3.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+# bitcoin plugin
+template '/opt/bro/share/bro/bitcoin/__load__.bro' do
+   source 'bro/bitcoin/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
+
+template '/opt/bro/share/bro/bitcoin/mining.bro' do
+   source 'bro/bitcoin/mining.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+template '/opt/bro/share/bro/bitcoin/json-rpc.sig' do
+   source 'bro/bitcoin/json-rpc.sig.erb'
    owner 'sguil'
    group 'sguil'
    mode '0644'
