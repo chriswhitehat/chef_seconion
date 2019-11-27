@@ -488,6 +488,14 @@ template '/opt/bro/share/bro/cert_authorities/cert_authorities.bro' do
    notifies :run, 'execute[deploy_bro]', :delayed
 end
 
+template '/opt/bro/share/bro/intel/__load__.bro' do
+  source 'bro/intel/__load__.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
+end
+
 template '/opt/bro/share/bro/scan_conf/__load__.bro' do
    source 'bro/scan_conf/__load__.bro.erb'
    owner 'sguil'
