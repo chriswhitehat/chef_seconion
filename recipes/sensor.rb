@@ -191,12 +191,14 @@ end
 directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/extractions',
                '/opt/bro/share/bro/base_streams',
+               '/opt/bro/share/bro/files_filter',
                '/opt/bro/share/bro/etpro',
                '/opt/bro/share/bro/smtp-embedded-url-bloom',
                '/opt/bro/share/bro/scan_conf',
                '/opt/bro/share/bro/networks',
                '/opt/bro/share/bro/cert_authorities',
                '/opt/bro/share/bro/ja3/',
+               '/opt/bro/share/bro/bitcoin',
                '/opt/bro/share/bro/hassh/',
                '/opt/bro/share/bro/pcr/',
                '/opt/bro/share/bro/peers/',
@@ -454,6 +456,22 @@ template '/opt/bro/share/bro/extractions/extractions.bro' do
    notifies :run, 'execute[deploy_bro]', :delayed
 end
 
+# Add files filter to remove noisy files events
+template '/opt/bro/share/bro/files_filter/__load__.bro' do
+   source 'bro/files_filter/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
+
+template '/opt/bro/share/bro/files_filter/files_filter.bro' do
+   source 'bro/files_filter/files_filter.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
 # Create files for adding certificate authorities for verifitcation
 template '/opt/bro/share/bro/cert_authorities/__load__.bro' do
    source 'bro/cert_authorities/__load__.bro.erb'
@@ -468,6 +486,14 @@ template '/opt/bro/share/bro/cert_authorities/cert_authorities.bro' do
    group 'sguil'
    mode '0644'
    notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+template '/opt/bro/share/bro/intel/__load__.bro' do
+  source 'bro/intel/__load__.bro.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]'
 end
 
 template '/opt/bro/share/bro/scan_conf/__load__.bro' do
@@ -503,6 +529,30 @@ end
 
 template '/opt/bro/share/bro/ja3/intel_ja3.bro' do
    source 'bro/ja3/intel_ja3.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+# bitcoin plugin
+template '/opt/bro/share/bro/bitcoin/__load__.bro' do
+   source 'bro/bitcoin/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
+
+template '/opt/bro/share/bro/bitcoin/mining.bro' do
+   source 'bro/bitcoin/mining.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+template '/opt/bro/share/bro/bitcoin/json-rpc.sig' do
+   source 'bro/bitcoin/json-rpc.sig.erb'
    owner 'sguil'
    group 'sguil'
    mode '0644'
@@ -944,6 +994,15 @@ node[:seconion][:sensor][:sniffing_interfaces].each do |sniff|
       end
     end
   end
+
+
+  logrotate_app "#{sniff[:sensorname]}-sid-changes" do
+    path      "/var/log/nsm/#{sniff[:sensorname]}/sid_changes.log"
+    frequency 'daily'
+    rotate    10
+    create    '644 root root'
+  end
+
 
   # Run sensor add command creating directories and other state
   execute "nsm_sensor_add_#{sniff[:sensorname]}" do
@@ -1618,4 +1677,26 @@ template '/etc/cron.d/bro-stats' do
   group 'root'
   mode '0644'
 end
+
+
+nsm_logrotate_paths = ['/var/log/nsm/netsniff-sync.log', 
+  '/var/log/nsm/nsm_cron.log',
+ '/var/log/nsm/pulledpork.log',
+ '/var/log/nsm/bro_stats.log',
+ '/var/log/nsm/sensor-newday-argus.log',
+ '/var/log/nsm/sensor-newday-http-agent.log',
+ '/var/log/nsm/sensor-newday-pcap.log',
+ '/var/log/nsm/so-bro-cron.log',
+ '/var/log/nsm/soup.log',
+ '/var/log/nsm/ossec_agent.log']
+
+logrotate_app "nsm-var-log-rotations" do
+  path      nsm_logrotate_paths
+  frequency 'daily'
+  rotate    60
+  create    '644 root root'
+end
+
+
+
 
