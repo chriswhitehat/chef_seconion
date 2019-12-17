@@ -8,6 +8,11 @@
 ##!
 ##! This file will not be overwritten when upgrading or reinstalling!
 
+<% if not node[:seconion][:sensor][:clustered] %>
+redef Broker::default_listen_address = "127.0.0.1";
+<% end %>
+
+
 #########################
 ## Bro Signatures
 #########################

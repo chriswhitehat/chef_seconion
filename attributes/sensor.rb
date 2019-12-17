@@ -44,6 +44,11 @@ default[:seconion][:sensor][:mgmt][:domain] = 'example.com'
 
 
 #########################
+# Clustered Config
+#########################
+default[:seconion][:sensor][:clustered] = false
+
+#########################
 # OSSEC
 #########################
 default[:seconion][:sensor][:ossec_enabled] = false
