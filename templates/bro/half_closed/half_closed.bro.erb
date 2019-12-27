@@ -7,7 +7,7 @@
 ## This causes the log to wait the 5min inactivity delay for any additional packets to come in which is not likely.
 ## This is made worse by the default delay for interactive session delay which is set to 1 hour.  This looks for a 
 ## partial close event and overwrites the inactivity to 1min instead of 5min or 1hour.
- 
-event connection_partial_close(c: connection) { 	
-	set_inactivity_timeout(c$id, 1mins); 	
-} 
+
+event connection_partial_close(c: connection){
+	set_inactivity_timeout(c$id, 1mins);
+}
