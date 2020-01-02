@@ -199,6 +199,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/cert_authorities',
                '/opt/bro/share/bro/ja3/',
                '/opt/bro/share/bro/bitcoin',
+               '/opt/bro/share/bro/half_closed',
                '/opt/bro/share/bro/hassh/',
                '/opt/bro/share/bro/pcr/',
                '/opt/bro/share/bro/peers/',
@@ -561,6 +562,22 @@ end
 
 template '/opt/bro/share/bro/bitcoin/json-rpc.sig' do
    source 'bro/bitcoin/json-rpc.sig.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+# half_closed plugin
+template '/opt/bro/share/bro/half_closed/__load__.bro' do
+   source 'bro/half_closed/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
+
+template '/opt/bro/share/bro/half_closed/half_closed.bro' do
+   source 'bro/half_closed/half_closed.bro.erb'
    owner 'sguil'
    group 'sguil'
    mode '0644'
