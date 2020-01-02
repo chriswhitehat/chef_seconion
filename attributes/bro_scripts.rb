@@ -180,6 +180,7 @@ default[:seconion][:sensor][:bro_scripts][:global]['files_filter'] = false
 # Add the bitcoin notice plugin
 default[:seconion][:sensor][:bro_scripts][:global]['bitcoin'] = false
 
+
 ############
 # Deprectated in 2.5
 ############
