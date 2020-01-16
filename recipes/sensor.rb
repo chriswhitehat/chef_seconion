@@ -197,6 +197,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/scan_conf',
                '/opt/bro/share/bro/networks',
                '/opt/bro/share/bro/cert_authorities',
+               '/opt/bro/share/bro/cve-2020-0601',
                '/opt/bro/share/bro/ja3/',
                '/opt/bro/share/bro/bitcoin',
                '/opt/bro/share/bro/half_closed',
@@ -467,6 +468,22 @@ end
 
 template '/opt/bro/share/bro/files_filter/files_filter.bro' do
    source 'bro/files_filter/files_filter.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+# Create files for adding cve-2020-0601 crypt32.dll vuln detection
+template '/opt/bro/share/bro/cve-2020-0601/__load__.bro' do
+   source 'bro/cve-2020-0601/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
+
+template '/opt/bro/share/bro/cve-2020-0601/cve-2020-0601.bro' do
+   source 'bro/cve-2020-0601/cve-2020-0601.bro.erb'
    owner 'sguil'
    group 'sguil'
    mode '0644'

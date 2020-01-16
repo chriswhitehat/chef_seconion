@@ -183,6 +183,8 @@ default[:seconion][:sensor][:bro_scripts][:global]['bitcoin'] = false
 # Add the half closed connection fix
 default[:seconion][:sensor][:bro_scripts][:global]['half_closed'] = false
 
+# Add the cve-2020-0601 crypt32.dll detection script
+default[:seconion][:sensor][:bro_scripts][:global]['cve-2020-0601'] = false
 
 ############
 # Deprectated in 2.5
