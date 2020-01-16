@@ -339,6 +339,14 @@ execute 'restart_ossec_agent' do
 end
 
 
+template '/var/ossec/rules/seconion_ossec_rules.xml' do
+  source 'ossec/seconion_ossec_rules.xml.erb'
+  owner 'root'
+  group 'root'
+  mode '0640'
+end
+
+
 
 ###########
 #
