@@ -118,17 +118,18 @@ if [ ! -f $SSH_CONF ]; then
         echo "ENGINE=suricata, so we'll execute PulledPork with the -T option to avoid adding soid rules to downloaded.rules."
     fi
 
-    SNORT_VERSION_MAJOR="$(snort --version 2>&1 >/dev/null | egrep -o "Version (.\..\..)" | cut -d " " -f 2)"
+    SNORT_VERSION_MAJOR="$(snort --version 2>&1 >/dev/null | egrep -o "Version ([0-9]+\.[0-9]+\.[0-9]+)" | cut -d " " -f 2)"
     SNORT_VERSION_SHORT="$(snort --version 2>&1 >/dev/null | egrep -o "Version (\S+)" | cut -d " " -f 2 | tr -d ".")"
 
     <% if node[:seconion][:pulledpork_proxy] %>
     #######################
     # HACK, be careful of the snort versions, manually appending a 0 to the snort version due to snort version truncation, I blame Cisco.
+    # Cisco added back in the trailing 4th version number.
     #######################
 
     echo "Getting rule archives via wget."
     <% if node[:seconion][:sensor][:vrt_rules_enabled] %>
-    wget -q "https://www.snort.org/reg-rules/snortrules-snapshot-${SNORT_VERSION_SHORT}0.tar.gz/<%=node[:seconion][:vrt_oinkcode]%>" -O /tmp/snortrules-snapshot-${SNORT_VERSION_SHORT}0.tar.gz
+    wget -q "https://www.snort.org/reg-rules/snortrules-snapshot-${SNORT_VERSION_SHORT}.tar.gz/<%=node[:seconion][:vrt_oinkcode]%>" -O /tmp/snortrules-snapshot-${SNORT_VERSION_SHORT}0.tar.gz
     <% end %>
     <% if node[:seconion][:sensor][:vrt_rules_enabled] %>
     wget -q "https://rules.emergingthreatspro.com/<%=node[:seconion][:etpro_oinkcode]%>/snort-$SNORT_VERSION_MAJOR/etpro.rules.tar.gz" -O /tmp/etpro.rules.tar.gz
