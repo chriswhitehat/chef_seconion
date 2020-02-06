@@ -201,6 +201,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/ja3/',
                '/opt/bro/share/bro/bitcoin',
                '/opt/bro/share/bro/half_closed',
+               '/opt/bro/share/bro/ntlm_extend',
                '/opt/bro/share/bro/hassh/',
                '/opt/bro/share/bro/pcr/',
                '/opt/bro/share/bro/peers/',
@@ -595,6 +596,23 @@ end
 
 template '/opt/bro/share/bro/half_closed/half_closed.bro' do
    source 'bro/half_closed/half_closed.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+   notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+
+# ntlm_extend plugin
+template '/opt/bro/share/bro/ntlm_extend/__load__.bro' do
+   source 'bro/ntlm_extend/__load__.bro.erb'
+   owner 'sguil'
+   group 'sguil'
+   mode '0644'
+end
+
+template '/opt/bro/share/bro/ntlm_extend/ntlm_extend.bro' do
+   source 'bro/ntlm_extend/ntlm_extend.bro.erb'
    owner 'sguil'
    group 'sguil'
    mode '0644'
