@@ -186,6 +186,10 @@ default[:seconion][:sensor][:bro_scripts][:global]['half_closed'] = false
 # Add the cve-2020-0601 crypt32.dll detection script
 default[:seconion][:sensor][:bro_scripts][:global]['cve-2020-0601'] = false
 
+# Log the negotiate_ntlm field to the ntlm logs indicating ntlm v1
+default[:seconion][:sensor][:bro_scripts][:global]['ntlm_extend'] = false
+
+
 ############
 # Deprectated in 2.5
 ############
