@@ -98,7 +98,7 @@ default[:seconion][:server][:warn_disk_usage] = 80
 default[:seconion][:server][:crit_disk_usage] = 95
 
 # How many days would you like to keep in the Sguil database archive?
-default[:seconion][:server][:days_to_keep] = 30
+default[:seconion][:server][:days_to_keep] = 0
 
 # How many days worth of tables would you like to repair every day?
 default[:seconion][:server][:days_to_repair] = 7
