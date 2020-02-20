@@ -116,6 +116,8 @@ default[:seconion][:sensor][:sniff][:snort_agent_enabled] = true
 default[:seconion][:sensor][:sniff][:snort_search_method] = 'ac'
 # The max size of the snort unified2 alert file
 default[:seconion][:sensor][:sniff][:snort_unified2_size] = 128
+# The http_inspect ports (used initially to set http_inspect across 443)
+default[:seconion][:sensor][:sniff][:snort_http_inspect_ports] = '80 81 311 383 591 593 901 1220 1414 1741 1830 2301 2381 2809 3037 3128 3702 4343 4848 5250 6988 7000 7001 7144 7145 7510 7777 7779 8000 8008 8014 8028 8080 8085 8088 8090 8118 8123 8180 8181 8243 8280 8300 8800 8888 8899 9000 9060 9080 9090 9091 9443 9999 11371 34443 34444 41080 50002 55555'
 # bpf for snort/suricata
 default[:seconion][:sensor][:sniff][:ids_bpf] = ''
 # Suricata capture method, legacy pfing or af-packet
