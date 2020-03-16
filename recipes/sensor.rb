@@ -953,6 +953,7 @@ template '/opt/bro/share/bro/site/local.bro' do
   owner 'sguil'
   group 'sguil'
   mode '0644'
+  manage_symlink_source true
   variables({
     :global_sigs => global_sigs,
     :regional_sigs => regional_sigs,
