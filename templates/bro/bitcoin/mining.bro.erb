@@ -1,25 +1,25 @@
-##! Detects hosts involved with Bitcoin mining (or other cryptocurrencies
-##! that share the same mining protocol like Litecoin, PPCoin, etc.).
-##!
-##! Bitcoin mining protocols typically involve the use of
-##! `JSON-RPC <http://www.jsonrpc.org/specification>`_ requests to mining
-##! pool servers to request work.  JSON-RPC doesn't require the use of a
-##! particular transport protocol, but the original
-##! `getwork <https://en.bitcoin.it/wiki/Getwork>`_ mining protocol uses
-##! HTTP as a transport.  A superceding mining protocol called
-##! `getblocktemplate <https://en.bitcoin.it/wiki/Getblocktemplate>`_
-##! is designed to be more extensible than "getwork" by not having to rely
-##! on HTTP headers to implement extensions.  Another protocol called
-##! `Stratum <http://mining.bitcoin.cz/stratum-mining/>`_ is an overlay
-##! network on top of the Bitcoin P2P protocol, includes methods related
-##! to mining, and is not tied to a particular transport.
-##!
-##! This script makes use of generic JSON-RPC signatures for TCP and HTTP
-##! (the most common transports used by mining software) and then inspects
-##! the method values of JSON-RPC requests in order to match connections that
-##! that potentially relate to Bitcoin mining.
-##!
-##! Note that the Bitcoin P2P protocol is not currently detected.
+#! Detects hosts involved with Bitcoin mining (or other cryptocurrencies
+#! that share the same mining protocol like Litecoin, PPCoin, etc.).
+#!
+#! Bitcoin mining protocols typically involve the use of
+#! `JSON-RPC <http://www.jsonrpc.org/specification>`_ requests to mining
+#! pool servers to request work.  JSON-RPC doesn't require the use of a
+#! particular transport protocol, but the original
+#! `getwork <https://en.bitcoin.it/wiki/Getwork>`_ mining protocol uses
+#! HTTP as a transport.  A superceding mining protocol called
+#! `getblocktemplate <https://en.bitcoin.it/wiki/Getblocktemplate>`_
+#! is designed to be more extensible than "getwork" by not having to rely
+#! on HTTP headers to implement extensions.  Another protocol called
+#! `Stratum <http://mining.bitcoin.cz/stratum-mining/>`_ is an overlay
+#! network on top of the Bitcoin P2P protocol, includes methods related
+#! to mining, and is not tied to a particular transport.
+#!
+#! This script makes use of generic JSON-RPC signatures for TCP and HTTP
+#! (the most common transports used by mining software) and then inspects
+#! the method values of JSON-RPC requests in order to match connections that
+#! that potentially relate to Bitcoin mining.
+#!
+#! Note that the Bitcoin P2P protocol is not currently detected.
 
 @load base/frameworks/notice
 @load base/frameworks/signatures/main
@@ -35,21 +35,21 @@ module Bitcoin;
 export {
 
 	redef enum Notice::Type += {
-		## Raised when a host doing Bitcoin mining is found.
+		# Raised when a host doing Bitcoin mining is found.
 		Miner,
 
-		## Raised when a host is serving work to Bitcoin miners.
+		# Raised when a host is serving work to Bitcoin miners.
 		Mining_Pool_Server,
 
-		## Raised when a host looks like it is involved in Bitcoin mining
-		## using the Stratum protocol, but the JSON-RPC request method
-		## was not one of the ones in :bro:see:`Bitcoin::stratum_client_methods`
-		## or :bro:see:`Bitcoin::stratum_server_methods`, though it did start
-		## with "mining.".
+		# Raised when a host looks like it is involved in Bitcoin mining
+		# using the Stratum protocol, but the JSON-RPC request method
+		# was not one of the ones in :bro:see:`Bitcoin::stratum_client_methods`
+		# or :bro:see:`Bitcoin::stratum_server_methods`, though it did start
+		# with "mining.".
 		Possible_Mining,
 	};
 
-	## Names of JSON-RPC request methods for Stratum mining clients.
+	# Names of JSON-RPC request methods for Stratum mining clients.
 	const stratum_client_methods: set[string] = {
 		"mining.authorize",
 		"mining.get_transactions",
@@ -57,20 +57,20 @@ export {
 		"mining.submit",
 	} &redef;
 
-	## Names of JSON-RPC request methods for Stratum mining servers.
+	# Names of JSON-RPC request methods for Stratum mining servers.
 	const stratum_server_methods: set[string] = {
 		"mining.notify",
 		"mining.set_difficulty",
 	} &redef;
 
-	## Names of JSON-RPC request methods for mining clients using
-	## the getblocktemplate protocol.
+	# Names of JSON-RPC request methods for mining clients using
+	# the getblocktemplate protocol.
 	const gbt_methods: set[string] = {
 		"getblocktemplate",
 		"submitblock",
 	} &redef;
 
-	## Names of JSON-RPC request methods used by MinerGate application.
+	# Names of JSON-RPC request methods used by MinerGate application.
 	const minergate_methods: set[string] = {
 		"getjob",
 		"job",
@@ -80,24 +80,24 @@ export {
 		"eth_submitWork",
 	} &redef;
 
-	## Other names of JSON-RPC request methods that may be used by
-	## mining clients/protocols.
+	# Other names of JSON-RPC request methods that may be used by
+	# mining clients/protocols.
 	const other_methods: set[string] = {
 	} &redef;
 
-	## Type of Bitcoin mining host which, on discovery, should raise a notice.
+	# Type of Bitcoin mining host which, on discovery, should raise a notice.
 	const notice_miner_hosts = LOCAL_HOSTS &redef;
 
-	## Type of Bitcoin pool server host which, on discovery, should raise a
-	## notice.
+	# Type of Bitcoin pool server host which, on discovery, should raise a
+	# notice.
 	const notice_pool_hosts = LOCAL_HOSTS &redef;
 
-	## Extracts the value of the "method" key from a JSON-RPC request object.
-	##
-	## json_obj: A JSON-RPC request object or objects.
-	##
-	## Returns: set of values for the "method" keys in the JSON objects or an
-	##          empty set if parsing the object failed.
+	# Extracts the value of the "method" key from a JSON-RPC request object.
+	#
+	# json_obj: A JSON-RPC request object or objects.
+	#
+	# Returns: set of values for the "method" keys in the JSON objects or an
+	#          empty set if parsing the object failed.
 	global extract_json_rpc_request_methods: function(json_obj: string): set[string];
 }
 
