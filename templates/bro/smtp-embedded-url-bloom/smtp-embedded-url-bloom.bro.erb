@@ -73,7 +73,7 @@ redef record connection += {
 };
 
 
-event bro_init() &priority=5
+event zeek_init() &priority=5
 {
         mail_links = bloomfilter_basic_init(0.00000001, 10000000) ;
         Log::create_stream(SMTPurl::Links_LOG, [$columns=Info]);

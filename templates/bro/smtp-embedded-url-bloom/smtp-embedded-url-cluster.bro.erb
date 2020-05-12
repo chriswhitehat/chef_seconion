@@ -101,7 +101,7 @@ redef record connection += {
 };
 
 
-event bro_init() &priority=5
+event zeek_init() &priority=5
 {
         Log::create_stream(SMTPurl::Links_LOG, [$columns=Info]);
 
@@ -290,7 +290,7 @@ event http_message_done(c: connection, is_orig: bool, stat: http_message_stat) &
 
 }
 
-event bro_init()
+event zeek_init()
 {
         schedule 1 min { mail_links_stats() };
 }

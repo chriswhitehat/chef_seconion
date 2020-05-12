@@ -77,7 +77,7 @@ event connection_state_remove (c: connection) {
 
 }
 
-event bro_init() {
+event zeek_init() {
 
     ## Create PCR log stream
     Log::create_stream(PCR::LOG, [$columns=Info, $ev=log_pcr]);
