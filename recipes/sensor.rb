@@ -1543,7 +1543,7 @@ end
 
 
 execute 'nsm_sensor_ps-restart --only-bro' do
-  not_if do ::File.exists?('/nsm/bro/spool/broctl-config.sh') end
+  not_if do ::File.exists?('/nsm/bro/spool/zeekctl-config.sh') end
   notifies :run, 'execute[deploy_bro]', :immediately
 end
 
