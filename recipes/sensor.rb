@@ -376,14 +376,14 @@ execute 'setcap_zeek_permissions' do
   command 'sudo setcap -v cap_net_raw,cap_net_admin=eip /opt/bro/bin/zeek && touch /opt/bro/share/bro/setcap_zeek'
   not_if do ::File.exists?("/opt/bro/share/bro/setcap_zeek") end
   action :run
-  notifies :run 'execute[deploy_bro]', :delayed
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 execute 'setcap_zeekctl_permissions' do
   command 'sudo setcap -v cap_net_raw,cap_net_admin=eip /opt/bro/bin/zeekctl && touch /opt/bro/share/bro/setcap_zeekctl'
   not_if do ::File.exists?("/opt/bro/share/bro/setcap_zeekctl") end
   action :run
-  notifies :run 'execute[deploy_bro]', :delayed
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/etc/node.cfg' do
