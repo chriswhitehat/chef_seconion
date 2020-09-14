@@ -39,7 +39,7 @@ global ransomware_filename_patterns_paraglob : opaque of paraglob;
 
 event zeek_init()
   {
-  Input::add_table([$source="fsrm_patterns_for_zeek.tsv", $name="ransomware_patterns", $idx=Idx, $val=Val, $destination=ransomware_filename_patterns_table, $mode=Input::REREAD]);
+  Input::add_table([$source="/opt/bro/share/bro/detect-ransomware-filenames/inputs/fsrm_patterns_for_zeek.tsv", $name="ransomware_patterns", $idx=Idx, $val=Val, $destination=ransomware_filename_patterns_table, $mode=Input::REREAD]);
   # Justin says Input::remove is unnecessary, so taking this out for now
   #Input::remove("ransomware_patterns");
   }

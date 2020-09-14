@@ -719,7 +719,7 @@ template '/opt/bro/share/bro/detect-ransomware-filenames/fsrm_patterns_for_zeek.
   owner 'sguil'
   group 'sguil'
   mode '0644'
-  not_if do ::File.exists?("/opt/bro/share/bro/detect-ransomware-filenames/fsrm_patterns_for_zeek.tsv") end
+  not_if do ::File.exists?("/opt/bro/share/bro/detect-ransomware-filenames/inputs/fsrm_patterns_for_zeek.tsv") end
   notifies :run, 'execute[deploy_bro]', :delayed
 end
 
