@@ -660,7 +660,7 @@ template '/opt/bro/share/bro/bzar/__load__.bro' do
   owner 'sguil'
   group 'sguil'
   mode '0644'
-  notifies :run, 'execute[deploy_bro]'
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/share/bro/bzar/bzar_dce-rpc.bro' do
@@ -668,7 +668,7 @@ template '/opt/bro/share/bro/bzar/bzar_dce-rpc.bro' do
   owner 'sguil'
   group 'sguil'
   mode '0644'
-  notifies :run, 'execute[deploy_bro]'
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/share/bro/bzar/bzar_dce-rpc_consts.bro' do
@@ -676,7 +676,7 @@ template '/opt/bro/share/bro/bzar/bzar_dce-rpc_consts.bro' do
   owner 'sguil'
   group 'sguil'
   mode '0644'
-  notifies :run, 'execute[deploy_bro]'
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/share/bro/bzar/bzar_files.bro' do
@@ -684,7 +684,7 @@ template '/opt/bro/share/bro/bzar/bzar_files.bro' do
   owner 'sguil'
   group 'sguil'
   mode '0644'
-  notifies :run, 'execute[deploy_bro]'
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/share/bro/bzar/bzar_smb.bro' do
@@ -692,7 +692,7 @@ template '/opt/bro/share/bro/bzar/bzar_smb.bro' do
   owner 'sguil'
   group 'sguil'
   mode '0644'
-  notifies :run, 'execute[deploy_bro]'
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/share/bro/bzar/dpd.sig' do
@@ -700,7 +700,7 @@ template '/opt/bro/share/bro/bzar/dpd.sig' do
   owner 'sguil'
   group 'sguil'
   mode '0644'
-  notifies :run, 'execute[deploy_bro]'
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/share/bro/bzar/main.bro' do
@@ -708,7 +708,7 @@ template '/opt/bro/share/bro/bzar/main.bro' do
   owner 'sguil'
   group 'sguil'
   mode '0644'
-  notifies :run, 'execute[deploy_bro]'
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 
@@ -719,6 +719,7 @@ template '/opt/bro/share/bro/detect-ransomware-filenames/fsrm_patterns_for_zeek.
   owner 'sguil'
   group 'sguil'
   mode '0644'
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/share/bro/detect-ransomware-filenames/__load__.zeek' do
@@ -726,6 +727,7 @@ template '/opt/bro/share/bro/detect-ransomware-filenames/__load__.zeek' do
   owner 'sguil'
   group 'sguil'
   mode '0644'
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/share/bro/detect-ransomware-filenames/check-for-ransomware-filenames.zeek' do
@@ -733,6 +735,7 @@ template '/opt/bro/share/bro/detect-ransomware-filenames/check-for-ransomware-fi
   owner 'sguil'
   group 'sguil'
   mode '0644'
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 template '/opt/bro/share/bro/detect-ransomware-filenames/download-list.py' do
@@ -740,6 +743,7 @@ template '/opt/bro/share/bro/detect-ransomware-filenames/download-list.py' do
   owner 'sguil'
   group 'sguil'
   mode '0644'
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 cron 'Update_Ransomware_List' do
