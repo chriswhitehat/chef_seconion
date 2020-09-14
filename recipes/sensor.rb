@@ -715,28 +715,28 @@ end
 # detect-ransomware-filenames
 
 template '/opt/bro/share/bro/detect-ransomware-filenames/fsrm_patterns_for_zeek.tsv' do
-  source 'fsrm_patterns_for_zeek.tsv.erb'
+  source '/bro/detect-ransomware-filenames/inputs/fsrm_patterns_for_zeek.tsv.erb'
   owner 'sguil'
   group 'sguil'
   mode '0644'
 end
 
 template '/opt/bro/share/bro/detect-ransomware-filenames/__load__.zeek' do
-  source '__load__.zeek.erb'
+  source '/bro/detect-ransomware-filenames/scripts/__load__.zeek.erb'
   owner 'sguil'
   group 'sguil'
   mode '0644'
 end
 
 template '/opt/bro/share/bro/detect-ransomware-filenames/check-for-ransomware-filenames.zeek' do
-  source 'check-for-ransomware-filenames.zeek.erb'
+  source '/bro/detect-ransomware-filenames/scripts/check-for-ransomware-filenames.zeek.erb'
   owner 'sguil'
   group 'sguil'
   mode '0644'
 end
 
 template '/opt/bro/share/bro/detect-ransomware-filenames/download-list.py' do
-  source 'download-list.py.erb'
+  source '/bro/detect-ransomware-filenames/download-list.py.erb'
   owner 'sguil'
   group 'sguil'
   mode '0644'
