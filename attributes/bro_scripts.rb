@@ -189,6 +189,9 @@ default[:seconion][:sensor][:bro_scripts][:global]['cve-2020-0601'] = false
 # Log the negotiate_ntlm field to the ntlm logs indicating ntlm v1
 default[:seconion][:sensor][:bro_scripts][:global]['ntlm_extend'] = false
 
+# Check for and create notice entries on known ransomware extensions
+default[:seconion][:sensor][:bro_scripts][:global]['detect-ransomware-filenames'] = false
+
 
 ############
 # Deprectated in 2.5
