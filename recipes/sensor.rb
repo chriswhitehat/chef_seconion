@@ -206,6 +206,8 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/pcr/',
                '/opt/bro/share/bro/peers/',
                '/opt/bro/share/bro/bzar/',
+               '/opt/bro/share/bro/detect-ransomware-filenames/',
+               '/opt/bro/share/bro/detect-ransomware-filenames/inputs',
                '/var/log/nsm',
                '/usr/local/lib/snort_dynamicrules',
                '/usr/local/lib/snort_dynamicrules_backup',
@@ -650,6 +652,9 @@ template '/opt/bro/share/bro/hassh/hassh.bro' do
    notifies :run, 'execute[deploy_bro]', :delayed
 end
 
+
+# BZAR
+
 template '/opt/bro/share/bro/bzar/__load__.bro' do
   source '/bro/bzar/__load__.bro.erb'
   owner 'sguil'
@@ -704,6 +709,46 @@ template '/opt/bro/share/bro/bzar/main.bro' do
   group 'sguil'
   mode '0644'
   notifies :run, 'execute[deploy_bro]'
+end
+
+
+# detect-ransomware-filenames
+
+template '/opt/bro/share/bro/detect-ransomware-filenames/fsrm_patterns_for_zeek.tsv' do
+  source 'fsrm_patterns_for_zeek.tsv.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+end
+
+template '/opt/bro/share/bro/detect-ransomware-filenames/__load__.zeek' do
+  source '__load__.zeek.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+end
+
+template '/opt/bro/share/bro/detect-ransomware-filenames/check-for-ransomware-filenames.zeek' do
+  source 'check-for-ransomware-filenames.zeek.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+end
+
+template '/opt/bro/share/bro/detect-ransomware-filenames/download-list.py' do
+  source 'download-list.py.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+end
+
+cron 'Update_Ransomware_List' do
+  hour '5'
+  minute '0'
+  day '*'
+  month '*'
+  week '1'
+  command 'cd /opt/bro/share/bro/detect-ransomware-filenames; /usr/bin/python3 download-list.py'
 end
 
 
