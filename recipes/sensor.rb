@@ -747,7 +747,7 @@ cron 'Update_Ransomware_List' do
   minute '0'
   day '*'
   month '*'
-  week '1'
+  weekday '1'
   command 'cd /opt/bro/share/bro/detect-ransomware-filenames; /usr/bin/python3 download-list.py'
 end
 
