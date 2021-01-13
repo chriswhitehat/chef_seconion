@@ -192,6 +192,8 @@ default[:seconion][:sensor][:bro_scripts][:global]['ntlm_extend'] = false
 # Check for and create notice entries on known ransomware extensions
 default[:seconion][:sensor][:bro_scripts][:global]['detect-ransomware-filenames'] = false
 
+# json-streaming-logs to include streaming json logs alongside regular logs.
+default[:seconion][:sensor][:bro_scripts][:global]['json-streaming-logs'] = false
 
 ############
 # Deprectated in 2.5
