@@ -5,7 +5,7 @@ license          'All rights reserved'
 description      'Installs/Configures/Maintains Security Onion'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 
-version          '0.62.0'
+version          '0.62.1'
 
 provides         'seconion::server'
 provides         'seconion::sensor'

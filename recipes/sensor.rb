@@ -208,6 +208,7 @@ directories = ['/nsm/sensor_data',
                '/opt/bro/share/bro/bzar/',
                '/opt/bro/share/bro/detect-ransomware-filenames/',
                '/opt/bro/share/bro/detect-ransomware-filenames/inputs',
+               '/opt/bro/share/bro/json-streaming-logs/',
                '/var/log/nsm',
                '/usr/local/lib/snort_dynamicrules',
                '/usr/local/lib/snort_dynamicrules_backup',
@@ -754,6 +755,25 @@ cron 'Update_Ransomware_List' do
   month '*'
   weekday '1'
   command 'cd /opt/bro/share/bro/detect-ransomware-filenames; /usr/bin/python3 download-list.py'
+end
+
+
+# json-streaming-logs
+template '/opt/bro/share/bro/json-streaming-logs/main.zeek' do
+  source '/bro/json-streaming-logs/main.zeek.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  not_if do ::File.exists?("/opt/bro/share/bro/json-streaming-logs/main.zeek") end
+  notifies :run, 'execute[deploy_bro]', :delayed
+end
+
+template '/opt/bro/share/bro/json-streaming-logs/__load__.zeek' do
+  source '/bro/json-streaming-logs/__load__.zeek.erb'
+  owner 'sguil'
+  group 'sguil'
+  mode '0644'
+  notifies :run, 'execute[deploy_bro]', :delayed
 end
 
 
